@@ -1,0 +1,240 @@
+package com.zhs.core.util.search;
+
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.StringUtils;
+
+/**
+ * 注意， {@link #eq(String, String, Object)},{@link #like(String, String, String)}
+ * 这两个方法当value为string时，会去掉其中的 "'".
+ */
+public abstract class AbstractQueryForm implements QueryForm {
+
+	private transient Map<String, Object> map = new HashMap<String, Object>();
+
+	private transient StringBuffer queryDescrition = new StringBuffer();
+
+	private transient boolean parsed = false;
+
+	private transient boolean advanceQuery;
+
+	private transient boolean initQuery = false;
+
+	/**
+	 * 子类在这个方法里根据成员属性值，生成查询规则.
+	 * 
+	 */
+	protected abstract void doParseInternal();
+
+	public void doParseInternalCompony() {
+	};
+
+	protected void customQl(String ql) {
+		queryDescrition.append(ql);
+	}
+
+	protected void customQl(String ql, Map<String, Object> params) {
+		if (ql == null || params == null) {
+			throw new IllegalArgumentException(
+					"Both ql and params can't be null.");
+		}
+
+		queryDescrition.append(ql);
+		addParameters(params);
+
+	}
+
+	protected Map<String, Object> addParameter(String paramName,
+			Object paramValue) {
+		if (map == null) {
+			map = new HashMap<String, Object>();
+		}
+		map.put(paramName, paramValue);
+		return map;
+	}
+
+	protected Map<String, Object> addParameters(Map<String, Object> params) {
+		if (map == null) {
+			map = new HashMap<String, Object>();
+		}
+		map.putAll(params);
+		return map;
+	}
+
+	/**
+	 * and alias like '%:proprertyName%'
+	 * 
+	 * @param alias
+	 * @param propertyName
+	 * @param value
+	 */
+	protected void like(String alias, String propertyName, String value) {
+		if (StringUtils.isNotBlank(value)) {
+			value = value.replace("'", "");
+			queryDescrition.append(" and " + alias + " like '%" + value.trim()
+					+ "%'");
+		}
+	}
+
+	/**
+	 * and alias <=:propertyName
+	 * 
+	 * @param alias
+	 * @param propertyName
+	 * @param value
+	 */
+	protected void le(String alias, String propertyName, Object value) {
+		if (value != null) {
+			queryDescrition.append(" and " + alias + " <= :" + propertyName);
+			addParameter(propertyName, value);
+		}
+	}
+
+	protected void ge(String alias, String propertyName, Object value) {
+		if (value != null) {
+			queryDescrition.append(" and " + alias + " >= :" + propertyName);
+			addParameter(propertyName, value);
+		}
+	}
+
+	protected void eq(String alias, String propertyName, Object value) {
+		if (!isEmpty(value)) {
+			if (value instanceof String) {
+				value = ((String) value).replace("'", "");
+
+				queryDescrition.append(" and lower(" + alias + ") = :"
+						+ propertyName);
+				addParameter(propertyName, ((String) value).toLowerCase());
+
+			} else {
+
+				queryDescrition.append(" and " + alias + " = :" + propertyName);
+				addParameter(propertyName, value);
+			}
+		}
+
+	}
+
+	protected void isEmpty(String alias, String propertyName) {
+		queryDescrition.append(" and " + alias + " != :" + propertyName);
+	}
+
+	protected void notEq(String alias, String propertyName, Object value) {
+		if (!isEmpty(value)) {
+			if (value instanceof String) {
+				value = ((String) value).replace("'", "");
+			}
+			queryDescrition.append(" and " + alias + " != :" + propertyName);
+			addParameter(propertyName, value);
+		}
+
+	}
+
+	protected void customQl(String ql, String propertyName, Object value) {
+		if (!isEmpty(value)) {
+			queryDescrition.append(" and " + ql);
+			addParameter(propertyName, value);
+		}
+	}
+
+	protected void between(String alias, String minValueProperty,
+			String maxValueProperty) {
+		Object minValue = null;
+		Object maxValue = null;
+		try {
+			maxValue = PropertyUtils.getProperty(this, maxValueProperty);
+			minValue = PropertyUtils.getProperty(this, minValueProperty);
+		} catch (Throwable ex) {
+			throw new IllegalArgumentException(ex);
+		}
+
+		if (maxValue instanceof java.util.Date) {
+			Date obj = (Date) maxValue;
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(obj);
+			calendar.set(Calendar.HOUR_OF_DAY, 23);
+			calendar.set(Calendar.MINUTE, 59);
+			calendar.set(Calendar.SECOND, 59);
+			calendar.set(Calendar.MILLISECOND, 999);
+			maxValue = calendar.getTime();
+		}
+
+		if (minValue != null && maxValue != null) {
+			if (minValue.equals(BigDecimal.valueOf(0))) {
+				queryDescrition.append(" and (" + alias + " is null or "
+						+ alias + " between :" + minValueProperty + " and :"
+						+ maxValueProperty + ")");
+			} else {
+				queryDescrition.append(" and (" + alias + " between :"
+						+ minValueProperty + " and :" + maxValueProperty + ")");
+			}
+			addParameter(minValueProperty, minValue);
+			addParameter(maxValueProperty, maxValue);
+		} else if (minValue != null) {
+			ge(alias, minValueProperty, minValue);
+		} else if (maxValue != null) {
+			le(alias, maxValueProperty, maxValue);
+		}
+
+	}
+
+	/**
+	 * 当 value为String对象时，不为空串 或 当value不是String对象时且不是null是返回true
+	 * 
+	 * @param value
+	 * @return
+	 */
+	private boolean isEmpty(Object value) {
+		return value == null
+				|| ((value instanceof String) && StringUtils
+						.isEmpty((String) value));
+	}
+
+	public Map<String, Object> toMap() {
+		if (!parsed) {
+			parse();
+		}
+		return map;
+	}
+
+	public String toQueryDescription() {
+		if (!parsed) {
+			parse();
+		}
+		return queryDescrition.toString();
+	}
+
+	private void parse() {
+		queryDescrition.append(" 1=1");
+		doParseInternalCompony();
+		doParseInternal();
+		parsed = true;
+	}
+
+	public boolean isAdvanceQuery() {
+		return advanceQuery;
+	}
+
+	public void setAdvanceQuery(boolean advanceQuery) {
+		this.advanceQuery = advanceQuery;
+	}
+
+	public void reset() {
+		this.queryDescrition = new StringBuffer();
+		this.map = null;
+	}
+
+	public boolean isInitQuery() {
+		return initQuery;
+	}
+
+	public void setInitQuery(boolean initQuery) {
+		this.initQuery = initQuery;
+	}
+
+}

@@ -1,0 +1,213 @@
+package com.zhs.common.model.tenement;
+
+import com.zhs.common.model.parking.space.YardBillingFour;
+import com.zhs.common.model.parking.space.YardBillingThree;
+import com.zhs.common.model.parking.space.YardBillingTwo;
+import com.zhs.core.model.BaseModel;
+import com.zhs.core.util.json.NoJson;
+import lombok.Data;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * @author ZHS-CZJiang
+ * @date 2018-07-07
+ * 停车位
+ */
+
+@Data
+@Entity
+@Table(name = "tb_parking_space")
+public class ParkingSpace extends BaseModel {
+
+    /**
+     * 远程服务器车位 id
+     */
+    @Column(name = "parking_space_id")
+    private Integer parkingSpaceId;
+
+    /**
+     * 远程服务器车场 id
+     */
+    @Column(name = "tenement_id")
+    private Integer tenementId;
+    /**
+     * 远程服务器区域 id
+     */
+    @Column(name = "area_id")
+    private Integer areaId;
+    /**
+     * 车位号
+     */
+    @Column(name = "space_num")
+    private String spaceNum;
+
+    /**
+     * 车位状态
+     */
+    private int status;
+
+    /**
+     * 用户 id
+     */
+    @Column(name = "user_id")
+    private long userId;
+    /**
+     * 单位 id
+     */
+    @Column(name = "enterprise_id")
+    private Integer enterpriseId;
+    /**
+     * 经销商 id
+     */
+    @Column(name = "dealer_id")
+    private Integer dealerId;
+    /**
+     * 车位锁 id
+     */
+    @Column(name = "client_id")
+    private String clientId;
+    /**
+     * 车位密码
+     */
+    @Column(name = "space_pwd")
+    private String spacePwd;
+    /**
+     * 共享密码进
+     */
+    @Column(name = "shared_pwd_id")
+    private String sharedPwdIn;
+    /**
+     * 共享密码出
+     */
+    @Column(name = "shared_pwd_out")
+    private String sharedPwdOut;
+    /**
+     * 车位锁 MAC
+     */
+    @Column(name = "client_mac")
+    private String clientMac;
+    /**
+     * 车位类别
+     */
+    @Column(name = "space_category")
+    private int spaceCategory;
+    /**
+     * 电池电量
+     */
+    @Column(name = "battery_level")
+    private BigDecimal batteryLevel;
+    /**
+     * 监测时间
+     */
+    @Column(name = "monitor_time")
+    private Date monitorTime;
+    /**
+     * 车位开启状态
+     */
+    @Column(name = "switch_status")
+    private int switchStatus;
+    /**
+     * 蓝牙服务
+     */
+    private String BLEService;
+    /**
+     * 蓝牙特征值
+     */
+    private String BLECharacteristic;
+    /**
+     * 车位锁类别 (独享、共享 )
+     */
+    @Column(name = "client_category")
+    private int clientCategory;
+    /**
+     * 车牌号码
+     */
+    @Column(name = "car_number")
+    private String carNumber;
+    /**
+     * 开始时间
+     */
+    @Column(name = "validity_start_time")
+    private Date validityStartTime;
+    /**
+     * 结束时间
+     */
+    @Column(name = "validity_end_time")
+    private Date validityEndTime;
+    /**
+     * 用户姓名
+     */
+    @Column(name = "user_name")
+    private String userName;
+    /**
+     * 身份证
+     */
+    @Column(name = "id_card")
+    private String idCard;
+    /**
+     * 手机号
+     */
+    private String phone;
+    /**
+     * 身份证号
+     */
+    @Column(name = "car_num")
+    private String carNum;
+    /**
+     * 卡号
+     */
+    @Column(name = "card_num")
+    private String cardNum;
+    /**
+     * 备注
+     */
+    @Lob
+    private String remark;
+    /**
+     * 车场路径
+     */
+    private String path;
+    /**
+     * 车辆状态
+     */
+    @Column(name = "car_status")
+    private int carStatus;
+    /**
+     * 是否包月
+     */
+    private boolean rent;
+
+    /**
+     * 计费规则,2:2规则;3:3规则;4:4规则
+     */
+    @Column(name="billing_rule")
+    private Integer billingRule;
+
+    /**
+     * 规则2
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "yard_billing_two_id")
+    private YardBillingTwo yardBillingTwo;
+    /**
+     * 规则2
+     */
+    @ManyToMany(cascade = {},fetch = FetchType.LAZY)
+    @JoinTable(name = "tb_parking_space_three",
+            joinColumns = {@JoinColumn(name = "parking_space_id")},
+            inverseJoinColumns = {@JoinColumn(name = "yard_billing_three_id")})
+    private List<YardBillingThree> yardBillingThreeList;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "yard_billing_four_id")
+    private YardBillingFour yardBillingFour;
+    /**
+     * 计费重复方式 2 ：每天，1：一次
+     */
+    private Integer duplication;
+
+}

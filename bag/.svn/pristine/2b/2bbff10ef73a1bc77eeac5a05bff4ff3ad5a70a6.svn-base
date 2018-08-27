@@ -1,0 +1,210 @@
+package com.zhs.core.util.search.paginate;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Query;
+import org.hibernate.Session;
+
+@SuppressWarnings("rawtypes" )
+public class PagedQuery {
+
+	Pattern ptn = Pattern.compile("select\\s([a-zA-Z0-9\\.\\*]+)\\sfrom");
+
+	/* private EntityManager entityManager; */
+	Session session;
+
+	private String ql;
+	
+	private String countQl;
+
+	private Map<String, Object> paramters;
+
+	/*
+	 * public EntityManager getEntityManager() { return entityManager; }
+	 * 
+	 * public PagedQuery setEntityManager(EntityManager entityManager) {
+	 * this.entityManager = entityManager; return this; }
+	 */
+
+	public PagedQuery setQueryString(String ql) {
+		this.ql = ql;
+		return this;
+	}
+	
+	public Session getSession() {
+		return session;
+	}
+
+	public void setSession(Session session) {
+		this.session = session;
+	}
+
+	public String getCountQl() {
+		return countQl;
+	}
+
+	public void setCountQl(String countQl) {
+		this.countQl = countQl;
+	}
+
+	public PagedQuery setParamters(Map<String, Object> paramters) {
+		this.paramters = paramters;
+		return this;
+	}
+
+	public PagedQuery setParamter(String name, Object value) {
+		if (paramters == null) {
+			paramters = new HashMap<String, Object>();
+		}
+		paramters.put(name, value);
+		return this;
+	}
+
+	/**
+	 * @param pageAndOrder
+	 *            鍒嗛〉鍙婃帓搴忛檺瀹�浼犲叆鐨刾ageAndOrder,瀵硅薄涓嶈兘涓虹┖锛屽苟搴斿寘鍚�
+	 *            褰撳墠椤点�鎺掑簭銆佹瘡椤靛璞℃暟绛変俊鎭紝濡傛湭璁剧疆锛屽綋鍓嶉〉榛樿涓�,姣忛〉瀵硅薄鏁伴粯璁や负
+	 *            PageAndOrder.DEFAULT_PAGE_SIZE <br>
+	 *            <strong>娉ㄦ剰:</strong>pageAndOrder瀵硅薄鐨�
+	 *            fullListSize灞炴�灏嗕細琚慨鏀逛负鎸囧畾鏌ヨ鏉′欢鐨勮褰曟潯鏁般�
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	public <E> List<E> executeQuery(PageAndOrder pageAndOrder) {
+		if (StringUtils.isNotEmpty(pageAndOrder.getOrderDesc())) {
+			ql = ql + " order by " + pageAndOrder.getOrderDesc();
+		} else {
+			ql = pageAndOrder.order(ql);
+
+		}
+		pageAndOrder.setTotalRows(countRows());
+		pageAndOrder.setFooter(getFooter(pageAndOrder));
+
+		Query query = session.createQuery(ql);
+		if(pageAndOrder.isPaging()){
+			query.setMaxResults(pageAndOrder.getPageSize());
+			query.setFirstResult((pageAndOrder.getCurrentPage() - 1)
+					* pageAndOrder.getPageSize());
+		}
+		
+		// System.out.println("........first" + pageAndOrder.getCurrentPage());
+		if (paramters != null) {
+			for (Map.Entry<String, Object> param : paramters.entrySet()) {
+				query.setParameter(param.getKey(), param.getValue());
+			}
+		}
+
+		List<E> result = query.list();
+
+		return result;
+	}
+
+	public int countRows() {
+		if (countQl == null) {
+			countQl = ql.replaceFirst("select\\s([a-zA-Z0-9\\.]+)\\sfrom",
+					"select count($1) from");
+			countQl = "select count(*) " + ql;
+		}
+		Query query = session.createQuery(countQl);
+		/*
+		 * System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>countQL=" +
+		 * countQl);
+		 */
+		if (paramters != null) {
+			for (Map.Entry<String, Object> param : paramters.entrySet()) {
+				query.setParameter(param.getKey(), param.getValue());
+			}
+		}
+		return ((Long) query.uniqueResult()).intValue();
+	}
+
+	@SuppressWarnings("unchecked")
+	public HashMap getFooter(PageAndOrder pageAndOrder) {
+		if (pageAndOrder.getFooterList() == null) {
+			return null;
+		}
+
+		StringBuilder footerSql = new StringBuilder(" SELECT 1,2 ");
+
+		Footer classF = null;
+		for (Footer fo : pageAndOrder.getFooterList()) {
+			if (!fo.isIfWhere()) {
+				if (fo.getKeyName().equals(PageAndOrder.ClassName)) {
+					classF = fo;
+				} else if (fo.getKeyVale() == null) {
+					footerSql.append(" ,SUM(" + fo.getKeyName() + ") ");
+				}
+			}
+		}
+		footerSql.append(" FROM " + classF.getKeyVale() + " WHERE 1=1 ");
+
+		if (pageAndOrder.getFooterList() != null) {
+			for (Footer fo : pageAndOrder.getFooterList()) {
+				if (fo.isIfWhere()) {
+					if(fo.getKeyName()==null){
+						footerSql.append(fo.getKeyVale());
+					}else{
+						footerSql.append(" AND " + fo.getKeyName() + "=:"
+								+ fo.getKeyName().replace(".", ""));
+					}
+					
+				}
+			}
+		}
+		
+		footerSql.append(pageAndOrder.getFooterVoWhere());
+		
+		System.out.println("footerSql:" + footerSql.toString());
+		Query query = session.createQuery(footerSql.toString());
+
+		if (pageAndOrder.getFooterList() != null) {
+			for (Footer fo : pageAndOrder.getFooterList()) {
+				if (fo.isIfWhere()) {
+//					footerSql.append(" AND " + fo.getKeyName() + "=:"
+//							+ fo.getKeyName().replace(".", ""));
+					if(fo.getKeyName()!=null){
+						query.setParameter(fo.getKeyName().replace(".", ""),
+								fo.getKeyVale());
+					}
+				}
+			}
+		}
+		if(StringUtils.isNotEmpty(pageAndOrder.getFooterVoWhere())){
+			if (paramters != null) {
+				for (Map.Entry<String, Object> param : paramters.entrySet()) {
+					query.setParameter(param.getKey(), param.getValue());
+				}
+			}
+		}
+		List<Object[]> result = query.list();
+
+		int i = 0;
+
+		HashMap map = new HashMap();
+		if (result != null && result.size() > 0) {
+			Object[] resu = result.get(0);
+			for (Footer fo : pageAndOrder.getFooterList()) {
+				if (!fo.isIfWhere()) {
+					if (fo.getKeyName().equals(PageAndOrder.ClassName)) {
+					} else if (fo.getKeyVale() == null) {
+						map.put(fo.getColumnName(),
+								resu[i + 2] == null ? BigDecimal.ZERO
+										: resu[i + 2].toString());
+						i++;
+					} else {
+						map.put(fo.getColumnName() == null ? fo.getKeyName()
+								: fo.getColumnName(), fo.getKeyVale());
+					}
+				}
+			}
+		}
+
+		return map;
+	}
+
+}

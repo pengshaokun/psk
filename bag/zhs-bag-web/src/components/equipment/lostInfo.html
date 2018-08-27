@@ -1,0 +1,53 @@
+<div id="grid-toolbar">
+    <div class="grid-search">
+        <form id="searchForm">
+            <ul class="search-table clearBox">
+                <li class="clearBox">
+                    <div class="select-condition clearBox">
+                        <div class="label">丢失人姓名：</div>
+                        <div class="select-input"><input name="fullName" class="f1 easyui-textbox" data-options="prompt:'请输入姓名'" type="text"/></div>
+                    </div>
+                    <div class="select-condition clearBox">
+                        <div class="label">丢失状态:</div>
+                        <div class="select-input">
+                        <!-- <input id="lookFlag" class="f5" type="text" />-->
+                            <select id="lostFlag" class="easyui-combobox" >
+                                <option value="2">全部</option>
+                                <option value="1">未找回</option>
+                                <option value="0">已找回</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <!--<table class="search-table">-->
+                <!--<tr>-->
+                    <!--<td class="label">丢失人姓名：</td>-->
+                    <!--<td><input name="fullName" class="f1 easyui-textbox" data-options="prompt:'请输入姓名'" type="text"/></td>-->
+                    <!--<td class="label">丢失状态:</td>-->
+                    <!--<td>-->
+                        <!--&lt;!&ndash; <input id="lookFlag" class="f5" type="text" />&ndash;&gt;-->
+                        <!--<select id="lostFlag" class="easyui-combobox" >-->
+                            <!--<option value="2">全部</option>-->
+                            <!--<option value="0">未找回</option>-->
+                            <!--<option value="1">已找回</option>-->
+                        <!--</select>-->
+                    <!--</td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        </form>
+        <div class="search-toolbar">
+            <a id="btnSearch" href="javascript:void(0)" class="c1" style="width:80px">查询</a>
+            <a id="btnClear" href="javascript:void(0)" class="c4" style="width:80px">清空</a>
+        </div>
+    </div>
+    <div class="grid-toolbar">
+    </div>
+</div>
+<table id="grid"></table>
+<div id="dlg" style="display: none;"></div>
+<div id="dlg-buttons">
+    <a id="btnSave" href="javascript:void(0)" style="width:80px">保存</a>
+    <a id="btnClose" href="javascript:void(0)"  style="width:80px">关闭</a>
+</div>

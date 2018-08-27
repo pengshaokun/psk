@@ -1,0 +1,89 @@
+package com.zhs.common.model.manager;
+
+
+import com.zhs.common.constant.SexType;
+import com.zhs.core.model.BaseModel;
+import com.zhs.core.model.BaseUser;
+
+import javax.persistence.*;
+
+/**
+ * 平台管理用户
+ */
+@Entity
+@Table(name = "tb_manager")
+public class Manager extends BaseModel {
+
+    /**
+     * 基础用户
+     */
+	@ManyToOne(cascade = {}, fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "base_user_id")
+	private BaseUser baseUser;
+
+    /**
+     * 昵称
+     */
+	@Column(name = "real_name")
+	private String realName;
+
+    /**
+     * 性别
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name="sex_type")
+    private SexType sexType;
+
+    /**
+     * 身份证号
+     */
+    @Column(name = "id_number")
+    private String idNumber;
+
+    /**
+     * 创建人ID
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "create_manager_id")
+    private Manager createManager;
+
+    public BaseUser getBaseUser() {
+        return baseUser;
+    }
+
+    public void setBaseUser(BaseUser baseUser) {
+        this.baseUser = baseUser;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public SexType getSexType() {
+        return sexType;
+    }
+
+    public void setSexType(SexType sexType) {
+        this.sexType = sexType;
+    }
+
+    public String getIdNumber() {
+        return idNumber;
+    }
+
+    public void setIdNumber(String idNumber) {
+        this.idNumber = idNumber;
+    }
+
+    public Manager getCreateManager() {
+        return createManager;
+    }
+
+    public void setCreateManager(Manager createManager) {
+        this.createManager = createManager;
+    }
+}

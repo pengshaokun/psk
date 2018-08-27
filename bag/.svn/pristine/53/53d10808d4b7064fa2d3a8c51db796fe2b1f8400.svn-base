@@ -1,0 +1,63 @@
+package com.zhs.common.model.parking.space;
+
+import javax.persistence.*;
+
+import com.zhs.common.model.tenement.Tenement;
+import com.zhs.core.model.BaseModel;
+import lombok.Data;
+
+import java.util.List;
+
+/**
+ * 车场计费规则4
+ * @author ZHSKG YANH
+ *
+ */
+@Data
+@Table
+@Entity(name="tb_yard_billing_four")
+public class YardBillingFour extends BaseModel{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2384867087594438975L;
+
+	
+	 /**
+     * 车场计费规则4 id
+     */
+    private Integer lid;
+	
+	/**
+	 * 免费时长
+	 */
+	@Column(name="free_time")
+	private int freeTime;
+	
+	
+	/**
+     * 首次收费(1小时/xxxx 分)
+     */
+    @Column(name = "first_charge")
+	private int firstCharge;
+    
+    /**
+     * 单价 (单位 分)
+     */
+    @Column(name = "price")
+    private int price;
+    
+    /**
+     * 超时价格  24小时  (单位 分)
+     */
+    @Column(name = "timeout_price")
+    private int timeoutPrice;
+    
+    /**
+     * 0:超出免费时长,不满半小时按半小时计,超过半小时不满一小时按一小时计;1:超出免费时长,不满一小时按一小时计
+     */
+    @Column(name="charge_type")
+    private int chargeType;
+	
+}

@@ -1,0 +1,125 @@
+package com.zhs.core.util.search.paginate;
+
+import java.io.Serializable;
+
+/**
+ * 
+ */
+class OrderByImpl implements Serializable, OrderBy {
+
+	private static final long serialVersionUID = 1718075741767258419L;
+
+	private String column;
+
+	private static final String SPACE = " ";
+
+	private static final String ORDER_BY = "ORDER" + SPACE + "BY";
+
+	private static final String SEPERATOR = ".";
+
+	private static final String COMMA = ",";
+
+	private static final String DEFAULT_MODEL_ALIAS = "model";
+
+	private Order order;
+
+	private String modelAlias;
+
+	private Boolean isHQL;
+
+	private Boolean isSorting;
+
+	private OrderByImpl() {
+		super();
+		modelAlias = DEFAULT_MODEL_ALIAS;
+	}
+
+	OrderByImpl(String column, Order order) {
+		this(column, order, Boolean.TRUE);
+	}
+
+	OrderByImpl(String column, Order order, Boolean isHQL) {
+		this();
+		if (null == column || 0 == column.trim().length()
+				|| "".equals(column.trim())) {
+			isSorting = false;
+			return;
+		}
+		isSorting = true;
+		this.column = column;
+		this.order = order;
+		this.isHQL = isHQL;
+	}
+
+	public String order(String queryString) {
+		return order(new StringBuilder(queryString));
+	}
+
+	public String order(StringBuffer queryString) {
+		return order(new StringBuilder(queryString));
+	}
+
+	public String order(StringBuilder queryString) {
+		if (!isSorting) {
+			return queryString.toString();
+		}
+		String temp = queryString.toString().toUpperCase();
+		String append = getOrderBy();
+		int startIndex = temp.lastIndexOf(ORDER_BY.substring(0, 6));
+		if (-1 < startIndex) {
+			int endIndex = temp.substring(startIndex).indexOf(
+					ORDER_BY.substring(6, 8));
+			if (-1 < endIndex) {
+				int balance = queryString.length()
+						- (startIndex + endIndex + 2);
+				if (1 > balance) {
+					queryString.setLength(queryString.length()
+							+ Math.abs(balance));
+				}
+				queryString.delete(startIndex, startIndex + endIndex + 2);
+				queryString = queryString.insert(startIndex, append + COMMA
+						+ SPACE);
+			} else {
+				queryString = queryString.replace(startIndex,
+						queryString.length(), append + SPACE);
+			}
+		} else {
+			queryString.append(append + SPACE);
+		}
+		return queryString.toString();
+	}
+
+	private String getOrderBy() {
+		return SPACE + ORDER_BY + SPACE
+				+ (isHQL ? modelAlias + SEPERATOR + column : column) + SPACE
+				+ order.getValue();
+	}
+
+	OrderBy setColumn(String column) {
+		this.column = column;
+		return this;
+	}
+
+	OrderBy setOrder(Order order) {
+		this.order = order;
+		return this;
+	}
+
+	OrderBy setIsHQL(Boolean isHQL) {
+		this.isHQL = isHQL;
+		return this;
+	}
+
+	public OrderBy setModelAlias(String modelAlias) {
+		this.modelAlias = modelAlias;
+		return this;
+	}
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public String getColumn() {
+		return column;
+	}
+}

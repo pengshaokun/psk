@@ -1,0 +1,10 @@
+package com.zhs.core.model.Constant;
+
+public class ModelStatus {
+	//正常状态
+	public static int  NORMAL = 0;
+	
+	//逻辑删除
+	public static int  DELETE = 1;
+	
+}

@@ -1,0 +1,11 @@
+package com.zhs.core.util.search;
+
+import java.util.Map;
+
+public interface QueryForm {
+
+	String toQueryDescription();
+
+	Map<String, Object> toMap();
+
+}

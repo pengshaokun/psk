@@ -1,0 +1,57 @@
+<div id="grid-toolbar">
+    <div class="grid-search">
+        <form id="searchForm">
+            <ul class="search-table clearBox">
+                <li class="fault-box left-box clearBox">
+                    <div class="label">申报时间：</div>
+                    <div><input id="txtStartTime" name="startTime" /></div>
+                    <div class="label">—</div>
+                    <div><input id="txtEndTime" name="endTime" /></div>
+                </li>
+                <li class="fault-box left-box clearBox">
+                    <div class="label">处理状态:</div>
+                    <div>
+                        <select id="status" name="status" class="easyui-combobox" >
+                            <option value="2">全部</option>
+                            <option value="0">未处理</option>
+                            <option value="1">已处理</option>
+                        </select>
+                    </div>
+                </li>
+            </ul>
+
+            <!--<table class="search-table">-->
+                <!--<tr>-->
+                    <!--<td class="label">申报时间：</td>-->
+                    <!--<td><input id="txtStartTime" name="startTime" /></td>-->
+                    <!--<td class="label">—</td>-->
+                    <!--<td><input id="txtEndTime" name="endTime" /></td>-->
+                    <!--<td class="label">处理状态:</td>-->
+                    <!--<td>-->
+                        <!--<select id="status" name="status" class="easyui-combobox" >-->
+                            <!--<option value="2">全部</option>-->
+                            <!--<option value="0">未处理</option>-->
+                            <!--<option value="1">已处理</option>-->
+                        <!--</select>-->
+                    <!--</td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        </form>
+        <div class="search-toolbar">
+            <a id="btnSearch" href="javascript:void(0)" class="c1" style="width:80px">查询</a>
+            <a id="btnClear" href="javascript:void(0)" class="c4" style="width:80px">清空</a>
+        </div>
+    </div>
+</div>
+<table id="grid"></table>
+<div id="dlg" style="display: none;"></div>
+<div id="dlg-buttons">
+    <a id="btnSave" href="javascript:void(0)" style="width:80px">处理</a>
+    <a id="btnCancel" href="javascript:void(0)" style="width:80px">取消</a>
+</div>
+
+<!-- 添加图片弹出框 弹出框的作用在于放大图片 -->
+<div id="imgDlg" style="display: none;"></div>
+<div id="imgDlg-buttons">
+    <!--<a id="imgDlgClose" href="javascript:void(0)"  style="width:80px">关闭</a>-->
+</div>

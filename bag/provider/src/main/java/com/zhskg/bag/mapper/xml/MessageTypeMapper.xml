@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.MessageTypeMapper">
+
+    <!-- messageTypeMap -->
+    <resultMap id="messageTypeMap" type="com.zhskg.bag.model.MessageTypeEntry">
+        <id column="t_id" property="id" />
+        <result column="t_dictname" property="dictname" />
+        <result column="t_dictvalue" property="dictvalue" />
+        <result column="t_description" property="description" />
+    </resultMap>
+
+
+    <!-- 根据参数查询消息列表 -->
+    <select id="query" parameterType="com.zhskg.bag.param.MessageTypeParam" resultMap="messageTypeMap">
+        select T.t_id,
+               T.t_dictname,
+               T.t_dictvalue,
+               T.t_description
+        from
+        tm_message_type T
+    </select>
+</mapper>

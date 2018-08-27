@@ -1,0 +1,55 @@
+package com.zhs.core.model.Constant;
+
+public class GpsModel {
+	/**
+	 * 纬度
+	 */
+	private double wgLat;
+
+	/**
+	 * 经度
+	 */
+	private double wgLon;
+
+	/**
+	 * 
+	 * @param wgLat 纬度
+	 * @param wgLon 经度
+	 */
+	public GpsModel(double wgLat, double wgLon) {
+		setWgLat(wgLat);
+		setWgLon(wgLon);
+	}
+
+	/**
+	 * 
+	 * @param laglon 纬度,经度
+	 */
+	public GpsModel(String laglon) {
+		String[] s = laglon.split(",");
+		setWgLat(Double.parseDouble(s[0]));
+		setWgLon(Double.parseDouble(s[1]));
+	}
+
+	public double getWgLat() {
+		return wgLat;
+	}
+
+	public void setWgLat(double wgLat) {
+		this.wgLat = wgLat;
+	}
+
+	public double getWgLon() {
+		return wgLon;
+	}
+
+	public void setWgLon(double wgLon) {
+		this.wgLon = wgLon;
+	}
+
+	@Override
+	public String toString() {
+		return wgLat + "," + wgLon;
+	}
+
+}

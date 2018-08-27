@@ -1,0 +1,65 @@
+package com.zhs.common.model.parking.space;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.*;
+
+import com.alibaba.fastjson.annotation.JSONField;
+import com.zhs.common.model.tenement.ParkingSpace;
+import com.zhs.common.model.tenement.Tenement;
+import com.zhs.core.model.BaseModel;
+import lombok.Data;
+
+/**
+ * 车场计费规则3   总时间段 不超过24小时
+ * @author ZHSKG YANH
+ *
+ */
+@Data
+@Table
+@Entity(name="tb_yard_billing_three")
+public class YardBillingThree extends BaseModel{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1471403319707503311L;
+
+	/**
+	 * 开始时间
+	 */
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "start_time")
+	private Date startTime;
+    
+    /**
+     * 车场计费规则3 id
+     */
+    private Integer lid;
+	
+	/**
+	 * 结束时间
+	 */
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "end_time")
+	private Date endTime;
+    
+    /**
+     * 单价  (单位 分)
+     */
+    private int price;
+    /**
+     * 车位
+     */
+    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "yardBillingThreeList")
+    private List<ParkingSpace> parkingSpaceList;
+    /**
+     * 车场
+     */
+    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "yardBillingThreeList")
+    private List<Tenement> tenementList;
+
+}

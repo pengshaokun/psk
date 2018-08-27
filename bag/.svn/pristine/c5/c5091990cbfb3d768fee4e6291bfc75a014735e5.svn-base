@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.ServerInfoMapper">
+    <resultMap id="serverInfoMap" type="com.zhskg.bag.entity.ServerInfo">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="domain_name" jdbcType="VARCHAR" property="domainName"/>
+        <result column="ip_address" jdbcType="VARCHAR" property="ipAddress"/>
+        <result column="data_port" jdbcType="INTEGER" property="dataPort"/>
+        <result column="heart_port" jdbcType="INTEGER" property="heartPort"/>
+        <result column="heart_rate" jdbcType="INTEGER" property="heartRate"/>
+        <result column="software_version" jdbcType="VARCHAR" property="softwareVersion"/>
+        <result column="create_on" jdbcType="BIGINT" property="createOn"/>
+        <result column="create_name" jdbcType="VARCHAR" property="createName"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="modify_on" jdbcType="BIGINT" property="modifyOn"/>
+        <result column="modify_name" jdbcType="VARCHAR" property="modifyName"/>
+        <result column="modify_time" jdbcType="BIGINT" property="modifyTime"/>
+    </resultMap>
+
+    <sql id="columns">
+        id,
+        domain_name,
+        ip_address,
+        data_port,
+        heart_port,
+        heart_rate,
+        software_version,
+        create_on,
+        create_name,
+        create_time,
+        modify_on,
+        modify_name,
+        modify_time
+    </sql>
+
+    <sql id="sqlFilter">
+        <where>
+            <if test="id!=null and id!=0">
+                AND id=#{id,jdbcType=INTEGER}
+            </if>
+            <if test="domainName!=null and domainName!=''">
+                AND domain_name LIKE '%${domainName}%'
+            </if>
+            <if test="ipAddress!=null and ipAddress!=''">
+                AND ip_address LIKE '%${ipAddress}%'
+            </if>
+            <if test="softwareVersion!=null and softwareVersion!=''">
+                AND software_version LIKE '%${softwareVersion}%'
+            </if>
+            <if test="createName!=null and createName!=''">
+                AND create_name LIKE '%${createName}%'
+            </if>
+            <if test="modifyName!=null and modifyName!=''">
+                AND modify_name LIKE '%${modifyName}%'
+            </if>
+        </where>
+    </sql>
+
+    <!--根据主键查询-->
+    <select id="get" resultMap="serverInfoMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="columns"/>
+        FROM tp_server_info
+        WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <delete id="remove" parameterType="map">
+        DELETE  FROM tp_server_info
+        <include refid="sqlFilter"/>
+    </delete>
+
+    <!--添加-->
+    <insert id="addAndId" parameterType="com.zhskg.bag.entity.ServerInfo">
+        INSERT INTO tp_server_info(
+        domain_name,
+        ip_address,
+        data_port,
+        heart_port,
+        heart_rate,
+        software_version,
+        create_on,
+        create_name,
+        create_time
+        ) VALUES (
+        #{domainName,jdbcType=VARCHAR},
+        #{ipAddress,jdbcType=VARCHAR},
+        #{dataPort,jdbcType=INTEGER},
+        #{heartPort,jdbcType=INTEGER},
+        #{heartRate,jdbcType=INTEGER},
+        #{softwareVersion,jdbcType=VARCHAR},
+        #{createOn,jdbcType=BIGINT},
+        #{createName,jdbcType=VARCHAR},
+        #{createTime,jdbcType=BIGINT}
+        )
+        <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">
+            SELECT @@IDENTITY as id
+        </selectKey>
+    </insert>
+
+    <!--修改-->
+    <update id="update" parameterType="com.zhskg.bag.entity.ServerInfo">
+        UPDATE tp_server_info
+        <trim prefix="set" suffixOverrides=",">
+            <if test="domainName!=null">domain_name = #{domainName,jdbcType=VARCHAR},</if>
+            <if test="ipAddress!=null">ip_address = #{ipAddress,jdbcType=VARCHAR},</if>
+            <if test="dataPort!=null">data_port = #{dataPort,jdbcType=INTEGER},</if>
+            <if test="heartPort!=null">heart_port = #{heartPort,jdbcType=INTEGER},</if>
+            <if test="heartRate!=null">heart_rate = #{heartRate,jdbcType=INTEGER},</if>
+            <if test="softwareVersion!=null">software_version = #{softwareVersion,jdbcType=VARCHAR},</if>
+            <if test="modifyTime!=null">modify_time = #{modifyTime,jdbcType=BIGINT},</if>
+            <if test="modifyName!=null">modify_name = #{modifyName,jdbcType=VARCHAR},</if>
+            <if test="modifyOn!=null">modify_on = #{modifyOn,jdbcType=BIGINT}</if>
+        </trim>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--获取列表-->
+    <select id="getList" resultMap="serverInfoMap" parameterType="map">
+        SELECT
+        <include refid="columns"/>
+        FROM  tp_server_info
+        <include refid="sqlFilter"/>
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

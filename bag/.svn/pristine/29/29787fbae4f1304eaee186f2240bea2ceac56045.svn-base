@@ -1,0 +1,20 @@
+<div class="form-container">
+    <form id="form1">
+        <table class="form-table" style="min-width:400px;">
+            <tr>
+                <td class="label">反馈人:</td>
+                <td ><input name="createName" class="f5 easyui-textbox" readonly type="text"/></td>
+            </tr>
+            <tr>
+                <td class="label">反馈类别:</td>
+                <td ><input id="txtCategory" name="category" class="f5 easyui-textbox" readonly  type="text"/></td>
+            </tr>
+
+            <tr>
+                <td class="label">内容:</td>
+                <td ><input name="feedback" class="f8 easyui-textbox" readonly type="text" multiline="true"
+                            style="height: 180px;width: 500px"/></td>
+            </tr>
+        </table>
+    </form>
+</div>

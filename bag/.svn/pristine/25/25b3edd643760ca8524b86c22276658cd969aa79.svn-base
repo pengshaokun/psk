@@ -1,0 +1,369 @@
+package com.zhs.core.util.search.paginate;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import com.zhs.core.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
+
+@SuppressWarnings("rawtypes" )
+class PageAndOrderImpl implements Serializable, PageAndOrder {
+
+	private static final long serialVersionUID = 1718075741767258419L;
+
+	private String column;
+
+	private static final String SPACE = " ";
+
+	private static final String ORDER_BY = " ORDER " + SPACE + "BY";
+
+	private static final String SEPERATOR = ".";
+
+	private static final String COMMA = ",";
+
+//	private static final String DEFAULT_MODEL_ALIAS = "model";
+
+	private Order order;
+
+	private Boolean isHQL;
+
+	private transient Boolean isSorting;
+
+	private int pageNumber;
+
+	private int objectsPerPage;
+
+	private int fullListSize;
+
+	private String type;
+
+	private List result;
+
+	// 判断是否分页，true为分，false 为不分
+	private transient boolean paging = true;
+
+	// 排序信息
+	private transient String orderDesc;
+	
+	private transient boolean footerUseVo = false;
+	
+	private transient String footerWhereQl="";
+
+	// 合计
+	private List<Footer> footerList;
+
+	private HashMap<String, Object> footer;
+	
+	private transient String serchSql = " ";
+	
+	private transient String serchHql = " ";
+
+	private PageAndOrderImpl() {
+		super();
+	}
+
+	PageAndOrderImpl(String column, Order order) {
+		this(column, order, Boolean.TRUE);
+	}
+
+	PageAndOrderImpl(String column, Order order, Boolean isHQL) {
+		this();
+		if (null == column || 0 == column.trim().length()
+				|| "".equals(column.trim())) {
+			isSorting = false;
+
+		} else {
+			isSorting = true;
+			this.column = column;
+			this.order = order;
+			if (this.order == null) {
+				order = Order.DESC;
+			}
+			this.isHQL = isHQL;
+		}
+	}
+
+	public String order(String queryString) {
+		return order(new StringBuilder(queryString));
+	}
+
+	public String order(StringBuffer queryString) {
+		return order(new StringBuilder(queryString));
+	}
+
+	public String order(StringBuilder queryString) {
+		if (!isSorting) {
+			return queryString.toString();
+		}
+		String temp = queryString.toString().toUpperCase();
+		String append = getOrderBy();
+		int startIndex = temp.lastIndexOf(ORDER_BY.substring(0, 7));
+		if (-1 < startIndex) {
+			int endIndex = temp.substring(startIndex).indexOf(
+					ORDER_BY.substring(6, 8));
+			if (-1 < endIndex) {
+				int balance = queryString.length()
+						- (startIndex + endIndex + 2);
+				if (1 > balance) {
+					queryString.setLength(queryString.length()
+							+ Math.abs(balance));
+				}
+				queryString.delete(startIndex, startIndex + endIndex + 2);
+				queryString = queryString.insert(startIndex, append + COMMA
+						+ SPACE);
+			} else {
+				queryString = queryString.replace(startIndex,
+						queryString.length(), append + SPACE);
+			}
+		} else {
+			queryString.append(append + SPACE);
+		}
+		return queryString.toString();
+	}
+
+	private String getOrderBy() {
+		if (column != null && column.contains(SEPERATOR)) {
+			return SPACE
+					+ ORDER_BY
+					+ SPACE
+					+ (null == isHQL || isHQL ? column : column)
+					+ SPACE
+					+ (null == order ? Order.DESC.getValue() : order.getValue());
+		} else {
+			return SPACE
+					+ ORDER_BY
+					+ SPACE
+					+ (null == isHQL || isHQL ? SPACE + column : column)
+					+ SPACE
+					+ (null == order ? Order.DESC.getValue() : order.getValue());
+		}
+	}
+
+	public PageAndOrder setOrderColumn(String column) {
+		if (StringUtils.isNotEmpty(column) && StringUtils.isNotBlank(column)) {
+			this.column = column;
+			isSorting = true;
+		}
+		return this;
+	}
+
+	public PageAndOrder setOrder(Order order) {
+		this.order = order;
+		return this;
+	}
+
+	PageAndOrder setIsHQL(Boolean isHQL) {
+		this.isHQL = isHQL;
+		return this;
+	}
+
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public String getColumn() {
+		return column;
+	}
+
+	public int getCurrentPage() {
+		return pageNumber;
+	}
+
+	public int getPageSize() {
+		return objectsPerPage > 0 ? objectsPerPage : DEFAULT_PAGE_SIZE;
+	}
+
+	public void setCurrentPage(int pageNumber) {
+		this.pageNumber = pageNumber;
+	}
+
+	public void setObjectsPerPage(int objectsPerPage) {
+		this.objectsPerPage = objectsPerPage;
+	}
+
+	public int getTotalRows() {
+		return this.fullListSize;
+	}
+
+	public void setTotalRows(int fullListSize) {
+		this.fullListSize = fullListSize;
+//		int totalPages = (int) Math.ceil((double) fullListSize
+//				/ (double) getPageSize());
+//		if (pageNumber > totalPages) {
+//			pageNumber = 1;
+//		}
+	}
+
+	public int getTotalPages() {
+		return (int) Math.ceil((double) fullListSize / (double) getPageSize());
+	}
+
+	public void reset() {
+		setCurrentPage(1);
+	}
+
+	public String getType() {
+
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+
+	}
+
+	public List getResult() {
+
+		return result;
+	}
+
+	public void setResult(List result) {
+		this.result = result;
+
+	}
+
+	public List<Footer> getFooterList() {
+		return footerList;
+	}
+
+	public void setFooterList(List<Footer> footerList) {
+		this.footerList = footerList;
+	}
+
+	public HashMap<String, Object> getFooter() {
+		return footer;
+	}
+
+	public void setFooter(HashMap<String, Object> footer) {
+		this.footer = footer;
+	}
+
+	public void addFooterSum(String entityColumn, Object entityValue,
+			String pageColumn) {
+		if (footerList == null) {
+			footerList = new ArrayList<Footer>();
+		}
+		Footer footer = new Footer();
+		footer.setIfWhere(false);
+		footer.setKeyName(entityColumn);
+		footer.setKeyVale(entityValue);
+		footer.setColumnName(pageColumn);
+		footerList.add(footer);
+	};
+
+	public void addFooterWhere(String entityColumn, Object entityValue) {
+		if (footerList == null) {
+			footerList = new ArrayList<Footer>();
+		}
+		Footer footer = new Footer();
+		footer.setIfWhere(true);
+		footer.setKeyName(entityColumn);
+		footer.setKeyVale(entityValue);
+		footerList.add(footer);
+	}
+	
+	public void addFooterWhere(String whereSql) {
+		if (footerList == null) {
+			footerList = new ArrayList<Footer>();
+		}
+		Footer footer = new Footer();
+		footer.setIfWhere(true);
+		footer.setKeyName(null);
+		footer.setKeyVale(whereSql);
+		footerList.add(footer);
+	}
+
+	public boolean isPaging() {
+		return paging;
+	}
+
+	public void setPaging(boolean paging) {
+		this.paging = paging;
+	}
+
+	@Override
+	public void setOrderDesc(String orderDesc) {
+		this.orderDesc = orderDesc;
+	}
+
+	@Override
+	public String getOrderDesc() {
+
+		return orderDesc;
+	}
+
+	@Override
+	public void setSerch(String str) {
+		if(StringUtil.isNotEmpty(str)){
+			String[] strs = str.split("_,_");
+			for(String s:strs){
+				if(StringUtil.isNotEmpty(s)){
+					//birthday_&_birthday_&_2015/03/03_&_date_&_=
+					String[] obj = s.split("_&_");
+					
+					String v = obj[2];
+					if(obj[4].equals("like")){
+						v = " \"%"+v+"%\" ";
+					}else if(obj[4].equals("lLike")){
+						v = " \""+v+"%\" ";
+					}else if(obj[4].equals("rLike")){
+						v = " \"%"+v+"\" ";
+					}else if(obj[3].equals("string")){
+						v = " \""+v+"\" ";
+					}else if(obj[3].equals("date")){
+						if(obj[4].equals(">")||obj[4].equals("<=")){
+							v = v+" 23:59:59";
+						}else if(obj[4].equals("<")||obj[4].equals(">=")){
+							v = v+" 00:00:00";
+						}
+					}
+					serchHql+=" "+obj[5]+" "+obj[0]+(obj[4].equals("lLike")||obj[4].equals("rLike")?" like ":" "+obj[4]+" ")+v;
+					serchSql+=" "+obj[5]+" "+obj[1]+(obj[4].equals("lLike")||obj[4].equals("rLike")?" like ":" "+obj[4]+" ")+v;
+//					System.out.println(serchHql);
+//					System.out.println(serchSql);
+				}
+			}
+			
+		}
+	}
+
+	@Override
+	public String getSerchHql() {
+		return serchHql;
+	}
+
+	@Override
+	public String getSerchsql() {
+		return serchSql;
+	}
+
+	@Override
+	public void setFooterUseVo(boolean flag) {
+		footerUseVo = flag;
+	}
+
+	@Override
+	public void setFooterVoWhere(String whereSql) {
+		footerWhereQl = whereSql;
+		
+	}
+
+	@Override
+	public boolean isUseFooterVo() {
+		return footerUseVo;
+	}
+
+	@Override
+	public String getFooterVoWhere() {
+		return footerWhereQl;
+	}
+
+	@Override
+	public int getObjectsPerPage() {
+		return objectsPerPage > 0 ? objectsPerPage : DEFAULT_PAGE_SIZE;
+	}
+
+}

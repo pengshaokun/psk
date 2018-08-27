@@ -1,0 +1,207 @@
+<div id="all-electric">
+    <form id="form1" style="margin:0px;padding:1%;">
+        <input name="id" class="easyui-numberbox" type="hidden"/>
+        <input name="clientId" class="easyui-textbox" type="hidden"/>
+        <ul class="form-table clearBox response-table" style="min-width:39%;margin: 0px auto;">
+            <li class="clearBox">
+                <div class="title-box float-box"><span>电池电量：</span></div>
+                <div class="content-box float-box" >
+                    <input name="batteryPower" class="easyui-numberbox" type="number"
+                           data-options="precision:2,prompt:'电池电量'"/>
+                </div>
+                <div class="title-box float-box unit-box">
+                    <span>A.H</span>
+                </div>
+                <div class="title-box float-box"><span>电池电压：</span></div>
+                <div class="content-box float-box">
+                    <input name="batteryVoltage" class="easyui-numberbox" type="number"
+                           data-options="precision:2,prompt:'电池电压'"/>
+                </div>
+                <div class="title-box float-box unit-box">
+                    <span>V</span>
+                </div>
+            </li>
+            <li  class="clearBox">
+                <div class="title-box float-box"><span>电池电流：</span></div>
+                <div class="content-box float-box">
+                    <input name="batteryCurrent" class="easyui-numberbox" type="number"
+                           data-options="precision:2,prompt:'电池电流'"/>
+                </div>
+                <div class="title-box float-box unit-box">
+                    <span>A</span>
+                </div>
+                <div class="title-box float-box"><span>电池温度：</span></div>
+                <div class="content-box float-box">
+                    <input name="batteryTemperature" class="easyui-numberbox" type="number"
+                           data-options="precision:2,prompt:'电池温度'"/>
+                </div>
+                <div class="title-box float-box unit-box">
+                    <span>℃</span>
+                </div>
+            </li>
+            <li>
+                <div class="title-box float-box"><span>防丢距离：</span></div>
+                <div class="content-box float-box">
+                    <input name="safeDistance" class="easyui-numberbox" type="number"
+                           data-options="precision:2,prompt:'防丢距离'"/>
+                </div>
+                <div class="title-box float-box unit-box">
+                    <span>m</span>
+                </div>
+                <div class="title-box float-box"><span>跟踪距离：</span></div>
+                <div class="content-box float-box">
+                    <input name="trackingDistance" class="easyui-numberbox" type="number"
+                           data-options="precision:2,prompt:'跟踪距离'"/>
+                </div>
+                <div class="title-box float-box unit-box">
+                    <span>m</span>
+                </div>
+            </li>
+            <li>
+                <div class="title-box float-box"><span>障碍距离：</span></div>
+                <div class="content-box float-box">
+                    <input name="obstacleDistance" class="easyui-numberbox" type="number"
+                           data-options="precision:2,prompt:'障碍距离'"/>
+                </div>
+                <div class="title-box float-box unit-box">
+                    <span>m</span>
+                </div>
+                <div class="title-box float-box"><span>光线阀值：</span></div>
+                <div class="content-box float-box">
+                    <input name="rayThreshold" class="easyui-numberbox" type="number"
+                           data-options="precision:2,prompt:'光线阀值'"/>
+                </div>
+                <div class="title-box float-box unit-box">
+                    <span></span>
+                </div>
+            </li>
+            <li>
+                <div class="title-box float-box"><span>速度阀值：</span></div>
+                <div class="content-box float-box">
+                    <input name="speedThreshold" class="easyui-numberbox" type="number"
+                           data-options="precision:2,prompt:'速度阀值'"/>
+                </div>
+                <div class="title-box float-box unit-box">
+                    <span>m/s</span>
+                </div>
+                <div class="title-box float-box"><span>称重限量：</span></div>
+                <div class="content-box float-box"><input name="weightLimit" class="easyui-numberbox" type="number"
+                           data-options="precision:2,prompt:'称重限量'"/></div>
+                <div class="title-box float-box unit-box">
+                    <span>kg</span>
+                </div>
+            </li>
+            <li>
+                <div class="title-box float-box" style="width:17% !important;"><span>充电次数：</span></div>
+                <div class="content-box float-box">
+                    <input name="chargeNum" class="easyui-numberbox" type="number"
+                           data-options="prompt:'充电次数'"/>
+                </div>
+                <div class="title-box float-box unit-box">
+                    <span></span>
+                </div>
+            </li>
+        </ul>
+
+        <!--<table cellpadding="15" style="border-collapse:separate; border-spacing:0px 15px;">-->
+            <!--<tr>-->
+                <!--<td><span>电池电量：</span></td>-->
+                <!--<td>-->
+                    <!--<input name="batteryPower" class="easyui-numberbox" type="number"-->
+                           <!--data-options="width:180,precision:2,prompt:'电池电量'"/>-->
+                <!--</td>-->
+                <!--<td style="padding-left:5px;">-->
+                    <!--<span>A.H</span>-->
+                <!--</td>-->
+                <!--<td style="padding-left:25px;"><span>电池电压：</span></td>-->
+                <!--<td>-->
+                    <!--<input name="batteryVoltage" class="easyui-numberbox" type="number"-->
+                           <!--data-options="width:180,precision:2,prompt:'电池电压'"/>-->
+                <!--</td>-->
+                <!--<td style="padding-left:5px;">-->
+                    <!--<span>V</span>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr style="padding-top: 20px">-->
+                <!--<td><span>电池电流：</span></td>-->
+                <!--<td>-->
+                    <!--<input name="batteryCurrent" class="easyui-numberbox" type="number"-->
+                           <!--data-options="width:180,precision:2,prompt:'电池电流'"/>-->
+                <!--</td>-->
+                <!--<td style="padding-left:5px;">-->
+                    <!--<span>A</span>-->
+                <!--</td>-->
+                <!--<td style="padding-left:25px;"><span>电池温度：</span></td>-->
+                <!--<td>-->
+                    <!--<input name="batteryTemperature" class="easyui-numberbox" type="number"-->
+                           <!--data-options="width:180,precision:2,prompt:'电池温度'"/>-->
+                <!--</td>-->
+                <!--<td style="padding-left:5px;">-->
+                    <!--<span>℃</span>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td><span>防丢距离：</span></td>-->
+                <!--<td>-->
+                    <!--<input name="safeDistance" class="easyui-numberbox" type="number"-->
+                           <!--data-options="width:180,precision:2,prompt:'防丢距离'"/>-->
+                <!--</td>-->
+                <!--<td style="padding-left:5px;">-->
+                    <!--<span>m</span>-->
+                <!--</td>-->
+                <!--<td style="padding-left:25px;"><span>跟踪距离：</span></td>-->
+                <!--<td>-->
+                    <!--<input name="trackingDistance" class="easyui-numberbox" type="number"-->
+                           <!--data-options="width:180,precision:2,prompt:'跟踪距离'"/>-->
+                <!--</td>-->
+                <!--<td style="padding-left:5px;">-->
+                    <!--<span>m</span>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td><span>障碍距离：</span></td>-->
+                <!--<td>-->
+                    <!--<input name="obstacleDistance" class="easyui-numberbox" type="number"-->
+                           <!--data-options="width:180,precision:2,prompt:'障碍距离'"/>-->
+                <!--</td>-->
+                <!--<td style="padding-left:5px;">-->
+                    <!--<span>m</span>-->
+                <!--</td>-->
+                <!--<td style="padding-left:25px;"><span>光线阀值：</span></td>-->
+                <!--<td>-->
+                    <!--<input name="rayThreshold" class="easyui-numberbox" type="number"-->
+                           <!--data-options="width:180,precision:2,prompt:'光线阀值'"/>-->
+                <!--</td>-->
+                <!--<td style="padding-left:5px;">-->
+                    <!--<span></span>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td><span>速度阀值：</span></td>-->
+                <!--<td>-->
+                    <!--<input name="speedThreshold" class="easyui-numberbox" type="number"-->
+                           <!--data-options="width:180,precision:2,prompt:'速度阀值'"/>-->
+                <!--</td>-->
+                <!--<td style="padding-left:5px;">-->
+                    <!--<span>m/s</span>-->
+                <!--</td>-->
+                <!--<td style="padding-left:25px;"><span>称重限量：</span></td>-->
+                <!--<td><input name="weightLimit" class="easyui-numberbox" type="number"-->
+                           <!--data-options="width:180,precision:2,prompt:'称重限量'"/></td>-->
+                <!--<td style="padding-left:5px;">-->
+                    <!--<span>kg</span>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td><span>充电次数：</span></td>-->
+                <!--<td>-->
+                    <!--<input name="chargeNum" class="easyui-numberbox" type="number"-->
+                           <!--data-options="width:180,prompt:'充电次数'"/>-->
+                <!--</td>-->
+                <!--<td style="padding-left:5px;" colspan="4">-->
+                    <!--<span></span>-->
+                <!--</td>-->
+            <!--</tr>-->
+        <!--</table>-->
+    </form>
+</div>

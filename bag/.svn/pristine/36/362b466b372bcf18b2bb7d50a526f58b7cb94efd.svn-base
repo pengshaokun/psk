@@ -1,0 +1,143 @@
+package com.zhs.common.model.tenement;
+
+import javax.persistence.*;
+
+import com.zhs.common.model.parking.space.YardBillingFour;
+import com.zhs.common.model.parking.space.YardBillingThree;
+import com.zhs.common.model.parking.space.YardBillingTwo;
+import com.zhs.core.model.BaseModel;
+import com.zhs.core.util.json.NoJson;
+import lombok.Data;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+
+/**
+ * 车场信息
+ * @author ZHSKG YANH
+ *
+ */
+@Entity(name="tb_Tenement")
+@Table
+@Data
+public class Tenement extends BaseModel{
+
+    /**
+     * 车场 id
+     */
+    @Column(name = "tenement_id")
+    private Integer tenementId;
+    
+    /**
+     * 车场标识
+     */
+    private String code;
+
+    /**
+     * 经度
+     */
+    @Column(precision = 19, scale = 6)
+    private BigDecimal lon;
+
+    /**
+     * 纬度
+     */
+    @Column(precision = 19, scale = 6)
+    private BigDecimal lat;
+
+    /**
+     * 停车场地址
+     */
+    private String address;
+    
+    /**
+     * 车位数
+     */
+    @Column(name="car_num")
+    private Integer carNum;
+    /**
+     * 剩余车位数
+     */
+    @Column(name="residue_car_num")
+    private Integer residueCarNum;
+    /**
+     * 车场名称
+     */
+    private String name;
+    /**
+     * 是否允许临时停车
+     */
+    @Column(name="temporary")
+    private int temporary;
+
+    /**
+     * 导航是否收费
+     */
+    @Column(name = "nav_charge_flag")
+    private int navChargeFlag;
+    /**
+     * 导航费用
+     */
+    @Column(name = "nav_cost_num")
+    private BigDecimal navCostNum;
+    /**
+     * 是否允许先离场后收费
+     */
+    @Column(name="departure_charge")
+    private boolean departureCharge;
+
+    /**
+     * 超期是否可进出
+     */
+    @Column(name="timeout_turnover")
+    private boolean timeoutTurnover;
+
+    /**
+     * 计费规则,2:2规则;3:3规则;4:4规则
+     */
+    @Column(name="billing_rule")
+    private Integer billingRule;
+
+    /**
+     * 父级停车场id
+     */
+    private Integer pid;
+
+    /**
+     * 规则2
+     */
+    @NoJson
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "yard_billing_two_id")
+    private YardBillingTwo yardBillingTwo;
+    /**
+     * 规则2
+     */
+    @NoJson
+    @ManyToMany(cascade = {},fetch = FetchType.LAZY)
+    @JoinTable(name = "tb_parking_three",
+            joinColumns = {@JoinColumn(name = "parking_id")},
+            inverseJoinColumns = {@JoinColumn(name = "yard_billing_three_id")})
+    private List<YardBillingThree> yardBillingThreeList;
+
+    @NoJson
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "yard_billing_four_id")
+    private YardBillingFour yardBillingFour;
+    /**
+     * 计费重复方式 2 ：每天，1：一次
+     */
+    private Integer duplication;
+    /**
+     * 安卓蓝牙信号
+     */
+    @Column(name = "bluetooth_signal_android")
+    private Integer bluetoothSignalAndroid;
+    /**
+     * IOS蓝牙信号
+     */
+    @Column(name = "bluetooth_signal_ios")
+    private Integer bluetoothSignalIos;
+
+}

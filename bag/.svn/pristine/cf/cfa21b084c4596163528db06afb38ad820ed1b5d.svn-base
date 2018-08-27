@@ -1,0 +1,71 @@
+package com.zhs.core.util;
+
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * web文件下载
+ * @author psc
+ *
+ */
+public class DownloadFileUtil {
+	
+	/**
+	 * 下载文件方法
+	 * @param filePath 下载文件的路径
+	 * @param outFileName 下载文件保存名称 eq:123.jpg(包括后缀)  不能为空
+	 * @param response
+	 */
+	public static void downloadFile(InputStream inputStream,String outFileName,HttpServletResponse response){
+		 OutputStream toClient = null;
+		try{
+			if(outFileName==null||outFileName.equals("")){
+				outFileName = UUID.randomUUID().toString().replace("-","").substring(0,15);
+			}
+			//开始下载
+			response.setContentType("application/vnd.ms-excel");
+			// 清空response 
+			response.reset(); 
+			// 设置response的Header 
+			if(inputStream == null){
+				PrintWriter out = response.getWriter();
+				out.write("抱歉,未找到下载资源!");
+				out.flush();
+				out.close();
+			}else{
+				response.addHeader("Content-Disposition", "attachment;filename="+new String((outFileName).getBytes("utf-8"),"iso-8859-1"));  //转码之后下载的文件不会出现中文乱码
+			}
+		    //以流的形式下载文件 
+	        toClient = new BufferedOutputStream(response.getOutputStream()); 
+	        byte[] buffer = new byte[1024];
+	        int num=0;
+	        while((num = inputStream.read(buffer, 0, buffer.length))!=-1){
+	        	toClient.write(buffer,0,num);
+	        }
+	        inputStream.close(); 
+	        //下载完成
+	        toClient.flush(); 
+	        toClient.close(); 
+	     }catch(Exception e){
+	        e.printStackTrace(); 
+	     }finally{
+	    	 try {
+				if(inputStream!=null){
+					inputStream.close();
+				 }
+				 if(toClient!=null){
+					 toClient.flush();
+					 toClient.close();
+				 }
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	     }
+	}
+}

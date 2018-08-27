@@ -1,0 +1,42 @@
+<div id="grid-toolbar">
+    <div class="grid-search">
+        <form id="searchForm">
+            <ul class="search-table clearBox">
+                <li class="clearBox">
+                    <div class="select-condition clearBox">
+                        <div class="label">查阅状态:</div>
+                        <div class="select-input">
+                        <!-- <input id="lookFlag" class="f5" type="text" />-->
+                            <select id="consultStatus" class="easyui-combobox" >
+                                <option value="">全部</option>
+                                <option value="0">未查阅</option>
+                                <option value="1">已查阅</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <!--<table class="search-table">-->
+                <!--<tr>-->
+                    <!--<td class="label">查阅状态:</td>-->
+                    <!--<td>-->
+                        <!--&lt;!&ndash; <input id="lookFlag" class="f5" type="text" />&ndash;&gt;-->
+                        <!--<select id="consultStatus" class="easyui-combobox" >-->
+                            <!--<option value="">全部</option>-->
+                            <!--<option value="0">未查阅</option>-->
+                            <!--<option value="1">已查阅</option>-->
+                        <!--</select>-->
+                    <!--</td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        </form>
+    </div>
+    <div class="grid-toolbar">
+    </div>
+</div>
+<table id="grid"></table>
+<div id="dlg" style="display: none;"></div>
+<div id="dlg-buttons">
+    <a id="btnClose" href="javascript:void(0)"  style="width:80px">关闭</a>
+</div>

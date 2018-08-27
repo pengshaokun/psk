@@ -1,0 +1,48 @@
+<div class="form-container">
+    <form id="form1">
+        <input id="id" name="id" type="hidden"/>
+        <ul class="form-table clearBox response-table" style="min-width:35%;margin: 0px auto;">
+            <li class="clearBox">
+                <div class="label title-box float-box">标题:</div>
+                <div class="content-box float-box">
+                    <input name="title" class="f5 easyui-textbox" type="text" data-options="required:true"/>
+                </div>
+            </li>
+            <li class="clearBox">
+                <div class="label title-box float-box">内容:</div>
+                <div class="content-box float-box">
+                    <input name="content" class="f5 easyui-textbox" type="text" data-options="required:true"/>
+                </div>
+            </li>
+            <!--<li class="clearBox">-->
+            <!--<div class="label title-box float-box">创建时间:</div>-->
+            <!--<div class="content-box float-box">-->
+            <!--<input id="createtime" name="createtime" class="f5 easyui-textbox" type="text"/>-->
+            <!--</div>-->
+            <!--</li>-->
+        </ul>
+    </form>
+</div>
+    <!--<div id="send-window" title="系统通知发送">-->
+        <!--<ul id="send" class="clearBox send-float">-->
+            <!--<li class="clearBox">-->
+                <!--<div class="label"><label for="all">所有系统:</label></div>-->
+                <!--<div class="send-check">-->
+                    <!--<input id="all" name="all" class="check-box" type="checkbox" data-options="required:true"/>-->
+                <!--</div>-->
+            <!--</li>-->
+            <!--<li class="clearBox">-->
+                <!--<div class="label"><label for="ios">苹果(IOS):</label></div>-->
+                <!--<div class="send-check">-->
+                    <!--<input id="ios" name="ios" class="check-box" type="checkbox" data-options="required:true"/>-->
+                <!--</div>-->
+            <!--</li>-->
+            <!--<li class="clearBox">-->
+                <!--<div class="label"><label for="android">安卓(Android):</label></div>-->
+                <!--<div class="send-check">-->
+                    <!--<input id="android" name="android" class="check-box" type="checkbox" data-options="required:true"/>-->
+                <!--</div>-->
+            <!--</li>-->
+        <!--</ul>-->
+    <!--</div>-->
+

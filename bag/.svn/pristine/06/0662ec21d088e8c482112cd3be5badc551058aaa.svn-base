@@ -1,0 +1,806 @@
+package com.zhs.core.dao;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
+
+import javax.annotation.Resource;
+
+import com.zhs.core.model.BaseModel;
+import com.zhs.core.model.Constant.ModelStatus;
+import com.zhs.core.util.StringUtil;
+import com.zhs.core.util.search.AbstractQueryForm;
+import com.zhs.core.util.search.paginate.PageAndOrder;
+import com.zhs.core.util.search.paginate.PagedQuery;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.transform.Transformers;
+
+import com.google.common.base.Preconditions;
+
+@SuppressWarnings({ "unchecked", "rawtypes" })
+public class HibernateDao implements IOperations {
+
+	@Resource(name = "sessionFactory")
+	private  SessionFactory sessionFactory;
+
+	protected final Session getCurrentSession() {
+		return sessionFactory.getCurrentSession();
+		/*Session s = (Session) session.get();  
+		 if(s == null) {  
+		    s = sessionFactory.openSession();  
+		    session.set(s);  
+		 }  
+		 return s; */ 
+	}
+	////////////
+	/*public static final ThreadLocal session = new ThreadLocal();  
+	public static void closeSession() throws HibernateException {  
+		Session s = (Session) session.get();  
+	    if(s != null) {  
+		   s.close();  
+	     }  
+	    session.set(null);  
+    }  */
+	public Object findOne(final long id, Class T) {
+		return getCurrentSession().get(T, id);
+	}
+
+	public Object findOne(String hql, Map params) {
+		Query query = getCurrentSession().createQuery(hql);
+		setParams(query,params);
+		query.setFirstResult(0);
+		query.setMaxResults(1);
+		List l = query.list();
+		if (l.size() > 0) {
+			return l.get(0);
+		}
+		return null;
+
+	}
+
+	public List<Object> findAll(Class T) {
+		return getCurrentSession().createQuery(
+				"from " + T.getName() + " where  isDelete=0 ").list();
+
+	}
+
+	public List<Object> find(String hql) {
+		return getCurrentSession().createQuery(hql).list();
+
+	}
+
+	/*
+	 * public List<Object> find(String hql, String[] par) { return
+	 * getCurrentSession().createQuery(hql).list();
+	 * 
+	 * }
+	 */
+	/**
+	 * 查询list,该方法设置param，
+	 *
+	 * @param hql
+	 * @param params
+	 * @return
+	 */
+	public List<Object> find(String hql, Map<String, Object> params) {
+		Query query = getCurrentSession().createQuery(hql);
+		setParams(query,params);
+		return query.list();
+	}
+
+	/**
+	 * 通过sql查询
+	 *
+	 * @param params
+	 * @return
+	 */
+	public List<Object> findBySQL(String sql, Map<String, Object> params) {
+		Query query = getCurrentSession().createSQLQuery(sql).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+		setParams(query,params);
+		return query.list();
+	}
+	/**
+	 *<p>Title: findBySQL</p>
+	 *<p>Description:   sql带参数查询</p>
+	 * @param @param sql
+	 * @param @param t
+	 * @param @param value
+	 * @param @return 设定文件
+	 * @return  List<T> 返回类型
+	 * @throws
+	 */
+	public List<Object> findBySQLMap(String sql, Object ...value) {
+		Query query = getCurrentSession().createSQLQuery(sql).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+		for (int i = 0; i < value.length; i++) {
+			query.setParameter(i, value[i]);
+		}
+		return query.list();
+	}
+	public void create(final Object entity) {
+		Preconditions.checkNotNull(entity);
+		if (entity != null) {
+			BaseModel model = (BaseModel) entity;
+			if (model != null) {
+				if(model.getCreateTime()==null){
+					model.setCreateTime(new Date());
+				}
+				if(model.getUpdateTime()==null){
+					model.setUpdateTime(new Date());
+				}
+			}
+		}
+		getCurrentSession().saveOrUpdate(entity);
+	}
+
+	public Object update(final Object entity) {
+		Preconditions.checkNotNull(entity);
+		if (entity != null) {
+			BaseModel model = (BaseModel) entity;
+			if (model != null) {
+				if (model.getCreateTime() == null) {
+					model.setCreateTime(new Date());
+				}
+				model.setUpdateTime(new Date());
+			}
+		}
+		getCurrentSession().update(entity);
+		return entity;
+		
+	}
+
+	public void delete(final Object entity) {
+		Preconditions.checkNotNull(entity);
+		getCurrentSession().delete(entity);
+	}
+
+	public void deleteById(final long entityId, Class t) {
+		Object entity = findOne(entityId, t);
+		Preconditions.checkState(entity != null);
+		delete(entity);
+	}
+
+	/**
+	 * 判断是否重复
+	 *
+	 * @param id
+	 * @param value
+	 * @return
+	 */
+	public boolean checkDuplicate(Class t, String field, Object id, Object value) {
+		String hql = "select id from " + t.getName() + " where " + field
+				+ "=:value and isDelete !=:detestatus";
+		if (id != null) {
+			hql = hql + " and id!=:id";
+
+		}
+		Query query = getCurrentSession().createQuery(hql);
+		query.setParameter("value", value);
+
+		query.setParameter("detestatus", ModelStatus.DELETE);
+
+		if (id != null) {
+			query.setParameter("id", id);
+		}
+		List l = query.list();
+
+		if (l.size() > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 结果只取一条数据
+	 * @return
+	 */
+	public Object singleFind(String hql) {
+		Query query = getCurrentSession().createQuery(hql);
+		query.setMaxResults(1);
+		query.setFirstResult(0);
+		List l = query.list();
+		if (l != null && l.size() > 0) {
+			return l.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * 分页查询
+	 */
+	public List findListByPaginate(Class t, AbstractQueryForm form,
+								   PageAndOrder pageAndOrder) {
+		String sql = "from  " + t.getName() + " where 1=1 ";
+
+		String countSql = "select count(*) from " + t.getName() + " ";
+
+		if (form != null) {
+			sql = sql + " and " + form.toQueryDescription() +pageAndOrder.getSerchHql()+ " ";
+			countSql = countSql + " where " + form.toQueryDescription()+pageAndOrder.getSerchHql() + " ";
+		}
+		List l = new ArrayList();
+		if(pageAndOrder.getFooter()!=null){
+			pageAndOrder.getFooter().put(PageAndOrder.ClassName, t.getName());
+
+		}
+		if(pageAndOrder.getFooterList()!=null){
+			if(pageAndOrder.isUseFooterVo()&&form != null){
+				System.out.println(form.toQueryDescription());
+				pageAndOrder.setFooterVoWhere(" AND "+form.toQueryDescription()+" ");
+			}
+		}
+		if (form != null) {
+			l = createPagedQuery(sql, countSql, getCurrentSession())
+					.setParamters(form.toMap()).executeQuery(pageAndOrder);
+		} else {
+			l = createPagedQuery(sql, countSql, getCurrentSession())
+					.executeQuery(pageAndOrder);
+		}
+		pageAndOrder.setResult(l);
+		return l;
+
+	}
+
+	/**
+	 * 查询某一条数据，根据属性
+	 *
+	 * @param property
+	 * @param value
+	 * @return
+	 */
+	public Object findOneByProperty(Class t, String property, Object value) {
+		String hql = "from " + t.getName() + " where " + property
+				+ "=:value and isDelete!=:isDeltee";
+		Query query = getCurrentSession().createQuery(hql);
+		query.setParameter("value", value);
+		query.setParameter("isDeltee", ModelStatus.DELETE);
+		query.setMaxResults(1);
+		query.setFirstResult(0);
+
+		List l = query.list();
+		if (l.size() > 0) {
+			return l.get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * 查询某一条数据，根据属性,可查询已删除的
+	 *
+	 * @param property
+	 * @param value
+	 * @return
+	 */
+	public Object findOneByProperty(Class t, String property, Object value,boolean getDelete) {
+		String hql = "from " + t.getName() + " where " + property
+				+ "=:value ";
+		if(!getDelete){
+			hql+= " and isDelete!=:isDeltee";
+		}
+		Query query = getCurrentSession().createQuery(hql);
+		query.setParameter("value", value);
+		if(!getDelete){
+			query.setParameter("isDeltee", ModelStatus.DELETE);
+		}
+		query.setMaxResults(1);
+		query.setFirstResult(0);
+
+		List l = query.list();
+		if (l.size() > 0) {
+			return l.get(0);
+		}
+		return null;
+	}
+
+	public PagedQuery createPagedQuery(String sql, String countQl,
+                                       Session entityManager) {
+		PagedQuery result = new PagedQuery();
+		result.setSession(getCurrentSession());
+		result.setQueryString(sql);
+		result.setCountQl(countQl);
+		return result;
+	}
+
+	/**
+	 * 获取编号
+	 *
+	 * @param propertyName
+	 *            字段名
+	 * @param t
+	 *            实体
+	 * @param createType
+	 *            创建类型，默认0（0自增长，1随机数）
+	 * @param before
+	 *            编号前缀
+	 * @param ifCenterDate
+	 *            中间是否插入时间格式，默认为true （如：19910101）
+	 * @param centerDate
+	 *            时间，默认为当前时间
+	 * @param dateFormat
+	 *            时间转换格式， 默认为 yyyyMMdd
+	 * @param afterNum
+	 *            结尾数的长度，默认3（创建类型为0时： 001 ，为1时： 934）
+	 * @return
+	 */
+	public String getNum(String propertyName, Class t, Integer createType,
+						 String before, Boolean ifCenterDate, Date centerDate,
+						 String dateFormat, Integer afterNum) {
+		afterNum = afterNum == null ? 3 : afterNum;
+		String num = "";
+		String beforeStr = before == null ? "" : before;
+		SimpleDateFormat sdf = new SimpleDateFormat(
+				StringUtil.isEmpty(dateFormat) ? "yyyyMMdd" : dateFormat);
+		String centerStr = "";
+		if (ifCenterDate == null || ifCenterDate) {
+			centerStr = sdf
+					.format(centerDate == null ? new Date() : centerDate);
+		}
+
+		String n = "";
+		for (int i = 0; i < afterNum; i++) {
+			n += "0";
+		}
+
+		num = beforeStr + centerStr;
+
+		DecimalFormat df = new DecimalFormat(n);
+		if (createType != null && createType != 0) {// 随机数
+			// System.out.println("执行随机数");
+			Random random = new Random();
+			int ic = Integer.parseInt("1" + n) - 1;
+			String afterStr = df.format(random.nextInt(ic));
+			int count = 0;
+			while (!checkNum(propertyName, t, num + afterStr)) {// 校验重复
+				afterStr = df.format(random.nextInt(ic));
+				count++;
+				if (count == 100) {// 校验100次，如果全都重复，强行跳出循环，返回空值。
+					break;
+				}
+			}
+			if (count == 100) {
+				return "";
+			}
+			num = num + afterStr;
+		} else {// 自增长
+			// System.out.println("执行自增长");
+			DecimalFormat df1 = new DecimalFormat(n);
+			StringBuffer sb = new StringBuffer("SELECT COUNT(*) FROM "
+					+ t.getName());
+			sb.append(" WHERE " + propertyName + " like :num ");
+			Query query = getCurrentSession().createQuery(sb.toString());
+			query.setParameter("num", beforeStr + centerStr + "%");
+			int i = ((Long) query.uniqueResult()).intValue() + 1;
+			int count = 0;
+			while (!checkNum(propertyName, t, num + df1.format(i))) {// 校验重复
+				i += 1;
+				count++;
+				if (count == 100) {
+					break;
+				}
+			}
+			if (count == 100) {
+				return "";
+			}
+
+			num = num + df1.format(i);
+		}
+
+		return num;
+	}
+
+	/**
+	 * 验证编号是否可用
+	 *
+	 * @param propertyName
+	 *            字段名
+	 * @param t
+	 *            实体
+	 * @param num
+	 *            编号
+	 */
+	public boolean checkNum(String propertyName, Class t, String num) {
+		StringBuffer sb = new StringBuffer("SELECT COUNT(*) FROM "
+				+ t.getName());
+		sb.append(" WHERE " + propertyName + " = :num ");
+		Query query = getCurrentSession().createQuery(sb.toString());
+		query.setParameter("num", num);
+		int i = ((Long) query.uniqueResult()).intValue();
+		if (i == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * 通过HQL分页查询
+	 *
+	 * @param hql
+	 * @param countHql
+	 * @param pageAndOrder
+	 * @return
+	 */
+	public List findListPaginateByHql(String hql, String countHql,
+									  Map<String, Object> paramters, PageAndOrder pageAndOrder) {
+		Query query = getCurrentSession().createQuery(countHql);
+		if (paramters != null) {
+			for (Map.Entry<String, Object> param : paramters.entrySet()) {
+				if(param.getValue() instanceof Collection){
+					query.setParameterList(param.getKey(),(Collection)param.getValue());
+				}else{
+					query.setParameter(param.getKey(), param.getValue());
+				}
+			}
+		}
+		int count = ((Long) query.uniqueResult()).intValue();
+		pageAndOrder.setTotalRows(count);
+
+		query = getCurrentSession().createQuery(hql);
+		if (paramters != null) {
+			for (Map.Entry<String, Object> param : paramters.entrySet()) {
+				if(param.getValue() instanceof Collection){
+					query.setParameterList(param.getKey(),(Collection)param.getValue());
+				}else{
+					query.setParameter(param.getKey(), param.getValue());
+				}
+			}
+		}
+
+		query.setMaxResults(pageAndOrder.getPageSize());
+		query.setFirstResult((pageAndOrder.getCurrentPage() - 1)
+				* pageAndOrder.getPageSize());
+
+		return query.list();
+	}
+
+	/**
+	 * 通过sql分页查询
+	 *
+	 * @param sql
+	 * @param countSql
+	 * @param pageAndOrder
+	 * @return
+	 */
+	public List findListPaginateBySql(String sql, String countSql,
+									  Map<String, Object> paramters, PageAndOrder pageAndOrder) {
+		Query query = null;
+		if(StringUtil.isNotEmpty(countSql)){
+			query = getCurrentSession().createSQLQuery(countSql);
+			if (paramters != null) {
+				for (Map.Entry<String, Object> param : paramters.entrySet()) {
+					query.setParameter(param.getKey(), param.getValue());
+				}
+			}
+			int count = ((java.math.BigInteger) query.uniqueResult()).intValue();
+			pageAndOrder.setTotalRows(count);
+		}
+
+		query = getCurrentSession().createSQLQuery(sql);
+		if (paramters != null) {
+			for (Map.Entry<String, Object> param : paramters.entrySet()) {
+				query.setParameter(param.getKey(), param.getValue());
+			}
+		}
+
+		query.setMaxResults(pageAndOrder.getPageSize());
+		query.setFirstResult((pageAndOrder.getCurrentPage() - 1)
+				* pageAndOrder.getPageSize());
+
+		return query.list();
+	}
+
+	/**
+	 * 通过sql分页查询返回可转换map对象的实体数组
+	 *
+	 * @param sql
+	 * @param countSql
+	 * @param pageAndOrder
+	 * @return
+	 */
+	public List<Map> findListPaginateBySqlToMap(String sql, String countSql,
+												Map<String, Object> paramters, PageAndOrder pageAndOrder) {
+		Query query = null;
+		if(StringUtil.isNotEmpty(countSql)){
+			query = getCurrentSession().createSQLQuery(countSql);
+			if (paramters != null) {
+				for (Map.Entry<String, Object> param : paramters.entrySet()) {
+					query.setParameter(param.getKey(), param.getValue());
+				}
+			}
+			int count = ((java.math.BigInteger) query.uniqueResult()).intValue();
+			pageAndOrder.setTotalRows(count);
+		}
+
+		query = getCurrentSession().createSQLQuery(sql).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+		if (paramters != null) {
+			for (Map.Entry<String, Object> param : paramters.entrySet()) {
+				query.setParameter(param.getKey(), param.getValue());
+			}
+		}
+
+		query.setMaxResults(pageAndOrder.getPageSize());
+		query.setFirstResult((pageAndOrder.getCurrentPage() - 1)
+				* pageAndOrder.getPageSize());
+
+		return query.list();
+	}
+
+	/**
+	 * 查询一条数据，通过id
+	 *
+	 * @param T
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public Object findOne(Class T, Long id) {
+		return getCurrentSession().get(T, id);
+	}
+
+	@Override
+	public Object findOne(Class T, String id) {
+		return getCurrentSession().get(T, id);
+	}
+
+	@Override
+	public List findListByForm(Class T, AbstractQueryForm form,
+							   Map<String, Object> paramters) {
+		String hql = "from  " + T.getName() + " ";
+
+		if (form != null) {
+			hql = hql + " where " + form.toQueryDescription() + " ";
+
+		}
+		return find(hql, paramters);
+
+	}
+
+	@Override
+	public List findListByForm2Sql(String sql, AbstractQueryForm form,
+								   Map<String, Object> paramters) {
+
+		if (form != null) {
+			sql = sql + " where " + form.toQueryDescription() + " ";
+
+		}
+		return findBySQL(sql, paramters);
+	}
+
+	@Override
+	public List find2Size(String hql, Integer size) {
+		if (size != null) {
+			return getCurrentSession().createQuery(hql).setMaxResults(size)
+					.list();
+		}
+
+		return getCurrentSession().createQuery(hql).list();
+	}
+
+	@Override
+	public List find2Size(String hql, Integer size, Map<String, Object> params) {
+		Query query = getCurrentSession().createSQLQuery(hql);
+		setParams(query,params);
+		if (size != null) {
+			query.setMaxResults(size);
+		}
+		return query.list();
+	}
+
+	@Override
+	public List findListByIds(Class t, AbstractQueryForm form,
+							  PageAndOrder pageAndOrder, String ids) {
+		String sql = "from  " + t.getName() + " WHERE 1=1 AND id IN (" + ids
+				+ ") AND ";
+		if (form != null) {
+			sql = sql + form.toQueryDescription() + " ";
+		}
+		String countSql = "select count(*) " + sql;
+		List l = new ArrayList();
+		if (form != null) {
+			l = createPagedQuery(sql, countSql, getCurrentSession())
+					.setParamters(form.toMap()).executeQuery(pageAndOrder);
+		} else {
+			l = createPagedQuery(sql, countSql, getCurrentSession())
+					.executeQuery(pageAndOrder);
+		}
+		pageAndOrder.setResult(l);
+		return l;
+	}
+
+
+	@Override
+	public HashMap<String, BigDecimal> sumValue(String[] sumVals, Class cla,String idKey,Long idVal) {
+		String sums = "";
+		for(String s:sumVals){
+			sums+=(StringUtil.isEmpty(sums)?"":",")+"SUM("+s+")";
+		}
+		String hql = "SELECT "+sums+",1 FROM " + cla.getName() +
+				" WHERE 1=1 AND "+idKey+"="+idVal;
+//		System.out.println("sql:"+hql);
+		Query query = getCurrentSession().createQuery(hql);
+		List<Object[]>  result = query.list();
+		HashMap<String,BigDecimal> map = new HashMap<String,BigDecimal>();
+		if(result!=null&&result.size()>0){
+			Object[] resu = result.get(0);
+			int i = 0;
+			for (String s:sumVals) {
+				map.put(s, resu[i]==null?BigDecimal.ZERO:new BigDecimal(resu[i].toString()));
+				i++;
+			}
+		}
+		return map;
+	}
+
+	@Override
+	public List findListByFormPaginateSql(String sql, AbstractQueryForm form,PageAndOrder pageAndOrder) {
+		if (form != null) {
+			sql = sql + " where " + form.toQueryDescription() + " ";
+		}
+		String countSql= "SELECT count(0) "+sql.substring(sql.toLowerCase().indexOf("from"));
+		pageAndOrder.setTotalRows( Integer.parseInt(getCurrentSession().createSQLQuery(countSql).uniqueResult().toString()));
+		Query query = getCurrentSession().createSQLQuery(sql).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+		query.setMaxResults(pageAndOrder.getPageSize());
+		query.setFirstResult((pageAndOrder.getCurrentPage() - 1)
+				* pageAndOrder.getPageSize());
+		return query.list();
+	}
+	public void updateSql(String sql) {
+		Query query =getCurrentSession().createSQLQuery(sql);
+		query.executeUpdate();
+	}
+	public List findListByHql(String hql, Object ...obj) {
+		Query query = getCurrentSession().createQuery(hql);
+		for (int i = 0; i < obj.length; i++) {
+			query.setParameter(i, obj[i]);
+		}
+		return query.list();
+	}
+
+	@Override
+	public Object findOneBySql(String sql){
+		return getCurrentSession().createSQLQuery(sql).uniqueResult();
+	}
+
+	/**
+	 * 查询 sql 返回非持久化对象
+	 * @param sql
+	 * @param params
+	 * @param T
+	 * @return
+	 */
+	@Override
+	public Object findOneBySql(String sql, Map<String, Object> params, Class T) {
+		Query query = getCurrentSession().createSQLQuery(sql).setResultTransformer(Transformers.aliasToBean(T));
+		setParams(query,params);
+		return query.uniqueResult();
+	}
+
+	@Override
+	public List findBySql(String sql, Map<String, Object> params, Class T) {
+		Query query = getCurrentSession().createSQLQuery(sql).setResultTransformer(Transformers.aliasToBean(T));
+		setParams(query,params);
+		return query.list();
+	}
+
+	@Override
+	public Object findOneByToken(Class T, String token) {
+		String hql = "from "+T.getName()+" where token=:token and isDelete=0";
+		Query query = getCurrentSession().createQuery(hql).setParameter("token",token);
+		return query.uniqueResult();
+	}
+
+	/**
+	 * sql 分页
+	 * @param sql
+	 * @param params
+	 * @param pageAndOrder
+	 * @param T
+	 * @return
+	 */
+	public List findListByPaginateSql(String sql,Map<String, Object> params,PageAndOrder pageAndOrder,Class T){
+		String countSql= "SELECT count(0) "+sql.substring(sql.toLowerCase().indexOf("from"));
+		Query query = getCurrentSession().createSQLQuery(sql);
+		Query queryCount = getCurrentSession().createSQLQuery(countSql);
+		if(T != null){
+			query.setResultTransformer(Transformers.aliasToBean(T));
+		} else {
+			query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+		}
+		setParams(query,params);
+		setParams(queryCount,params);
+		pageAndOrder.setTotalRows( Integer.parseInt(queryCount.uniqueResult().toString()));
+		query.setMaxResults(pageAndOrder.getPageSize());
+		query.setFirstResult((pageAndOrder.getCurrentPage() - 1) * pageAndOrder.getPageSize());
+		List list = query.list();
+		pageAndOrder.setResult(list);
+		return list;
+	}
+
+	private void setParams(Query query, Map<String, Object> params){
+		if (params != null) {
+			Iterator<Entry<String, Object>> it = params.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry<String, Object> entry = it.next();
+				Object val = entry.getValue();
+				if(val instanceof Collection){
+					query.setParameterList(entry.getKey(),(Collection) val);
+				}else if(val instanceof Object[]){
+					query.setParameterList(entry.getKey(),(Object[]) val);
+				}else{
+					query.setParameter(entry.getKey(), val);
+				}
+			}
+		}
+	}
+
+	@Override
+	public int executeUpdate(String sql,Object... parameters) {
+		if(StringUtils.isNoneBlank(sql)){
+			SQLQuery query = getCurrentSession().createSQLQuery(sql);
+			for (int i = 0; i < parameters.length; i++) {
+				query.setParameter(i, parameters[i]);
+				/*if(parameters[i] instanceof String[]){
+				}else if(parameters[i] instanceof List){
+					query.setpa
+				}*/
+			}
+			return query.executeUpdate();
+		}
+		return 0;
+	}
+	@Override
+	public int executeUpdate(String sql, Map<String, Object> parameters) {
+		Object value;
+		if(StringUtils.isNoneBlank(sql)){
+			SQLQuery query = getCurrentSession().createSQLQuery(sql);
+			for (String name : parameters.keySet()) {
+				value = parameters.get(name);
+				if(value instanceof List){
+					query.setParameterList(name, (Collection) value);
+				}else{
+					query.setParameter(name, value);
+				}
+			}
+			return query.executeUpdate();
+		}
+		return 0;
+	}
+
+    @Override
+	public boolean batchCreate(List list) {
+        Session session = getCurrentSession();
+		for (int i=0;i< list.size();i++) {
+            session.save(list.get(i));
+            if (i % 100 == 0) {
+                session.flush();
+                session.clear();
+            }
+        }
+        return true;
+	}
+    @Override
+	public void batchUpdate(List list) {
+		Session session = getCurrentSession();
+		for (int i=0;i< list.size();i++) {
+			session.update(list.get(i));
+			if (i % 100 == 0) {
+				session.flush();
+				session.clear();
+			}
+		}
+	}
+}

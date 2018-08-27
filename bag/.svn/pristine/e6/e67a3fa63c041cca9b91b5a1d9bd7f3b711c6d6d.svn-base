@@ -1,0 +1,70 @@
+<div class="form-container">
+    <form id="form1">
+        <input id="hidMenuId" name="menuId" type="hidden" />
+        <input id="hidLevel" name="level" type="hidden" value="0"/>
+        <input id="hidParentId" name="parentId" type="hidden" value="0"/>
+        <input id="hidParentLevel" name="parentLevel" type="hidden" value="0"/>
+        <input id="hidParentPath" name="parentPath" type="hidden"/>
+        <ul class="form-table  clearBox response-table" style="min-width:35%;margin: 0px auto;">
+            <li class="clearBox">
+                <div class="label title-box float-box">编号:</div>
+                <div class="content-box float-box"><input id="menuNo" name="menuNo" class="f5 easyui-textbox" type="text" /></div>
+            </li>
+            <li class="clearBox">
+                <div class="label title-box float-box">名称:</div>
+                <div class="content-box float-box"><input id="menuName" name="menuName" class="f5 easyui-textbox" type="text" data-options="required:true"/></div>
+            </li>
+            <li class="clearBox">
+                <div class="label title-box float-box">标题:</div>
+                <div class="content-box float-box"><input id="caption" name="caption" class="f5 easyui-textbox" type="text" /></div>
+            </li>
+            <li class="clearBox">
+                <div class="label title-box float-box">图标样式:</div>
+                <div class="content-box float-box"><input id="iconCls" name="iconCls" class="f5 easyui-textbox" type="text" /></div>
+            </li>
+            <li class="clearBox">
+                <div class="label title-box float-box">排序号:</div>
+                <div class="content-box float-box"><input id="sortNo" name="sortNo" class="f5 easyui-textbox" type="text" data-options="required:true"/></div>
+            </li>
+            <li class="clearBox">
+                <div class="label title-box float-box">url:</div>
+                <div class="content-box float-box"><input id="url" name="url" class="f5 easyui-textbox" type="text" /></div>
+            </li>
+            <li class="clearBox">
+                <div class="label title-box float-box">备注:</div>
+                <div class="content-box float-box"><input id="comment" name="comment" class="f5 easyui-textbox" type="text" /></div>
+            </li>
+        </ul>
+
+        <!--<table class="form-table" style="min-width:550px;">-->
+            <!--<tr>-->
+                <!--<td class="label">编号:</td>-->
+                <!--<td><input name="menuNo" class="f5 easyui-textbox" type="text" /></td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="label">名称:</td>-->
+                <!--<td><input name="menuName" class="f5 easyui-textbox" type="text" data-options="required:true"/></td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="label">标题:</td>-->
+                <!--<td><input name="caption" class="f5 easyui-textbox" type="text" /></td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="label">图标样式:</td>-->
+                <!--<td><input name="iconCls" class="f5 easyui-textbox" type="text" /></td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="label">排序号:</td>-->
+                <!--<td><input name="sortNo" class="f5 easyui-textbox" type="text" data-options="required:true"/></td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="label">url:</td>-->
+                <!--<td><input name="url" class="f5 easyui-textbox" type="text" /></td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="label">备注:</td>-->
+                <!--<td><input name="comment" class="f5 easyui-textbox" type="text" /></td>-->
+            <!--</tr>-->
+        <!--</table>-->
+    </form>
+</div>

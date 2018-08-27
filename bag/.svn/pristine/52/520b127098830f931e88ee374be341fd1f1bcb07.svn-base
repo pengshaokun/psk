@@ -1,0 +1,89 @@
+<div class="form-container">
+    <form id="headerForm">
+        <input name="userId" type="hidden"/>
+        <input name="accountId" type="hidden"/>
+        <input name="account" type="hidden"/>
+        <div id="form1">
+        <ul class="form-table clearBox response-table" style="min-width:39%;margin: 0px auto;">
+            <li class="clearBox">
+                <div class="label title-box float-box">姓名:</div>
+                <div class="content-box float-box"><input name="fullName" class="f4 easyui-textbox" type="text" data-options="required:true"/>
+                </div>
+                <div class="label title-box float-box">性别:</div>
+                <div class="content-box float-box">
+                    <label><input name="gender" type="radio" value="1" checked="checked"/><span></span>男</label>
+                    <label><input name="gender" type="radio" value="2"/><span></span>女</label>
+                </div>
+            </li>
+            <li class="clearBox">
+                <div class="label title-box float-box">生日:</div>
+                <div class="content-box float-box">
+                    <input id="birthDate" name="birthDate" class="f4 easyui-datebox" type="text"/>
+                </div>
+                <div class="label title-box float-box">身份证号码:</div>
+                <div class="content-box float-box">
+                    <input id="selfIdentityCardNo" name="identityCardNo" class="f4 easyui-textbox" type="text"/>
+                </div>
+            </li>
+            <li class="clearBox">
+                <div class="label title-box float-box">手机号码:</div>
+                <div class="content-box float-box">
+                    <input id="selfMobileNumber" name="mobileNumber" class="f4 easyui-numberbox" type="text"
+                           data-options="required:true"/>
+                </div>
+                <div class="label title-box float-box">电子邮箱:</div>
+                <div class="content-box float-box">
+                    <input name="email" class="f4 easyui-textbox" type="text"/>
+                </div>
+            </li>
+            <li class="clearBox note-box">
+                <div class="label title-box note-title float-box">备注:</div>
+                <div class="content-box float-box">
+                    <input name="comment" class="easyui-textbox" multiline="true" type="text"
+                           style="width: 520px; height: 120px"/>
+                </div>
+            </li>
+        </ul>
+        </div>
+        <!--<table class="form-table" style="min-width: 675px;">-->
+            <!--<tr>-->
+                <!--<td class="label">姓名:</td>-->
+                <!--<td><input name="fullName" class="f4 easyui-textbox" type="text" data-options="required:true"/>-->
+                <!--</td>-->
+                <!--<td class="label">性别:</td>-->
+                <!--<td>-->
+                    <!--<label><input name="gender" type="radio" value="1" checked="checked"/><span></span>男</label>-->
+                    <!--<label><input name="gender" type="radio" value="2"/><span></span>女</label>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="label">生日:</td>-->
+                <!--<td>-->
+                    <!--<input name="birthDate" class="f4 easyui-datebox" type="text"/>-->
+                <!--</td>-->
+                <!--<td class="label">身份证号码:</td>-->
+                <!--<td>-->
+                    <!--<input id="selfIdentityCardNo" name="identityCardNo" class="f4 easyui-textbox" type="text"/>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="label">手机号码:</td>-->
+                <!--<td>-->
+                    <!--<input id="selfMobileNumber" name="mobileNumber" class="f4 easyui-numberbox" type="text"-->
+                           <!--data-options="required:true"/>-->
+                <!--</td>-->
+                <!--<td class="label">电子邮箱:</td>-->
+                <!--<td>-->
+                    <!--<input name="email" class="f4 easyui-textbox" type="text"/>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="label">备注:</td>-->
+                <!--<td colspan="3">-->
+                    <!--<input name="comment" class="easyui-textbox" multiline="true" type="text"-->
+                                       <!--style="width: 520px; height: 120px"/>-->
+                <!--</td>-->
+            <!--</tr>-->
+        <!--</table>-->
+    </form>
+</div>

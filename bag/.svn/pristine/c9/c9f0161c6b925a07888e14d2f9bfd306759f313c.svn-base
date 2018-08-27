@@ -1,0 +1,37 @@
+package com.zhs.common.constant;
+
+import com.zhs.core.model.BaseEnum;
+
+/**
+ * Created with IntelliJ IDEA
+ *
+ * @User:ZHS-CZJiang
+ * @Date:2018/5/23
+ */
+public enum FreeCarType implements BaseEnum {
+
+	perpetual("永久"),
+    longTime("包月");
+
+    private String desc;
+
+    FreeCarType(String desc) {
+        this.desc = desc;
+    }
+
+    @Override
+    public String getDesc() {
+        return desc;
+    }
+    
+    public static FreeCarType isValue(String value) {
+    	FreeCarType fc;
+    	try {
+			fc=FreeCarType.valueOf(value);
+		} catch (Exception e) {
+			return null;
+		}
+    	return fc;
+    }
+    
+}

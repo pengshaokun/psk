@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.AboutUsMapper">
+    <resultMap id="aboutUsMap" type="com.zhskg.bag.entity.AboutUs">
+        <id column="about_id" jdbcType="INTEGER" property="aboutId" />
+        <result column="link_phone" jdbcType="VARCHAR" property="linkPhone" />
+        <result column="website_url" jdbcType="VARCHAR" property="websiteUrl" />
+        <result column="android_download" jdbcType="VARCHAR" property="androidDownload" />
+        <result column="ios_download" jdbcType="VARCHAR" property="iosDownload" />
+        <result column="android_version" jdbcType="VARCHAR" property="androidVersion" />
+        <result column="ios_version" jdbcType="VARCHAR" property="iosVersion" />
+        <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    </resultMap>
+    <!--数据库字段-->
+    <sql id="columns">
+        about_id,
+        link_phone,
+        website_url,
+        android_download,
+        ios_download,
+        android_version,
+        ios_version,
+        company_name
+    </sql>
+    <!--根据主键查询-->
+    <select id="get" resultMap="aboutUsMap" parameterType="java.lang.Integer">
+        SELECT  
+        <include refid="columns"/> 
+        FROM ts_about_us 
+        WHERE about_id = #{aboutId,jdbcType=INTEGER}
+    </select>
+    <select id="getDetail" resultMap="aboutUsMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_about_us LIMIT 0,1
+    </select>
+    <!--根据主键假删除-->
+    <delete id="removeById" parameterType="java.lang.Integer">
+        DELETE FROM ts_about_us
+        WHERE about_id = #{aboutId,jdbcType=INTEGER} 
+    </delete>
+
+    <!--添加记录并返回主键(主键必须是自增列)-->
+    <insert id="addAndId" parameterType="com.zhskg.bag.entity.AboutUs">
+        INSERT INTO ts_about_us ( 
+        <include refid="columns"/>
+        ) VALUES (
+        #{aboutId, jdbcType=INTEGER}, 
+        #{linkPhone, jdbcType=VARCHAR}, 
+        #{websiteUrl, jdbcType=VARCHAR}, 
+        #{androidDownload, jdbcType=VARCHAR}, 
+        #{iosDownload, jdbcType=VARCHAR}, 
+        #{androidVersion, jdbcType=VARCHAR}, 
+        #{iosVersion, jdbcType=VARCHAR}, 
+        #{companyName, jdbcType=VARCHAR}
+        )
+        <selectKey order="AFTER" keyProperty="aboutId" resultType="java.lang.Integer"> SELECT @@IDENTITY as aboutId </selectKey>
+    </insert>
+
+    <!--根据主键修改-->
+	<update id="updateById" parameterType="com.zhskg.bag.entity.AboutUs">
+		UPDATE ts_about_us 
+        <trim prefix="set" suffixOverrides=","> 
+            <if test="linkPhone != null">link_phone = #{linkPhone, jdbcType=VARCHAR}, </if>
+            <if test="websiteUrl != null">website_url = #{websiteUrl, jdbcType=VARCHAR}, </if>
+            <if test="androidDownload != null">android_download = #{androidDownload, jdbcType=VARCHAR}, </if>
+            <if test="iosDownload != null">ios_download = #{iosDownload, jdbcType=VARCHAR}, </if>
+            <if test="androidVersion != null">android_version = #{androidVersion, jdbcType=VARCHAR}, </if>
+            <if test="iosVersion != null">ios_version = #{iosVersion, jdbcType=VARCHAR}, </if>
+            <if test="companyName != null">company_name = #{companyName, jdbcType=VARCHAR}</if> 
+        </trim>
+        WHERE about_id = #{aboutId,jdbcType=INTEGER}
+	</update>
+    <!--根据条件查询-->
+    <select id="getList" resultMap="aboutUsMap" parameterType="map">
+        SELECT 
+        <include refid="columns"/>
+        FROM ts_about_us
+        <where>
+            <if test="aboutId!=null and aboutId!=''">
+                AND about_id=#{aboutId,jdbcType=INTEGER}
+            </if>
+            <if test="linkPhone!=null and linkPhone!=''">
+                AND link_phone=#{linkPhone,jdbcType=VARCHAR}
+            </if>
+            <if test="websiteUrl!=null and websiteUrl!=''">
+                AND website_url LIKE '%${websiteUrl}%'
+            </if>
+            <if test="androidDownload!=null and androidDownload!=''">
+                AND android_download LIKE '%${androidDownload}%'
+            </if>
+            <if test="iosDownload!=null and iosDownload!=''">
+                AND ios_download LIKE '%${iosDownload}%'
+            </if>
+            <if test="androidVersion!=null and androidVersion!=''">
+                AND android_version LIKE '%${androidVersion}%'
+            </if>
+            <if test="iosVersion!=null and iosVersion!=''">
+                AND ios_version LIKE '%${iosVersion}%'
+            </if>
+            <if test="companyName!=null and companyName!=''">
+                AND company_name LIKE '%${companyName}%'
+            </if>
+        </where>
+    </select>
+
+</mapper>

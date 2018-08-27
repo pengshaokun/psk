@@ -1,0 +1,57 @@
+<div id="grid-toolbar">
+    <div class="grid-search">
+        <form id="searchForm">
+            <ul class="search-table clearBox">
+                <li class="clearBox">
+                    <div class="select-condition clearBox">
+                        <div class="label">过期标记:</div>
+                        <div clas="select-input">
+                            <select class="easyui-combobox" style="width: 100px;" name="overdueFlag">
+                                <option value="">全部</option>
+                                <option value="0">正常</option>
+                                <option value="1">会过期</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="select-condition clearBox">
+                        <div class="label">路径:</div>
+                        <div class="select-input">
+                            <input name="filePath" class="f6 easyui-textbox" type="text"/>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <!--<table class="search-table">-->
+                <!--<tr>-->
+                    <!--<td class="label">过期标记:</td>-->
+                    <!--<td>-->
+                        <!--<select class="easyui-combobox" style="width: 100px;" name="overdueFlag">-->
+                            <!--<option value="">全部</option>-->
+                            <!--<option value="0">正常</option>-->
+                            <!--<option value="1">会过期</option>-->
+                        <!--</select>-->
+                    <!--</td>-->
+                    <!--<td class="label">路径:</td>-->
+                    <!--<td>-->
+                        <!--<input name="filePath" class="f6 easyui-textbox" type="text"/>-->
+                    <!--</td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        </form>
+        <div class="search-toolbar">
+            <a id="btnSearch" href="javascript:void(0)" class="c1" style="width:80px">查询</a>
+            <a id="btnClear" href="javascript:void(0)" class="c4" style="width:80px">清空</a>
+        </div>
+    </div>
+    <div class="grid-toolbar">
+        <a id="btnClearFile" href="javascript:void(0);" class="c1">清理过期文件</a>
+    </div>
+</div>
+<table id="grid"></table>
+<!--
+<div id="dlg" style="display: none;"></div>
+<div id="dlg-buttons">
+    <a id="btnSave" href="javascript:void(0)"  style="width:80px">保存</a>
+    <a id="btnCancel" href="javascript:void(0)" style="width:80px">取消</a>
+</div>-->

@@ -1,0 +1,49 @@
+package com.zhs.common.model.tenement;
+
+import com.zhs.core.model.BaseModel;
+import lombok.Data;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+/**
+ * @author ZHS-CZJiang
+ * @date 2018-07-06
+ * 区域
+ */
+@Data
+@Entity
+@Table(name = "tb_parking_area")
+public class Area extends BaseModel {
+
+    /**
+     * 远程服务器存储的 id
+     */
+    @Column(name = "area_id")
+    private Integer areaId;
+
+    /**
+     * 车场 id
+     */
+    @Column(name = "parking_id")
+    private Integer parkingId;
+
+    /**
+     * 区域名称
+     */
+    private String name;
+
+    /**
+     * 车位描述
+     */
+    @Column(name = "area_describe")
+    private String areaDescribe;
+
+    /**
+     * 区域类别 0 普通，1 入口，2 出口 3 进口，4 电梯口
+     */
+    private int category;
+
+}
+

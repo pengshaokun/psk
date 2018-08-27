@@ -1,0 +1,23 @@
+<div id="grid-toolbar">
+    <div class="grid-search">
+        <form id="searchForm">
+            <ul class="search-table clearBox">
+                <li class="clearBox">
+                    <div class="select-condition clearBox">
+                        <div class="label">手机号码：</div>
+                        <div class="select-input"><input name="phone" class="f1 easyui-textbox" data-options="prompt:'请输入手机号码'" type="text"/></div>
+                    </div>
+                </li>
+            </ul>
+        </form>
+        <div class="search-toolbar">
+            <a id="btnSearch" href="javascript:void(0)" class="c1" style="width:80px">查询</a>
+        </div>
+    </div>
+</div>
+<table id="grid"></table>
+<div id="dlg" style="display: none;"></div>
+<div id="dlg-buttons">
+    <a id="btnSave" href="javascript:void(0)" style="width:80px">保存</a>
+    <a id="btnCancel" href="javascript:void(0)" style="width:80px">取消</a>
+</div>

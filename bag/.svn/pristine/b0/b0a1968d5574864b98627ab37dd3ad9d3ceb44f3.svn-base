@@ -1,0 +1,11 @@
+package com.zhs.core.util.jpush;
+
+public class JPushConfig {
+
+    // 每个应用都对应一个appkey
+    public static final String APP_KEY = "";
+
+    // 每个应用都对应一个masterSecret
+    public static final String MASTER_SECRET = "";
+    
+}

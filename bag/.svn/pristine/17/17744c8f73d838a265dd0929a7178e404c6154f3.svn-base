@@ -1,0 +1,76 @@
+package com.zhs.core.util.zip;
+
+import java.io.File;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * 文件删除工具类
+ * 
+ * @author PSC
+ *
+ */
+public class DeleteFileUtil {
+	/**
+	 * 删除文件或文件夹(包括文件夹中的子文件)
+	 * 
+	 * @param delpath
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean deleteAllFile(String delpath) {
+		File file = new File(delpath);
+		if (!file.exists()) {
+			return false;
+		}
+		if (!file.isDirectory()) {
+			file.delete();
+		} else if (file.isDirectory()) {
+			String[] filelist = file.list();
+			for (int i = 0; i < filelist.length; i++) {
+				File delfile = new File(delpath + "\\" + filelist[i]);
+				if (!delfile.isDirectory()) {
+					delfile.delete();
+				} else if (delfile.isDirectory()) {
+					deleteAllFile(delpath + "\\" + filelist[i]);
+				}
+			}
+			file.delete();
+		}
+		return true;
+	}
+
+	/**
+	 * 删除指定的文件或文件夹<br/>
+	 * 如果传入的是文件夹路径,并且文件夹下面有子文件,删除失败
+	 * 
+	 * @param delpath
+	 * @return
+	 */
+	public static boolean deleteFile(String delPath) {
+		if (StringUtils.isBlank(delPath)) {
+			return false;
+		}
+		File file = new File(delPath);
+		if (!file.exists()) {
+			return false;
+		}
+		if (file.isDirectory() && file.list().length > 0) {
+			return false;
+		}
+		file.delete();
+		return true;
+	}
+	/**
+	 * 删除指定的文件或文件夹<br/>
+	 * 如果传入的是文件夹路径,并且文件夹下面有子文件,删除失败
+	 * @param delpath
+	 * @return
+	 */
+	public static void deleteFiles(List<File> downloadFiles) {
+		for (File file : downloadFiles) {
+			deleteFile(file.getPath());
+		}
+	}
+}

@@ -1,0 +1,72 @@
+/**
+	翻页查询超过10000条数据的话，可能需要设置该参数
+PUT _settings
+{
+    "index": {
+        "max_result_window": "10000000"
+    }
+}
+*/	
+
+POST /bagdata_db/bagdata_tb
+{
+		"settings": {
+		     "number_of_shards": 12
+		  },
+		"mappings": {
+			"bagdata_tb": {
+				"properties": {
+					"tableId": {"type": "integer","store": true,"index": true},
+					"clientId": {"type": "keyword","store": true,"index": true},
+					"factory": {"type": "text","store": true,"index": false},
+					"ip": {"type": "text","store": true,"index": false},
+					"port": {"type": "integer","store": true,"index": true},
+					"stockId": {"type": "keyword","store": true,"index": true},
+					"lon": {"type": "integer","store": true,"index": true},
+					"lat": {"type": "integer","store": true,"index": true},
+					"alarmFlag": {"type": "integer","store": true,"index": true},
+					"faultFlag": {"type": "integer","store": true,"index": true},
+					"af": {"type": "most_fields","store": true,"index": true},
+					"wa": {"type": "most_fields","store": true,"index": true},
+					"data": {"type": "text","store": true,"index": false},
+					"createTime": {"type": "long","store": true,"index": true}
+				}
+			}
+		}
+	}
+
+	POST /bg_stocks/bg_stock
+    	{
+    	"settings": {
+		     "number_of_shards": 9
+		  },
+    		"mappings": {
+    			"bg_stock": {
+    				"properties": {
+    					"productId": {"type": "keyword","store": true,"index": true},
+    					"clientId": {"type": "keyword","store": true,"index": true},
+    					"productName": {"type": "text","store": true,"index": true},
+    					"productSpecific": {"type": "text","store": true,"index": true},
+    					"produceTime": {"type": "long","store": true,"index": true},
+    					"productPattern": {"type": "keyword","store": true,"index": true},
+    					"productBrand": {"type": "text","store": true,"index": true},
+    					"productFactory": {"type": "text","store": true,"index": true},
+    					"productCategory": {"type": "keyword","store": true,"index": true},
+    					"stockState": {"type": "keyword","store": true,"index": true},
+    					"amount": {"type": "integer","store": true,"index": true},
+    					"qualityState": {"type": "keyword","store": true,"index": true},
+    					"createTime": {"type": "long","store": true,"index": true},
+    					"createId": {"type": "long","store": true,"index": true},
+    					"createName": {"type": "keyword","store": true,"index": true},
+    					"modifyTime": {"type": "long","store": true,"index": true},
+    					"modifyId": {"type": "long","store": true,"index": true},
+    					"productCode": {"type": "keyword","store": true,"index": true},
+    					"serialNumber": {"type": "text","store": true,"index": true},
+    					"productProperty": {"type": "text","store": true,"index": true},
+    					"productPropertyName": {"type": "text","store": true,"index": true},
+    					"mac": {"type": "keyword","store": true,"index": true},
+    					"pwd": {"type": "keyword","store": true,"index": true}
+    				}
+    			}
+    		}
+    	}

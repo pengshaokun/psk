@@ -1,0 +1,26 @@
+package com.zhs.common.constant;
+
+import com.zhs.core.model.BaseEnum;
+
+/**
+ * Created with IntelliJ IDEA
+ *
+ * @User:ZHS-CZJiang
+ * @Date:2018/5/23
+ */
+public enum MonthlyStatus implements BaseEnum {
+
+    normal("正常"),
+    cancel ("取消");
+
+    private String desc;
+
+    MonthlyStatus(String desc) {
+        this.desc = desc;
+    }
+
+    @Override
+    public String getDesc() {
+        return desc;
+    }
+}

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.ThresholdMapper">
+    <resultMap id="thresholdMap" type="com.zhskg.bag.entity.Threshold">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="client_id" jdbcType="VARCHAR" property="clientId"/>
+        <result column="battery_power" jdbcType="DOUBLE" property="batteryPower"/>
+        <result column="battery_voltage" jdbcType="DOUBLE" property="batteryVoltage"/>
+        <result column="battery_current" jdbcType="DOUBLE" property="batteryCurrent"/>
+        <result column="battery_temperature" jdbcType="DOUBLE" property="batteryTemperature"/>
+        <result column="safe_distance" jdbcType="DOUBLE" property="safeDistance"/>
+        <result column="tracking_distance" jdbcType="DOUBLE" property="trackingDistance"/>
+        <result column="obstacle_distance" jdbcType="DOUBLE" property="obstacleDistance"/>
+        <result column="ray_threshold" jdbcType="DOUBLE" property="rayThreshold"/>
+        <result column="speed_threshold" jdbcType="DOUBLE" property="speedThreshold"/>
+        <result column="weight_limit" jdbcType="DOUBLE" property="weightLimit"/>
+        <result column="charge_num" jdbcType="DOUBLE" property="chargeNum"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="create_on" jdbcType="BIGINT" property="createOn"/>
+        <result column="modify_time" jdbcType="BIGINT" property="modifyTime"/>
+        <result column="modify_on" jdbcType="BIGINT" property="modifyOn"/>
+        <result column="set_flag" jdbcType="INTEGER" property="setFlag"/>
+    </resultMap>
+
+    <!--数据库字段-->
+    <sql id="columns">
+        id,
+        client_id,
+        battery_power,
+        battery_current,
+        battery_temperature,
+        battery_voltage,
+        safe_distance,
+        tracking_distance,
+        obstacle_distance,
+        ray_threshold,
+        speed_threshold,
+        weight_limit,
+        charge_num,
+        create_time,
+        create_on,
+        modify_time,
+        modify_on,
+        set_flag
+    </sql>
+   <!-- <sql id="sqlFilter">
+        <where>
+            <if test="id!=null and id!=0">
+                AND id=#{id,jdbcType=INTEGER}
+            </if>
+            <if test="clientId!=null and clientId!=''">
+                AND client_id=#{clientId,jdbcType=VARCHAR}
+            </if>
+            <if test="chargeNum!=null and chargeNum!=0">
+                AND charge_num=#{chargeNum,jdbcType=INTEGER}
+            </if>
+            <if test="setFlag!=null">
+                AND set_flag=#{setFlag,jdbcType=INTEGER}
+            </if>
+            <if test="batteryPower!=null and batteryPower!=0.00">
+                AND battery_power=#{batteryPower,jdbcType=DOUBLE}
+            </if>
+            <if test="batteryVoltage!=null and batteryVoltage!=0.00">
+                AND battery_voltage=#{batteryVoltage,jdbcType=DOUBLE}
+            </if>
+            <if test="batteryTemperature!=null and batteryTemperature!=0.00">
+                AND battery_temperature=#{batteryTemperature,jdbcType=DOUBLE}
+            </if>
+            <if test="batteryCurrent!=null and batteryCurrent!=0.00">
+                AND battery_current=#{batteryCurrent,jdbcType=DOUBLE}
+            </if>
+            <if test="safeDistance!=null and safeDistance!=0.00">
+                AND safe_distance=#{safeDistance,jdbcType=DOUBLE}
+            </if>
+            <if test="trackingDistance!=null and trackingDistance!=0.00">
+                AND tracking_distance=#{trackingDistance,jdbcType=DOUBLE}
+            </if>
+            <if test="obstacleDistance!=null and obstacleDistance!=0.00">
+                AND obstacle_distance=#{obstacleDistance,jdbcType=DOUBLE}
+            </if>
+            <if test="rayThreshold!=null and rayThreshold!=0.00">
+                AND ray_threshold=#{rayThreshold,jdbcType=DOUBLE}
+            </if>
+            <if test="speedThreshold!=null and speedThreshold!=0.00">
+                AND speed_threshold=#{speedThreshold,jdbcType=DOUBLE}
+            </if>
+            <if test="weightLimit!=null and weightLimit!=0.00">
+                AND weight_limit=#{weightLimit,jdbcType=DOUBLE}
+            </if>
+        </where>
+    </sql>-->
+
+    <sql id="sqlFilter">
+        <where>
+            <if test="id!=null and id!=0">
+                AND id=#{id,jdbcType=INTEGER}
+            </if>
+            <if test="clientId!=null and clientId!=''">
+                AND client_id=#{clientId,jdbcType=VARCHAR}
+            </if>
+            <if test="setFlag!=null and setFlag==2">
+                AND set_flag IN (0,1)
+            </if>
+            <if test="setFlag!=null and setFlag!=2 ">
+                AND set_flag=#{setFlag,jdbcType=INTEGER}
+            </if>
+
+        </where>
+    </sql>
+
+
+    <!--根据主键查询-->
+    <select id="get" resultMap="thresholdMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="columns"/>
+        FROM tp_threshold
+        WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <!--根据条件删除-->
+    <delete id="remove" parameterType="map">
+        DELETE FROM tp_threshold
+        <include refid="sqlFilter"/>
+    </delete>
+
+    <!--添加-->
+    <insert id="addAndId" parameterType="com.zhskg.bag.entity.Threshold">
+        INSERT INTO tp_threshold(
+        client_id,
+        battery_power,
+        battery_current,
+        battery_temperature,
+        battery_voltage,
+        safe_distance,
+        tracking_distance,
+        obstacle_distance,
+        ray_threshold,
+        speed_threshold,
+        weight_limit,
+        charge_num,
+        create_time,
+        create_on,
+        set_flag
+        ) VALUES (
+        #{clientId,jdbcType=VARCHAR},
+        #{batteryPower,jdbcType=DOUBLE},
+        #{batteryCurrent,jdbcType=DOUBLE},
+        #{batteryTemperature,jdbcType=DOUBLE},
+        #{batteryVoltage,jdbcType=DOUBLE},
+        #{safeDistance,jdbcType=DOUBLE},
+        #{trackingDistance,jdbcType=DOUBLE},
+        #{obstacleDistance,jdbcType=DOUBLE},
+        #{rayThreshold,jdbcType=DOUBLE},
+        #{speedThreshold,jdbcType=DOUBLE},
+        #{weightLimit,jdbcType=DOUBLE},
+        #{chargeNum,jdbcType=INTEGER},
+        #{createTime,jdbcType=BIGINT},
+        #{createOn,jdbcType=BIGINT},
+        #{setFlag,jdbcType=INTEGER},
+        )
+        <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">
+            SELECT @@IDENTITY as id
+        </selectKey>
+    </insert>
+
+    <!--修改-->
+    <update id="update" parameterType="com.zhskg.bag.entity.Threshold">
+        UPDATE tp_threshold
+        <trim prefix="set" suffixOverrides=",">
+            <if test="clientId!=null">client_id = #{clientId,jdbcType=VARCHAR},</if>
+            <if test="batteryPower!=null">battery_power = #{batteryPower,jdbcType=DOUBLE},</if>
+            <if test="batteryCurrent!=null">battery_current = #{batteryCurrent,jdbcType=DOUBLE},</if>
+            <if test="batteryTemperature!=null">battery_temperature = #{batteryTemperature,jdbcType=DOUBLE},</if>
+            <if test="batteryVoltage!=null">battery_voltage = #{batteryVoltage,jdbcType=DOUBLE},</if>
+            <if test="safeDistance!=null">safe_distance = #{safeDistance,jdbcType=DOUBLE},</if>
+            <if test="trackingDistance!=null">tracking_distance = #{trackingDistance,jdbcType=DOUBLE},</if>
+            <if test="obstacleDistance!=null">obstacle_distance = #{obstacleDistance,jdbcType=DOUBLE},</if>
+            <if test="rayThreshold!=null">ray_threshold = #{rayThreshold,jdbcType=DOUBLE},</if>
+            <if test="speedThreshold!=null">speed_threshold = #{speedThreshold,jdbcType=DOUBLE},</if>
+            <if test="weightLimit!=null">weight_limit = #{weightLimit,jdbcType=DOUBLE},</if>
+            <if test="chargeNum!=null">charge_num = #{chargeNum,jdbcType=INTEGER},</if>
+            <if test="modifyTime!=null">modify_time = #{modifyTime,jdbcType=BIGINT},</if>
+            <if test="modifyOn!=null">modify_on = #{modifyOn,jdbcType=BIGINT},</if>
+            <if test="setFlag!=null">set_flag = #{setFlag,jdbcType=INTEGER}</if>
+        </trim>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateSetFlag" parameterType="com.zhskg.bag.entity.Threshold">
+        UPDATE tp_threshold
+        SET set_flag = #{setFlag,jdbcType=INTEGER}
+        <where>
+            <if test="id!=null and id!=0">
+                AND id=#{id,jdbcType=INTEGER}
+            </if>
+            <if test="clientId!=null and clientId!=''">
+                AND client_id=#{clientId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </update>
+
+    <!--获取列表-->
+    <select id="getList" resultMap="thresholdMap" parameterType="map">
+        SELECT
+        <include refid="columns"/>
+        FROM tp_threshold
+        <include refid="sqlFilter"/>
+        ORDER BY create_time DESC
+    </select>
+
+    <!--获取分页列表-->
+    <select id="getPageList" resultMap="thresholdMap" parameterType="map">
+        SELECT
+        <include refid="columns"/>
+        FROM tp_threshold
+        <include refid="sqlFilter"/>
+        ORDER BY create_time DESC LIMIT #{pageIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <!--获取记录条数-->
+    <select id="getCount" parameterType="map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM tp_threshold
+        <include refid="sqlFilter"/>
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+

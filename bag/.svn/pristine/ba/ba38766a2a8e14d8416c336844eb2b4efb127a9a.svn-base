@@ -1,0 +1,111 @@
+package com.zhs.common.model.order;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.alibaba.fastjson.annotation.JSONField;
+import com.zhs.core.model.BaseModel;
+
+/**
+ * APP预约车位信息
+ * @author ZHS-CZJiang
+ */
+@Entity(name="tb_private_monthly_car")
+@Table
+public class PrivateMonthlyCar extends BaseModel{
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4065358520399828077L;
+	
+	/**
+     * 预约 id
+     */
+    @Column(name = "private_car_id")
+    private long privateCarId;
+	/**
+	 * 开始时间
+	 */
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false, name = "start_time")
+	private Date startTime;
+    /**
+	 * 结束时间
+	 */
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false, name = "end_time")
+	private Date endTime;
+    /**
+     * 车牌
+     */
+    @Column(name="car_num")
+    private String carNum;
+    /**
+     * 预定车位id
+     */
+   	@Column(nullable = false, name = "private_park_id")
+   	private long privateParkId;
+	/**
+	 * 预约状态 （是否取消预约）
+	 */
+	private boolean state;
+
+    public long getPrivateCarId() {
+        return privateCarId;
+    }
+
+    public void setPrivateCarId(long privateCarId) {
+        this.privateCarId = privateCarId;
+    }
+
+    public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getCarNum() {
+		return carNum;
+	}
+
+	public void setCarNum(String carNum) {
+		this.carNum = carNum;
+	}
+
+    public long getPrivateParkId() {
+        return privateParkId;
+    }
+
+    public void setPrivateParkId(long privateParkId) {
+        this.privateParkId = privateParkId;
+    }
+
+    public boolean isState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
+    }
+
+    
+    
+}

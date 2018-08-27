@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+	<bean name="openSessionInViewInterceptor"
+		class="org.springframework.orm.hibernate4.support.OpenSessionInViewInterceptor">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean name="huachuangTokenIntercept"
+		class="com.zhs.bill.filter.ShareTokenIntercept">
+		<property name="toLogin" value="/toLogin"/>
+	</bean>
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<ref bean="openSessionInViewInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/login"/>
+			<mvc:exclude-mapping path="/advertiser/login"/>
+			<mvc:exclude-mapping path="/shop/login"/>
+			<mvc:exclude-mapping path="/toLogin"/>
+			<mvc:exclude-mapping path="/js/layerIM/**"/>
+			<mvc:exclude-mapping path="/submitLogin"/>
+			<mvc:exclude-mapping path="/advertiser/submitLogin"/>
+			<mvc:exclude-mapping path="/shop/submitLogin"/>
+			<mvc:exclude-mapping path="/encryRSA"/>
+			<ref bean="huachuangTokenIntercept" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<!-- 启动自动扫描该包下所有的Bean(例如@Controller) -->
+	<context:component-scan base-package="com.zhs.bill">
+		<context:include-filter type="regex"
+			expression=".service.*" />
+		<context:include-filter type="regex"
+			expression=".dao.*" />
+		<context:include-filter type="regex"
+			expression=".controller.*" />
+	</context:component-scan>
+	
+
+	<!-- 启动自动扫描该包下所有的Bean(例如@Controller) -->
+	<context:component-scan base-package="com.zhs.core">
+		<context:include-filter type="regex"
+			expression=".service.*" />
+		<context:include-filter type="regex"
+			expression=".dao.*" />
+	</context:component-scan>
+
+	<!-- 启动自动扫描该包下所有的Bean(例如@Controller) -->
+	<context:component-scan base-package="com.zhs.base">
+		<context:include-filter type="regex"
+			expression=".service.*" />
+		<context:include-filter type="regex"
+			expression=".dao.*" />
+	</context:component-scan>
+	
+
+	<!-- 启动自动扫描该包下所有的Bean(例如@Controller) -->
+	<context:component-scan base-package="com.zhs.common">
+		<context:include-filter type="regex"
+			expression=".service.*" />
+		<context:include-filter type="regex"
+			expression=".dao.*" />
+		<context:include-filter type="regex"
+			expression=".web.controller.*" />
+	</context:component-scan>
+    <!--task扫描注解-->
+	<task:annotation-driven />
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes" value="text/plain;charset=UTF-8" />
+			</bean>
+			<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html;charset=UTF-8</value>
+						<value>application/json</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	<!-- 基于注释的事务，当注释中发现@Transactional时，使用id为“transactionManager”的事务管理器 -->
+	<!-- 如果没有设置transaction-manager的值，则spring以缺省默认的事务管理器来处理事务，默认事务管理器为第一个加载的事务管理器 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<!-- 定义视图解析器 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/WEB-INF/jsp/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+
+	<!-- 支持上传文件 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+	
+	<!-- <bean id="SocketClientInitializer" class="com.zhs.bill.listener.SocketClientInitializer" scope="singleton"  init-method="initMethod"></bean>  -->
+</beans>

@@ -1,0 +1,27 @@
+<div class="form-container" style="padding: 0px;">
+    <form id="headerForm">
+        <table class="form-table" style="min-width: 300px;">
+            <tr>
+                <td class="label">原密码:</td>
+                <td>
+                    <!--添加id="oldPassword" 能对原密码进行校验-->
+                    <input id="oldPassword" name="oldPassword" class="f5 easyui-textbox" type="password"
+                           data-options="required:true"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">新密码:</td>
+                <td>
+                    <input id="headerNewPassword" name="newPassword" class="f5" type="password"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">确认密码:</td>
+                <td>
+                    <input id="headerConfirmPassword" class="f5" type="password"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+

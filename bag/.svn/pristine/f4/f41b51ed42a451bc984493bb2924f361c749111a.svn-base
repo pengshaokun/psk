@@ -1,0 +1,42 @@
+<div id="grid-toolbar">
+    <div class="grid-search">
+        <form id="searchForm">
+            <ul class="search-table third-party-main clearBox">
+                <li class="third-party-box clearBox">
+                    <div class="third-party-title third-party-time left-box clearBox">
+                        <div class="label">查询时间：</div>
+                        <div><input id="txtStartTime" name="startTime" /></div>
+                        <div class="label">—</div>
+                        <div><input id="txtEndTime" name="endTime" /></div>
+                    </div>
+                    <div class="third-party-title left-box clearBox">
+                        <div class="label">昵称：</div>
+                        <div><input id="name" name="name" class="easyui-textbox" data-options="prompt:'请输入昵称'" type="text" /></div>
+                    </div>
+                    <div class="third-party-title left-box clearBox">
+                        <div class="label">授权类别：</div>
+                        <div><input id="txtEmpowerType" name="empowerType"  type="text" /></div>
+                    </div>
+                </li>
+            </ul>
+
+            <!--<table class="search-table">-->
+                <!--<tr>-->
+                    <!--<td class="label">查询时间：</td>-->
+                    <!--<td><input id="txtStartTime" name="startTime" /></td>-->
+                    <!--<td class="label">—</td>-->
+                    <!--<td><input id="txtEndTime" name="endTime" /></td>-->
+                    <!--<td class="label">昵称：</td>-->
+                    <!--<td><input id="name" name="name" class="easyui-textbox" data-options="prompt:'请输入昵称'" type="text" /></td>-->
+                    <!--<td class="label">授权类别：</td>-->
+                    <!--<td><input id="txtEmpowerType" name="empowerType"  type="text" /></td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        </form>
+        <div class="search-toolbar">
+            <a id="btnSearch" href="javascript:void(0)" class="c1" style="width:80px">查询</a>
+            <a id="btnClear" href="javascript:void(0)" class="c4" style="width:80px">清空</a>
+        </div>
+    </div>
+</div>
+<table id="grid"></table>

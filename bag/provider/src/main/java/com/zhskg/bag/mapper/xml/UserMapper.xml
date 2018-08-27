@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.UserMapper">
+    <resultMap id="userMap" type="com.zhskg.bag.entity.User">
+        <id column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="account_id" jdbcType="BIGINT" property="accountId"/>
+        <result column="full_name" jdbcType="VARCHAR" property="fullName" />
+        <result column="gender" jdbcType="INTEGER" property="gender"/>
+        <result column="mobile_number" jdbcType="VARCHAR" property="mobileNumber"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="identity_card_no" jdbcType="VARCHAR" property="identityCardNo"/>
+        <result column="create_on" jdbcType="BIGINT" property="createOn"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="modify_on" jdbcType="BIGINT" property="modifyOn"/>
+        <result column="modify_time" jdbcType="BIGINT" property="modifyTime"/>
+        <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag"/>
+        <result column="birth_date" jdbcType="BIGINT" property="birthDate"/>
+        <result column="head_portrait" jdbcType="VARCHAR" property="headPortrait"/>
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
+    </resultMap>
+    <!--数据库字段-->
+    <sql id="columns">
+        user_id,
+        account_id,
+        full_name,
+        gender,
+        mobile_number,
+        email,
+        identity_card_no,
+        birth_date,
+        head_portrait,
+        nick_name,
+        create_on,
+        create_time,
+        modify_on,
+        modify_time,
+        delete_flag
+    </sql>
+
+    <!--根据主键查询-->
+    <select id="get" resultMap="userMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="columns"/>
+        FROM tu_user
+        WHERE user_id = #{userId,jdbcType=BIGINT}
+    </select>
+
+    <!-- 根据账户id获取用户信息 -->
+    <select id="getByAccountId" resultMap="userMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="columns"/>
+        FROM tu_user
+        WHERE account_id = #{accountId,jdbcType=BIGINT}
+    </select>
+    <!--根据主键假删除-->
+    <update id="removeById" parameterType="java.lang.Long">
+        UPDATE tu_user
+        SET delete_flag = 1
+        WHERE user_id = #{userId,jdbcType=BIGINT}
+    </update>
+
+    <!--根据主键删除-->
+    <delete id="realRemoveById" parameterType="java.lang.Long">
+        delete from tu_user
+        WHERE user_id = #{userId,jdbcType=BIGINT}
+    </delete>
+
+    <!--添加记录并返回主键(主键必须是自增列)-->
+    <insert id="addAndId" parameterType="com.zhskg.bag.entity.User">
+        INSERT INTO tu_user (
+        account_id,
+        full_name,
+        gender,
+        mobile_number,
+        email,
+        identity_card_no,
+        birth_date,
+        head_portrait,
+        nick_name,
+        create_on,
+        create_time
+        ) VALUES (
+        #{accountId, jdbcType=BIGINT},
+        #{fullName, jdbcType=VARCHAR},
+        #{gender, jdbcType=INTEGER},
+        #{mobileNumber, jdbcType=VARCHAR},
+        #{email, jdbcType=VARCHAR},
+        #{identityCardNo, jdbcType=VARCHAR},
+        #{birthDate, jdbcType=BIGINT},
+        #{headPortrait, jdbcType=VARCHAR},
+        #{nickName, jdbcType=VARCHAR},
+        #{createOn, jdbcType=BIGINT},
+        #{createTime, jdbcType=BIGINT}
+        )
+        <selectKey order="AFTER" keyProperty="userId" resultType="java.lang.Long">SELECT @@IDENTITY as userId
+        </selectKey>
+    </insert>
+
+    <!--根据主键修改-->
+    <update id="updateById" parameterType="com.zhskg.bag.entity.User">
+        UPDATE tu_user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="fullName != null">full_name =  #{fullName, jdbcType=VARCHAR},</if>
+            <if test="gender != null">gender = #{gender, jdbcType=INTEGER},</if>
+            <if test="mobileNumber != null">mobile_number = #{mobileNumber, jdbcType=VARCHAR},</if>
+            <if test="email != null">email = #{email, jdbcType=VARCHAR},</if>
+            <if test="identityCardNo != null">identity_card_no = #{identityCardNo, jdbcType=VARCHAR},</if>
+            <if test="birthDate != null">birth_date = #{birthDate, jdbcType=BIGINT},</if>
+            <if test="headPortrait != null">head_portrait = #{headPortrait, jdbcType=VARCHAR},</if>
+            <if test="accountId != null and accountId>0">account_id = #{accountId, jdbcType=BIGINT},</if>
+            <if test="nickName != null">nick_name = #{nickName, jdbcType=VARCHAR},</if>
+            <if test="modifyOn != null">modify_on = #{modifyOn, jdbcType=BIGINT},</if>
+            <if test="modifyTime != null">modify_time = #{modifyTime, jdbcType=BIGINT}</if>
+        </trim>
+        WHERE user_id = #{userId,jdbcType=BIGINT}
+    </update>
+
+    <!--根据条件查询-->
+    <select id="getList" resultMap="userMap">
+        SELECT
+        <include refid="columns"/>
+        FROM tu_user
+        <include refid="sqlFilter"/>
+    </select>
+    <!--根据条件分页查询-->
+    <select id="getPageList" resultMap="userMap">
+        SELECT
+        <include refid="columns"/>
+        FROM tu_user
+        <include refid="sqlFilter"/>
+        ORDER BY create_time DESC LIMIT #{pageIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+    <!--根据条件查询记录总数-->
+    <select id="getCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM tu_user
+        <include refid="sqlFilter"/>
+    </select>
+
+    <sql id="sqlFilter">
+        <where>
+            (delete_flag = 0)
+            <if test="user.fullName != null and user.fullName != ''">
+                AND full_name LIKE '%${user.fullName}%'
+            </if>
+            <if test="user.accountId != null and user.accountId != 0">
+                AND account_id = #{user.accountId, jdbcType=BIGINT}
+            </if>
+            <if test="user.gender != null and user.gender != 0">
+                AND gender = #{user.gender, jdbcType=INTEGER}
+            </if>
+            <if test="user.mobileNumber != null and user.mobileNumber != ''">
+                AND mobile_number LIKE '%${user.mobileNumber}%'
+            </if>
+            <if test="user.email != null and user.email != ''  ">
+                AND email LIKE '%${user.email}%'
+            </if>
+            <if test="user.identityCardNo != null and user.identityCardNo != ''">
+                AND identity_card_no LIKE '%${user.identityCardNo}%'
+            </if>
+        </where>
+    </sql>
+    <select id="getByFirst" resultMap="userMap" parameterType="map">
+        SELECT
+        <include refid="columns"/>
+        FROM tu_user
+        <where>
+            <if test=" accountId != null and accountId != 0 ">
+                AND account_id = #{accountId,jdbcType=VARCHAR}
+            </if>
+            <if test="mobileNumber !=null and mobileNumber !=''">
+                AND mobile_number =#{mobileNumber}
+            </if>
+        </where>
+        ORDER BY user_id DESC LIMIT 0,1
+    </select>
+    <select id="checkMobileNumberByUserId" resultMap="userMap" parameterType="map">
+        SELECT
+        <include refid="columns"/>
+        FROM tu_user
+        <where>
+            mobile_number = #{mobileNumber}
+            AND user_id NOT IN (#{userId})
+        </where>
+    </select>
+
+    <!-- 根据ID修改用户手机号码 -->
+    <update id="updatePhoneById">
+        update tu_user set tu_user.mobile_number = #{mobileNumber} where tu_user.user_id = #{userId}
+    </update>
+
+    <!-- 即将绑定的新手机号码是否已经存在 -->
+    <select id="mobileNumberisExist" resultType="string" parameterType="com.zhskg.bag.entity.User">
+        select U.mobile_number
+        from tu_user U
+        where
+        U.mobile_number = #{mobileNumber}
+    </select>
+
+    <!-- 根据用户id获取账号id -->
+    <select id="queryAccountId" parameterType="long" resultType="long">
+        select U.account_id
+        from tu_user U
+        where
+        U.user_id = #{userId}
+    </select>
+    
+</mapper>

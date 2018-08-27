@@ -1,0 +1,66 @@
+<div id="tt" class="easyui-tabs" data-options="fit:true">
+    <div title="基本信息">
+        <div class="form-container">
+            <form id="form1">
+                <input id="roleId" name="roleId" type="hidden"/>
+                <ul class="form-table clearBox response-table" style="min-width:35%;margin: 0px auto;">
+                    <li class="clearBox">
+                        <div class="label title-box float-box">角色名称:</div>
+                        <div class="content-box float-box">
+                            <input name="roleName" class="f5 easyui-textbox" type="text" data-options="required:true"/>
+                        </div>
+                    </li>
+                    <li class="clearBox" style="display:none">
+                        <div class="label title-box float-box" >启用标记:</div>
+                        <div class="content-box float-box" >
+                            <label  hidden="hidden"><input name="enableFlag" value="1" checked="checked" type="checkbox" /><span></span></label>
+                        </div>
+                    </li>
+                    <li class="clearBox">
+                        <div class="label title-box float-box">角色编码:</div>
+                        <div class="content-box float-box">
+                            <input name="roleCode" class="f5 easyui-textbox" type="text"/>
+                        </div>
+                    </li>
+                    <li class="clearBox note-box">
+                        <div class="label title-box note-title float-box">备注:</div>
+                        <div class="content-box float-box">
+                            <input name="comment" class="f5 easyui-textbox" type="text" />
+                        </div>
+                    </li>
+                </ul>
+                <!--multiline="true" style="height: 70%;"-->
+                <!--<table class="form-table" style="min-width:550px;">-->
+                    <!--<tr>-->
+                        <!--<td class="label">角色名称:</td>-->
+                        <!--<td>-->
+                            <!--<input name="roleName" class="f5 easyui-textbox" type="text" data-options="required:true"/>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td class="label">启用标记:</td>-->
+                        <!--<td>-->
+                            <!--<label><input name="enableFlag" value="1" checked="checked" type="checkbox"/><span></span></label>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<td class="label">角色编码:</td>-->
+                    <!--<td>-->
+                        <!--<input name="roleCode" class="f5 easyui-textbox" type="text"/>-->
+                    <!--</td>-->
+                    <!--<tr>-->
+                        <!--<td class="label">备注:</td>-->
+                        <!--<td>-->
+                            <!--<input name="comment" class="f5 easyui-textbox" type="text" multiline="true" style="height: 60px"/>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                <!--</table>-->
+            </form>
+        </div>
+    </div>
+    <div title="菜单权限">
+        <ul id="menu"></ul>
+    </div>
+    <div title="资源权限">
+        <ul id="resource"></ul>
+    </div>
+</div>

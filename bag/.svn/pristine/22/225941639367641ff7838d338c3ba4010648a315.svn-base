@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.ThirdPartyInfoMapper">
+    <resultMap id="thirdPartyInfoMap" type="com.zhskg.bag.entity.ThirdPartyInfo">
+        <id column="open_id" jdbcType="VARCHAR" property="openId"/>
+        <result column="union_id" jdbcType="VARCHAR" property="unionId"/>
+        <result column="access_token" jdbcType="VARCHAR" property="accessToken"/>
+        <result column="expiration_date" jdbcType="BIGINT" property="expirationDate"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="city" jdbcType="VARCHAR" property="city"/>
+        <result column="prvinice" jdbcType="VARCHAR" property="prvinice"/>
+        <result column="country" jdbcType="VARCHAR" property="country"/>
+        <result column="gender" jdbcType="VARCHAR" property="gender"/>
+        <result column="icon_url" jdbcType="VARCHAR" property="iconUrl"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="empower_type" jdbcType="INTEGER" property="empowerType"/>
+        <result column="create_on" jdbcType="BIGINT" property="createOn"/>
+        <result column="create_name" jdbcType="VARCHAR" property="createName"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag"/>
+        <result column="third_terrace_type"  javaType="com.zhskg.bag.enums.ThirdTerraceType" jdbcType="VARCHAR"  property="thirdTerraceType" />
+    </resultMap>
+    <!--数据库字段-->
+    <sql id="columns">
+        open_id,
+        union_id,
+        access_token,
+        expiration_date,
+        name,
+        city,
+        prvinice,
+        country,
+        gender,
+        icon_url,
+        user_id,
+        empower_type,
+        create_on,
+        create_name,
+        create_time,
+        delete_flag,
+        third_terrace_type
+    </sql>
+    <!--根据主键查询-->
+    <select id="get" resultMap="thirdPartyInfoMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_third_party_info
+        WHERE open_id = #{openId,jdbcType=VARCHAR}
+        AND delete_flag = 0
+    </select>
+
+    <!--根据userId 以及 平台查询-->
+    <select id="getByUserIdAndTerraceType" resultMap="thirdPartyInfoMap">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_third_party_info
+        where user_id =#{userId}
+        AND third_terrace_type= #{thirdTerraceType}
+        AND delete_flag = 0
+    </select>
+
+
+    <select id="getByUserId" resultMap="thirdPartyInfoMap" parameterType="long">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_third_party_info
+        WHERE user_id = #{userId}
+        AND delete_flag = 0
+    </select>
+    <!--根据条件查询返回第一行-->
+    <select id="getFirst" resultMap="thirdPartyInfoMap">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_third_party_info
+        <where>
+            <if test="openId!=null and openTd!=''">
+                AND open_id=#{openId,jdbcType=VARCHAR}
+            </if>
+            <if test="accessToken!=null and accessToken!=''">
+                AND access_token=#{accessToken,jdbcType=VARCHAR}
+            </if>
+            AND delete_flag = 0
+        </where>
+        ORDER BY create_time DESC LIMIT 0,1
+    </select>
+    <!--根据主键假删除-->
+    <update id="removeById" parameterType="java.lang.String"> 
+        UPDATE ts_third_party_info 
+        SET delete_flag = 1 
+        WHERE open_id = #{openId,jdbcType=VARCHAR} 
+    </update>
+
+    <update id="setUserId" parameterType="map">
+        UPDATE ts_third_party_info
+        SET user_id = #{userId}
+        WHERE open_id = #{openId,jdbcType=VARCHAR}
+    </update>
+    <!--添加记录-->
+    <insert id="add" parameterType="com.zhskg.bag.entity.ThirdPartyInfo">
+        INSERT INTO ts_third_party_info (
+        <include refid="columns"/>
+        ) VALUES (
+        #{openId, jdbcType=VARCHAR},
+        #{unionId, jdbcType=VARCHAR},
+        #{accessToken, jdbcType=VARCHAR},
+        #{expirationDate, jdbcType=BIGINT},
+        #{name, jdbcType=VARCHAR},
+        #{city, jdbcType=VARCHAR},
+        #{prvinice, jdbcType=VARCHAR},
+        #{country, jdbcType=VARCHAR},
+        #{gender, jdbcType=VARCHAR},
+        #{iconUrl, jdbcType=VARCHAR},
+        #{userId, jdbcType=BIGINT},
+        #{empowerType, jdbcType=INTEGER},
+        #{createOn, jdbcType=BIGINT},
+        #{createName, jdbcType=VARCHAR},
+        #{createTime, jdbcType=BIGINT},
+        #{deleteFlag, jdbcType=INTEGER},
+        #{thirdTerraceType,jdbcType=VARCHAR}
+        )
+    </insert>
+    <!--根据主键修改-->
+    <update id="updateById" parameterType="com.zhskg.bag.entity.ThirdPartyInfo">
+        UPDATE ts_third_party_info
+        <trim prefix="set" suffixOverrides=",">
+            <if test="unionId != null">union_id = #{unionId, jdbcType=VARCHAR},</if>
+            <if test="accessToken != null">access_token = #{accessToken, jdbcType=VARCHAR},</if>
+            <if test="expirationDate != null">expiration_date = #{expirationDate, jdbcType=BIGINT},</if>
+            <if test="name != null">name = #{name, jdbcType=VARCHAR},</if>
+            <if test="city != null">city = #{city, jdbcType=VARCHAR},</if>
+            <if test="prvinice != null">prvinice = #{prvinice, jdbcType=VARCHAR},</if>
+            <if test="country != null">country = #{country, jdbcType=VARCHAR},</if>
+            <if test="gender != null">gender = #{gender, jdbcType=VARCHAR},</if>
+            <if test="iconUrl != null">icon_url = #{iconUrl, jdbcType=VARCHAR},</if>
+            <if test="userId != null">user_id = #{userId, jdbcType=BIGINT},</if>
+            <if test="empowerType != null">empower_type = #{empowerType, jdbcType=INTEGER},</if>
+            <if test="createOn != null">create_on = #{createOn, jdbcType=BIGINT},</if>
+            <if test="createName != null">create_name = #{createName, jdbcType=VARCHAR},</if>
+            <if test="createTime != null">create_time = #{createTime, jdbcType=BIGINT},</if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag, jdbcType=INTEGER}</if>
+        </trim>
+        WHERE open_id = #{openId,jdbcType=VARCHAR}
+    </update>
+    <!--根据条件查询-->
+    <select id="getList" resultMap="thirdPartyInfoMap" parameterType="map">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_third_party_info
+        <include refid="filterSql"/>
+    </select>
+    <!--根据条件分页查询-->
+    <select id="getPageList" resultMap="thirdPartyInfoMap" parameterType="map">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_third_party_info
+        <include refid="filterSql"/>
+        ORDER BY create_time DESC LIMIT #{pageIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+    <!--根据条件查询记录总数-->
+    <select id="getCount" parameterType="map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM ts_third_party_info
+        <include refid="filterSql"/>
+    </select>
+    <sql id="filterSql">
+        <where>
+            delete_flag=0
+            <if test="startTime!=null">
+                AND create_time &gt;=#{startTime,jdbcType=BIGINT}
+            </if>
+            <if test="endTime!=null">
+                AND create_time &lt;=#{endTime,jdbcType=BIGINT}
+            </if>
+            <if test="name!=null and name!=''">
+                AND name LIKE '%${name}%'
+            </if>
+            <if test="empowerType!=null and empowerType!=''">
+                AND empower_type = #{empowerType,jdbcType=INTEGER}
+            </if>
+        </where>
+    </sql>
+</mapper>

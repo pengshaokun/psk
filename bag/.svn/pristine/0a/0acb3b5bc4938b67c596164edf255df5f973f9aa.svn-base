@@ -1,0 +1,49 @@
+package com.zhs.common.model.tenement;
+
+import com.zhs.core.model.BaseModel;
+import lombok.Data;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+
+/**
+ * @author ZHS-CZJiang
+ * @date 2018-07-09
+ */
+@Data
+@Entity
+@Table(name = "tb_parking_door")
+public class Door extends BaseModel {
+    /**
+     * 远程服务器 id
+     */
+    @Column(name = "door_id")
+    private Integer doorId;
+    @Column(name = "door_name")
+    private String doorName;
+    @Column(precision = 19, scale = 6)
+    private BigDecimal lon;
+    @Column(precision = 19, scale = 6)
+    private BigDecimal lat;
+    /**
+     * 类别 0:入口，1：出口，2：出入口
+     */
+    private Integer category;
+    /**
+     * 状态
+     */
+    private Integer status;
+    /**
+     * 停车场 id
+     */
+    @Column(name = "parking_id")
+    private Integer parkingId;
+
+    /**
+     * 门闸类型 1 ：摄像头
+     */
+    private int type;
+
+}

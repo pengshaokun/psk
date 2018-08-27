@@ -1,0 +1,41 @@
+package com.zhs.core.model.Constant;
+
+import java.io.Serializable;
+
+public class ResponseObject implements Serializable{
+	
+	private static final long serialVersionUID = 2377831441418727578L;
+	
+	public static final String successCode="201";
+	
+	private String reCode;
+	
+	private String codeTxt;
+	
+	private Object data = new Object();
+
+	public String getReCode() {
+		return reCode;
+	}
+
+	public void setReCode(String reCode) {
+		this.reCode = reCode;
+	}
+
+	public String getCodeTxt() {
+		return codeTxt;
+	}
+
+	public void setCodeTxt(String codeTxt) {
+		this.codeTxt = codeTxt;
+	}
+
+	public Object getData() {
+		return data;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
+	}
+
+}

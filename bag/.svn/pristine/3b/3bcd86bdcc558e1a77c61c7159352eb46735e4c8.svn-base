@@ -1,0 +1,258 @@
+package com.zhs.core.service;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.zhs.core.dao.IGenericOperations;
+import com.zhs.core.util.search.AbstractQueryForm;
+import com.zhs.core.util.search.paginate.PageAndOrder;
+import org.springframework.transaction.annotation.Transactional;
+
+@SuppressWarnings({ "unchecked", "rawtypes" })
+@Transactional
+public abstract class AbstractGenericService<T extends Serializable> implements
+		IOpertionService<T> {
+
+	protected abstract IGenericOperations<T> getDao();
+
+	@Override
+	public T findOne(final long id) {
+		return getDao().findOne(id);
+	}
+
+	@Override
+	public Object findOne(Class T, String id) {
+		return getDao().findOne(T, id);
+	}
+
+	@Override
+	public List<T> findAll() {
+		return getDao().findAll();
+	}
+
+	@Override
+	public void create(final T entity) {
+		getDao().create(entity);
+	}
+
+	@Override
+	public T update(final T entity) {
+		return getDao().update(entity);
+	}
+
+	@Override
+	public void delete(final T entity) {
+		getDao().delete(entity);
+	}
+
+	@Override
+	public void deleteById(long entityId) {
+		getDao().deleteById(entityId);
+	}
+
+	@Override
+	public Object findOne(long id, Class T) {
+		return getDao().findOne(id, T);
+	}
+
+	@Override
+	public List<Object> findAll(Class T) {
+		return getDao().findAll(T);
+	}
+
+	@Override
+	public void create(Object entity) {
+		getDao().create(entity);
+
+	}
+
+	@Override
+	public Object update(Object entity) {
+		return getDao().update(entity);
+	}
+
+	@Override
+	public void delete(Object entity) {
+		getDao().delete(entity);
+
+	}
+
+	@Override
+	public void deleteById(long entityId, Class T) {
+		getDao().deleteById(entityId, T);
+
+	}
+
+	@Override
+	public List find(String hql) {
+		return getDao().find(hql);
+	}
+
+	@Override
+	public List find(String hql, Map<String, Object> params) {
+
+		return getDao().find(hql, params);
+	}
+
+	@Override
+	public boolean checkDuplicate(Class t, String field, Object id, Object value) {
+		return getDao().checkDuplicate(t, field, id, value);
+	}
+
+	@Override
+	public Object singleFind(String hsql) {
+		return getDao().singleFind(hsql);
+	}
+
+	@Override
+	public List findListByPaginate(Class t, AbstractQueryForm form,
+			PageAndOrder pageAndOrder) {
+		return getDao().findListByPaginate(t, form, pageAndOrder);
+	}
+
+	@Override
+	public List findListByIds(Class t, AbstractQueryForm form,
+			PageAndOrder pageAndOrder, String ids) {
+		return getDao().findListByIds(t, form, pageAndOrder, ids);
+	}
+
+	@Override
+	public T findOneByProperty(String property, Object value) {
+		return getDao().findOneByProperty(property, value);
+
+	}
+	
+	@Override
+	public T findOneByProperty(String property, Object value,boolean getDelete) {
+		return getDao().findOneByProperty(property, value,getDelete);
+
+	}
+
+	@Override
+	public Object findOneByProperty(Class t, String property, Object value) {
+		return getDao().findOneByProperty(t, property, value);
+
+	}
+
+	@Override
+	public String getNum(String propertyName, Class t, Integer createType,
+			String before, Boolean ifCenterDate, Date CenterDate,
+			String dateFormat, Integer afterNum) {
+		return getDao().getNum(propertyName, t, createType, before,
+				ifCenterDate, CenterDate, dateFormat, afterNum);
+	}
+
+	@Override
+	public boolean checkNum(String propertyName, Class t, String num) {
+		return getDao().checkNum(propertyName, t, num);
+	}
+
+	@Override
+	public List<Object[]> findBySQL(String sql, Map<String, Object> params) {
+		return getDao().findBySQL(sql, params);
+	}
+
+	public List findListPaginateByHql(String hql, String countHql,
+			Map<String, Object> paramters, PageAndOrder pageAndOrder) {
+		return getDao().findListPaginateByHql(hql, countHql, paramters,
+				pageAndOrder);
+	}
+
+	public List findListPaginateBySql(String sql, String countSql,
+			Map<String, Object> paramters, PageAndOrder pageAndOrder) {
+		return getDao().findListPaginateByHql(sql, countSql, paramters,
+				pageAndOrder);
+	}
+	
+	public List<Map> findListPaginateBySqlToMap(String sql, String countSql,
+			Map<String, Object> paramters, PageAndOrder pageAndOrder){
+		return getDao().findListPaginateBySqlToMap(sql, countSql, paramters, pageAndOrder);
+	}
+
+	public Object findOne(Class T, Long id) {
+		return getDao().findOne(T, id);
+	}
+
+	public Object findOne(String hql, Map params) {
+		return getDao().findOne(hql, params);
+	}
+
+	public List findListByForm2Sql(String sql, AbstractQueryForm form,
+			Map<String, Object> paramters) {
+		return getDao().findListByForm2Sql(sql, form, paramters);
+	}
+
+	public List findListByForm(Class T, AbstractQueryForm form,
+			Map<String, Object> paramters) {
+
+		return getDao().findListByForm(T, form, paramters);
+	}
+
+	public List find2Size(String hql, Integer size) {
+
+		return getDao().find2Size(hql, size);
+	}
+
+	public List find2Size(String hql, Integer size, Map<String, Object> params) {
+
+		return getDao().find2Size(hql, size, params);
+	}
+
+	public HashMap<String, BigDecimal> sumValue(String[] sumVals, Class cla,String idKey,Long idVal) {
+		return getDao().sumValue(sumVals, cla, idKey, idVal);
+	}
+	public List<Object> findListByFormPaginateSql(String sql, AbstractQueryForm form, PageAndOrder pageAndOrder) {
+		return getDao().findListByFormPaginateSql( sql,  form,pageAndOrder);
+	}
+	public void updateSql(String sql){
+		getDao().updateSql(sql);
+	}
+	public List<Object> findBySQLMap(String sql,Object ...value) {
+		return getDao().findBySQLMap(sql, value);
+	}
+	public List findListByHql(String hql, Object ...obj) {
+		return getDao().findListByHql(hql, obj);
+	}
+
+	public Object findOneBySql(String sql){
+		return getDao().findOneBySql(sql);
+	}
+
+    public Object findOneBySql(String sql, Map<String, Object> params, Class T) {
+	    return getDao().findOneBySql(sql,params,T);
+    }
+
+    @Override
+    public List findBySql(String sql, Map<String, Object> params, Class T) {
+        return getDao().findBySql(sql,params,T);
+    }
+
+    @Override
+    public Object findOneByToken(Class T, String token) {
+        return getDao().findOneByToken(T,token);
+    }
+
+	public List findListByPaginateSql(String sql,Map<String, Object> params,PageAndOrder pageAndOrder,Class T){
+		return getDao().findListByPaginateSql(sql,params,pageAndOrder,T);
+	}
+	public int executeUpdate(String sql, Object... parameters) {
+		return getDao().executeUpdate(sql,parameters);
+	}
+	public int executeUpdate(String sql, Map<String, Object> parameters) {
+		return getDao().executeUpdate(sql,parameters);
+	}
+
+	@Override
+	public boolean batchCreate(List list) {
+		return getDao().batchCreate(list);
+	}
+
+	@Override
+	public void batchUpdate(List list) {
+	    getDao().batchUpdate(list);
+	}
+}

@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.ResourceMapper">
+    <resultMap id="resourceMap" type="com.zhskg.bag.entity.Resource">
+        <id column="resource_id" jdbcType="BIGINT" property="resourceId" />
+        <result column="resource_no" jdbcType="VARCHAR" property="resourceNo" />
+        <result column="resource_name" jdbcType="VARCHAR" property="resourceName" />
+        <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+        <result column="path" jdbcType="VARCHAR" property="path" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="sort_no" jdbcType="BIGINT" property="sortNo" />
+        <result column="category" jdbcType="INTEGER" property="category" />
+        <result column="caption" jdbcType="VARCHAR" property="caption" />
+        <result column="url" jdbcType="VARCHAR" property="url" />
+        <result column="method" jdbcType="VARCHAR" property="method" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="json" jdbcType="VARCHAR" property="json" />
+        <result column="comment" jdbcType="VARCHAR" property="comment" />
+        <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag" />
+        <result column="create_on" jdbcType="BIGINT" property="createOn" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="modify_on" jdbcType="BIGINT" property="modifyOn" />
+        <result column="modify_time" jdbcType="BIGINT" property="modifyTime" />
+    </resultMap>
+    <!--数据库字段-->
+    <sql id="columns"> 
+        resource_id,
+        resource_no,
+        resource_name,
+        parent_id,
+        path,
+        level,
+        sort_no,
+        category,
+        caption,
+        url,
+        method,
+        description,
+        json,
+        comment,
+        delete_flag,
+        create_on,
+        create_time,
+        modify_on,
+        modify_time
+    </sql>
+    <!--插入记录-->
+    <insert id="add" parameterType="com.zhskg.bag.entity.Resource">
+        INSERT INTO ts_resource ( 
+        <include refid="columns"/>
+        ) VALUES (
+        #{resourceId, jdbcType=BIGINT},
+        #{resourceNo, jdbcType=VARCHAR},
+        #{resourceName, jdbcType=VARCHAR},
+        #{parentId, jdbcType=BIGINT},
+        #{path, jdbcType=VARCHAR},
+        #{level, jdbcType=INTEGER},
+        #{sortNo, jdbcType=BIGINT},
+        #{category, jdbcType=INTEGER},
+        #{caption, jdbcType=VARCHAR},
+        #{url, jdbcType=VARCHAR},
+        #{method, jdbcType=VARCHAR},
+        #{description, jdbcType=VARCHAR},
+        #{json, jdbcType=VARCHAR},
+        #{comment, jdbcType=VARCHAR},
+        #{deleteFlag, jdbcType=INTEGER},
+        #{createOn, jdbcType=BIGINT},
+        #{createTime, jdbcType=BIGINT},
+        #{modifyOn, jdbcType=BIGINT},
+        #{modifyTime, jdbcType=BIGINT}
+        )
+    </insert>
+    <!--插入记录并返回主键(主键必须是自增列)-->
+    <insert id="addAndId" parameterType="com.zhskg.bag.entity.Resource">
+        INSERT INTO ts_resource ( 
+        <include refid="columns"/>
+        ) VALUES (
+        #{resourceId, jdbcType=BIGINT},
+        #{resourceNo, jdbcType=VARCHAR},
+        #{resourceName, jdbcType=VARCHAR},
+        #{parentId, jdbcType=BIGINT},
+        #{path, jdbcType=VARCHAR},
+        #{level, jdbcType=INTEGER},
+        #{sortNo, jdbcType=BIGINT},
+        #{category, jdbcType=INTEGER},
+        #{caption, jdbcType=VARCHAR},
+        #{url, jdbcType=VARCHAR},
+        #{method, jdbcType=VARCHAR},
+        #{description, jdbcType=VARCHAR},
+        #{json, jdbcType=VARCHAR},
+        #{comment, jdbcType=VARCHAR},
+        #{deleteFlag, jdbcType=INTEGER},
+        #{createOn, jdbcType=BIGINT},
+        #{createTime, jdbcType=BIGINT},
+        #{modifyOn, jdbcType=BIGINT},
+        #{modifyTime, jdbcType=BIGINT}
+        )
+        <selectKey order="AFTER" keyProperty="resourceId" resultType="java.lang.Long"> SELECT @@IDENTITY as resourceId </selectKey>
+    </insert>
+    <!--批量插入-->
+    <insert id="batchAdd" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO ts_resource ( 
+        <include refid="columns"/>
+        ) VALUES 
+        <foreach separator="," index="index" item="item" collection="list"> 
+            (
+            #{item.resourceId, jdbcType=BIGINT},
+            #{item.resourceNo, jdbcType=VARCHAR},
+            #{item.resourceName, jdbcType=VARCHAR},
+            #{item.parentId, jdbcType=BIGINT},
+            #{item.path, jdbcType=VARCHAR},
+            #{item.level, jdbcType=INTEGER},
+            #{item.sortNo, jdbcType=BIGINT},
+            #{item.category, jdbcType=INTEGER},
+            #{item.caption, jdbcType=VARCHAR},
+            #{item.url, jdbcType=VARCHAR},
+            #{item.method, jdbcType=VARCHAR},
+            #{item.description, jdbcType=VARCHAR},
+            #{item.json, jdbcType=VARCHAR},
+            #{item.comment, jdbcType=VARCHAR},
+            #{item.deleteFlag, jdbcType=INTEGER},
+            #{item.createOn, jdbcType=BIGINT},
+            #{item.createTime, jdbcType=BIGINT},
+            #{item.modifyOn, jdbcType=BIGINT},
+            #{item.modifyTime, jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
+    <!--根据主键假删除-->
+    <update id="removeById" parameterType="java.lang.Long"> 
+        UPDATE ts_resource SET delete_flag = 1 where resource_id = #{resourceId,jdbcType=BIGINT} 
+    </update>
+    <update id="removeByPath" parameterType="java.lang.String">
+        UPDATE ts_resource SET delete_flag = 1 where path LIKE '${path}%'
+    </update>
+    <!--根据条件假删除-->
+    <update id="remove" parameterType="com.zhskg.bag.param.ResourceParam">
+        UPDATE ts_resource SET delete_flag = 1
+        <where>
+            <if test="resourceName !=null and resourceName !=''"> AND resource_name LIKE '%${resourceName}%'</if>
+            <if test="resourceNo !=null and resourceNo !=''"> AND resource_no = #{resourceNo,jdbcType=VARCHAR}</if>
+            <if test="parentId !=null and parentId !=0"> AND parent_id = #{parentId,jdbcType=BIGINT}</if>
+        </where>
+    </update>
+    <!--根据主键删除-->
+    <delete id="realRemoveById" parameterType="java.lang.Long"> 
+        delete from ts_resource where resource_id = #{resourceId,jdbcType=BIGINT} 
+    </delete>
+    <!--根据条件删除-->
+    <delete id="realRemove" parameterType="com.zhskg.bag.param.ResourceParam">
+        delete from ts_resource
+        <where>
+            <if test="resourceName !=null and resourceName !=''"> AND resource_name LIKE '%${resourceName}%'</if>
+            <if test="resourceNo !=null and resourceNo !=''"> AND resource_no = #{resourceNo,jdbcType=VARCHAR}</if>
+            <if test="parentId !=null and parentId !=0"> AND parent_id = #{parentId,jdbcType=BIGINT}</if>
+        </where>
+    </delete>
+    <!--根据主键查询-->
+    <select id="get" resultMap="resourceMap" parameterType="java.lang.Long">
+        SELECT  
+        <include refid="columns"/> 
+        FROM ts_resource WHERE resource_id = #{resourceId,jdbcType=BIGINT}
+    </select>
+    <!--根据条件查询返回第一行-->
+    <select id="getFirst" resultMap="resourceMap" parameterType="com.zhskg.bag.param.ResourceParam">
+        SELECT  
+        <include refid="columns"/> 
+        FROM ts_resource
+        <where>
+            <if test="resourceName !=null and resourceName !=''"> AND resource_name LIKE '%${resourceName}%'</if>
+            <if test="resourceNo !=null and resourceNo !=''"> AND resource_no = #{resourceNo,jdbcType=VARCHAR}</if>
+            <if test="parentId !=null and parentId !=0"> AND parent_id = #{parentId,jdbcType=BIGINT}</if>
+        </where>
+        ORDER BY create_on DESC LIMIT 0,1
+    </select>
+    <!--根据条件查询-->
+    <select id="getList" resultMap="resourceMap" parameterType="com.zhskg.bag.param.ResourceParam">
+        SELECT 
+        <include refid="columns"/>
+        ,(SELECT COUNT(*) FROM ts_resource WHERE parent_id = t.resource_id AND delete_flag = 0) AS total
+        FROM ts_resource t
+        <where>
+            t.delete_flag = 0
+            <if test="resourceNo !=null and resourceNo !=''"> AND t.resource_no LIKE '%${resourceNo}%'</if>
+            <if test="resourceName !=null and resourceName !=''"> AND t.resource_name LIKE '%${resourceName}%'</if>
+            <if test="caption !=null and caption !=''"> AND t.caption LIKE '%${caption}%'</if>
+            <if test="parentId != null"> AND parent_id = #{parentId,jdbcType=BIGINT}</if>
+            <if test="url !=null and url !=''"> AND t.url LIKE '%${url}%'</if>
+            <if test="comment !=null and comment !=''"> AND t.comment LIKE '%${comment}%'</if>
+        </where>
+    </select>
+    <!--根据条件分页查询-->
+    <select id="getPageList" resultMap="resourceMap">
+        SELECT 
+        <include refid="columns"/>
+        FROM ts_resource 
+        <where>
+            AND delete_flag = 0
+            <if test=" condition.keywords != '' and condition.keywords != null "> AND (resource_name LIKE '%${condition.keywords}%' OR caption LIKE '%${condition.keywords}%') </if>
+            <if test="condition.resourceName !=null and condition.resourceName !=''"> AND resource_name LIKE '%${condition.resourceName}%'</if>
+            <if test="condition.resourceNo !=null and condition.resourceNo !=''"> AND resource_no = #{condition.resourceNo,jdbcType=VARCHAR}</if>
+            <if test="condition.parentId !=null and condition.parentId !=0"> AND parent_id = #{condition.parentId,jdbcType=BIGINT}</if>
+        </where>
+        ORDER BY create_on DESC LIMIT #{pageIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+    <!--根据条件查询记录总数-->
+    <select id="getCount" parameterType="com.zhskg.bag.param.ResourceParam" resultType="java.lang.Integer">
+        SELECT COUNT(*) 
+        FROM ts_resource
+        <where>
+            AND delete_flag = 0
+            <if test=" keywords != '' and keywords != null "> AND (resource_name LIKE '%${keywords}%' OR caption LIKE '%${keywords}%') </if>
+            <if test="resourceName !=null and resourceName !=''"> AND resource_name LIKE '%${resourceName}%'</if>
+            <if test="resourceNo !=null and resourceNo !=''"> AND resource_no = #{resourceNo,jdbcType=VARCHAR}</if>
+            <if test="parentId !=null and parentId !=0"> AND parent_id = #{parentId,jdbcType=BIGINT}</if>
+        </where>
+    </select>
+    <select id="getRoleResource" resultMap="resourceMap">
+        SELECT
+        <include refid="columns"/>
+        ,(SELECT COUNT(*) FROM ts_role_resource WHERE role_id = #{roleId,jdbcType=BIGINT} AND resource_id = t.resource_id) AS total
+        FROM ts_resource t
+        <where>
+            AND t.delete_flag = 0 AND t.resource_id IN (SELECT resource_id FROM ts_role_resource WHERE role_id = #{roleId,jdbcType=BIGINT})
+        </where>
+        ORDER BY t.level,t.sort_no
+    </select>
+    <select id="getCheckedRoleResource" resultMap="resourceMap">
+        SELECT
+        <include refid="columns"/>
+        ,(SELECT COUNT(*) FROM ts_role_resource WHERE role_id = #{roleId,jdbcType=BIGINT} AND resource_id = t.resource_id) AS total
+        FROM ts_resource t
+        <where>
+             AND t.delete_flag = 0
+            <if test="condition.resourceNo !=null and condition.resourceNo !=''"> AND t.resource_no LIKE '%${condition.resourceNo}%'</if>
+            <if test="condition.resourceName !=null and condition.resourceName !=''"> AND t.resource_name LIKE '%${condition.resourceName}%'</if>
+            <if test="condition.caption !=null and condition.caption !=''"> AND t.caption LIKE '%${condition.caption}%'</if>
+            <if test="condition.parentId != null"> AND parent_id = #{condition.parentId,jdbcType=BIGINT}</if>
+            <if test="condition.url !=null and condition.url !=''"> AND t.url LIKE '%${condition.url}%'</if>
+            <if test="condition.comment !=null and condition.comment !=''"> AND t.comment LIKE '%${condition.comment}%'</if>
+        </where>
+    </select>
+    <!--根据主键修改-->
+	<update id="updateById" parameterType="com.zhskg.bag.entity.Resource">
+		UPDATE ts_resource
+        <trim prefix="set" suffixOverrides=",">
+            <if test="resourceNo != null">resource_no = #{resourceNo, jdbcType=VARCHAR}, </if>
+            <if test="resourceName != null">resource_name = #{resourceName, jdbcType=VARCHAR}, </if>
+            <if test="parentId != null">parent_id = #{parentId, jdbcType=BIGINT}, </if>
+            <if test="path != null">path = #{path, jdbcType=VARCHAR}, </if>
+            <if test="level != null">level = #{level, jdbcType=INTEGER}, </if>
+            <if test="sortNo != null">sort_no = #{sortNo, jdbcType=BIGINT}, </if>
+            <if test="category != null">category = #{category, jdbcType=INTEGER}, </if>
+            <if test="caption != null">caption = #{caption, jdbcType=VARCHAR}, </if>
+            <if test="url != null">url = #{url, jdbcType=VARCHAR}, </if>
+            <if test="method != null">method = #{method, jdbcType=VARCHAR}, </if>
+            <if test="description != null">description = #{description, jdbcType=VARCHAR}, </if>
+            <if test="json != null">json = #{json, jdbcType=VARCHAR}, </if>
+            <if test="comment != null">comment = #{comment, jdbcType=VARCHAR}, </if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag, jdbcType=INTEGER}, </if>
+            <if test="createOn != null">create_on = #{createOn, jdbcType=BIGINT}, </if>
+            <if test="createTime != null">create_time = #{createTime, jdbcType=BIGINT}, </if>
+            <if test="modifyOn != null">modify_on = #{modifyOn, jdbcType=BIGINT}, </if>
+            <if test="modifyTime != null">modify_time = #{modifyTime, jdbcType=BIGINT}</if>
+        </trim>
+        WHERE resource_id = #{resourceId,jdbcType=BIGINT}
+	</update>
+    <!--根据条件修改-->
+	<update id="update">
+		UPDATE ts_resource 
+        <trim prefix="set" suffixOverrides=",">
+            <if test="resource.resourceNo != null">resource_no = #{resource.resourceNo, jdbcType=VARCHAR}, </if>
+            <if test="resource.resourceName != null">resource_name = #{resource.resourceName, jdbcType=VARCHAR}, </if>
+            <if test="resource.parentId != null">parent_id = #{resource.parentId, jdbcType=BIGINT}, </if>
+            <if test="resource.path != null">path = #{resource.path, jdbcType=VARCHAR}, </if>
+            <if test="resource.level != null">level = #{resource.level, jdbcType=INTEGER}, </if>
+            <if test="resource.sortNo != null">sort_no = #{resource.sortNo, jdbcType=BIGINT}, </if>
+            <if test="resource.category != null">category = #{resource.category, jdbcType=INTEGER}, </if>
+            <if test="resource.caption != null">caption = #{resource.caption, jdbcType=VARCHAR}, </if>
+            <if test="resource.url != null">url = #{resource.url, jdbcType=VARCHAR}, </if>
+            <if test="resource.method != null">method = #{resource.method, jdbcType=VARCHAR}, </if>
+            <if test="resource.description != null">description = #{resource.description, jdbcType=VARCHAR}, </if>
+            <if test="resource.json != null">json = #{resource.json, jdbcType=VARCHAR}, </if>
+            <if test="resource.comment != null">comment = #{resource.comment, jdbcType=VARCHAR}, </if>
+            <if test="resource.deleteFlag != null">delete_flag = #{resource.deleteFlag, jdbcType=INTEGER}, </if>
+            <if test="resource.createOn != null">create_on = #{resource.createOn, jdbcType=BIGINT}, </if>
+            <if test="resource.createTime != null">create_time = #{resource.createTime, jdbcType=BIGINT}, </if>
+            <if test="resource.modifyOn != null">modify_on = #{resource.modifyOn, jdbcType=BIGINT}, </if>
+            <if test="resource.modifyTime != null">modify_time = #{resource.modifyTime, jdbcType=BIGINT}</if>
+        </trim>
+        <where>
+            <if test="condition.resourceName !=null and condition.resourceName !=''"> AND resource_name LIKE '%${condition.resourceName}%'</if>
+            <if test="condition.resourceNo !=null and condition.resourceNo !=''"> AND resource_no = #{condition.resourceNo,jdbcType=VARCHAR}</if>
+            <if test="condition.parentId !=null and condition.parentId !=0"> AND parent_id = #{condition.parentId,jdbcType=BIGINT}</if>
+        </where>
+	</update>
+    <update id="updatePath" parameterType="map">
+        UPDATE ts_resource
+        SET path = #{path, jdbcType=VARCHAR}
+        WHERE resource_id = #{resourceId,jdbcType=BIGINT}
+    </update>
+</mapper>

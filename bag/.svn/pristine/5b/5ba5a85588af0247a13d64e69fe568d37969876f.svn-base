@@ -1,0 +1,44 @@
+<div id="grid-toolbar">
+    <div class="grid-search">
+        <form id="searchForm">
+            <ul class="search-table clearBox">
+                <li  class="clearBox">
+                    <div class="select-condition clearBox">
+                        <div class="label">姓名：</div>
+                        <div class="select-input"><input name="fullName" class="f1 easyui-textbox" data-options="prompt:'请输入姓名'" type="text"/></div>
+                    </div>
+                    <div class="select-condition clearBox">
+                        <div class="label">手机号码：</div>
+                        <div class="select-input"><input name="mobileNumber" class="f1 easyui-textbox" data-options="prompt:'请输入手机号码'" type="text"/></div>
+                    </div>
+                    <div class="select-condition clearBox">
+                        <div class="label">电子邮箱：</div>
+                        <div class="select-input"><input name="email" class="f1 easyui-textbox" data-options="prompt:'请输入电子邮箱'" type="text"/></div>
+                    </div>
+                    <div class="select-condition clearBox">
+                        <div class="label">身份证号：</div>
+                        <div class="select-input"><input name="identityCardNo" class="easyui-textbox" style="width:180px" data-options="prompt:'请输入身份证号'" type="text"/></div>
+                    </div>
+                </li>
+            </ul>
+
+            <!--<table class="search-table">-->
+                <!--<tr>-->
+                    <!--<td class="label">姓名：</td>-->
+                    <!--<td><input name="fullName" class="f1 easyui-textbox" data-options="prompt:'请输入姓名'" type="text"/></td>-->
+                    <!--<td class="label">手机号码：</td>-->
+                    <!--<td><input name="mobileNumber" class="f1 easyui-textbox" data-options="prompt:'请输入手机号码'" type="text"/></td>-->
+                    <!--<td class="label">电子邮箱：</td>-->
+                    <!--<td><input name="email" class="f1 easyui-textbox" data-options="prompt:'请输入电子邮箱'" type="text"/></td>-->
+                    <!--<td class="label">身份证号：</td>-->
+                    <!--<td><input name="identityCardNo" class="easyui-textbox" style="width:180px" data-options="prompt:'请输入身份证号'" type="text"/></td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        </form>
+        <div class="search-toolbar">
+            <a id="btnSearch" href="javascript:void(0)" class="c1" style="width:80px">查询</a>
+            <a id="btnClear" href="javascript:void(0)" class="c4" style="width:80px">清空</a>
+        </div>
+    </div>
+</div>
+<table id="grid"></table>

@@ -1,0 +1,26 @@
+package com.zhs.core.util.json;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.zhs.core.model.BaseEnum;
+
+public class EnumProxyTypeAdapter implements JsonSerializer<BaseEnum> {
+
+	@Override
+	public JsonElement serialize(BaseEnum object, Type arg1,
+			JsonSerializationContext arg2) {
+		HashMap<String, String> enumModel = new HashMap<String, String>();
+		enumModel.put("key", object.toString());
+		enumModel.put("value", object.getDesc());
+		String jsonText = JsonUtil.toJsonString(enumModel);
+		JsonElement element = new JsonParser().parse(jsonText);
+		return element;
+//		return new JsonPrimitive(object.getDesc());
+	}
+	
+}

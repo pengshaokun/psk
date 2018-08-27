@@ -1,0 +1,134 @@
+package com.zhs.core.util.json;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.zhs.core.model.BaseEnum;
+import com.zhs.core.model.IpModel;
+import com.zhs.core.model.Constant.ResponseObject;
+import com.zhs.core.util.ClassUtil;
+
+/**
+ * JSON工具类  
+ * 
+ * @author yurui
+ * 2016-2-22
+ */
+public class JsonUtil {
+
+	/**
+	 * 返回JSON字符
+	 * @param ob
+	 * @return
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static String toJsonString(Object ob) {
+        ExclusionStrategy excludeStrategy = new SetterExclusionStrategy();
+        GsonBuilder b = new GsonBuilder();
+        b.setExclusionStrategies(excludeStrategy);
+        b.registerTypeAdapterFactory(HibernateProxyTypeAdapter.FACTORY);
+		b.setDateFormat("yyyy-MM-dd HH:mm:ss");
+		if (ob instanceof ResponseObject) {
+			ResponseObject ro = (ResponseObject) ob;
+			if (ro.getData() instanceof HashMap) {
+				HashMap<String,Object> ha = (HashMap<String, Object>) ro.getData();
+				List ll = (List) ha.get("data");
+				if(ll!=null&&ll.size()!=0){
+					List<Class> l = ClassUtil.findTypeProperties(ll.get(0), BaseEnum.class);
+					enumProxy(l,b);
+				}
+			}else if (ro.getData() instanceof ArrayList) {
+				List<Object> li =  (List<Object>) ro.getData();
+				if(li.size()!=0){
+					List<Class> l = ClassUtil.findTypeProperties(li.get(0), BaseEnum.class);
+					enumProxy(l,b);
+				}
+			}else if (ro.getData() instanceof Object[]) {
+				Object[] li =   (Object[]) ro.getData();
+				if(li.length!=0){
+					List<Class> l = ClassUtil.findTypeProperties(li[0], BaseEnum.class);
+					enumProxy(l,b);
+				}
+			}else if(ro.getData() instanceof String) {
+                Gson gs = new GsonBuilder()
+                        .setPrettyPrinting()
+                        .disableHtmlEscaping()
+                        .create();
+                String text = gs.toJson(ob);
+                return text.replace("\\", "");
+            }else{
+				List<Class> l = ClassUtil.findTypeProperties(ro.getData(), BaseEnum.class);
+				enumProxy(l,b);
+			}
+		}
+		Gson gson = b.create();
+		String text = gson.toJson(ob);
+		return text;
+	}
+	
+	private static void enumProxy(List<Class> l,GsonBuilder b){
+        for (Class c : l) {
+            b.registerTypeAdapter(c, new EnumProxyTypeAdapter());
+            List<Class> l2 = ClassUtil.findTypeProperties(c, BaseEnum.class);
+            for (Class a : l2) {
+                b.registerTypeAdapter(a, new EnumProxyTypeAdapter());
+            }
+        }
+    }
+	
+	/** 
+     * json字符串转成对象 
+     * @param str   
+     * @param type  
+     * @return  
+     */  
+    public static <T> T toObject(String str, Class<T> type) {  
+        Gson gson = new Gson();  
+        return gson.fromJson(str, type);  
+    }
+    
+    public static <T> T fromJsonToObject(String str, Type type) {  
+   	 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss")  
+  			  .create();
+       return gson.fromJson(str, type);  
+   }  
+    
+    public static void main(String[] args) {
+		List<IpModel>  ips=new ArrayList<IpModel>();
+		for(int i=0;i<10;i++) {
+			IpModel ip =new IpModel();
+			ip.setAddress(i+"");
+			ip.setIp(i+"");
+			ips.add(ip);
+		}
+		String json=JsonUtil.toJsonString(ips);
+		System.out.println(json);
+		List<IpModel> ipn=JsonUtil.fromJsonToObject(json,  new com.google.gson.reflect.TypeToken<List<IpModel>>(){}.getType());
+		
+    }
+}
+
+class SetterExclusionStrategy implements ExclusionStrategy {
+
+	@Override
+	public boolean shouldSkipClass(Class<?> arg0) {
+		return false;
+	}
+
+	@Override
+	public boolean shouldSkipField(FieldAttributes f) {
+		if(f.getAnnotation(NoJson.class)==null){
+			return false;
+		}else{
+			return true;
+		}
+//		return f.getName().endsWith("NoJson");
+	}
+
+}

@@ -1,0 +1,41 @@
+package com.zhs.common.model.tenement;
+
+import com.zhs.core.model.BaseModel;
+import lombok.Data;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+/**
+ * @author ZHS-CZJiang
+ * @date 2018-07-06
+ * 楼层
+ */
+@Data
+@Entity
+@Table(name = "tb_parking_floor")
+public class Floor extends BaseModel {
+
+    /**
+     * 远程服务器  id
+     */
+    @Column(name = "floor_id")
+    private Integer floorId;
+    /**
+     * 楼层名称
+     */
+    private String name;
+
+    /**
+     * 排序号
+     */
+    @Column(name = "sort_num")
+    private Integer sortNum;
+
+    /**
+     * 楼层编码
+     */
+    private String code;
+
+}

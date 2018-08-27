@@ -1,0 +1,242 @@
+package com.zhs.core.util;
+
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
+
+public final class StrUtil {
+
+	/**
+	 * 判断字符串，数组，集合 是否为空
+	 * 
+	 * @param obj
+	 * @return
+	 */
+	public static boolean isEmpty(Object obj) {
+		if (obj instanceof String) {
+			if (obj == null || "".equals((String) obj)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else if (obj instanceof Object[]) {
+			if (obj == null || ((Object[]) obj).length == 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} else if (obj instanceof Collection<?>) {
+			if (obj == null || ((Collection<?>) obj).size() == 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			if (obj == null) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+
+	public static boolean isNotEmpty(Object obj) {
+		return !isEmpty(obj);
+	}
+
+	/**
+	 * 生成UUID
+	 * 
+	 * @return
+	 */
+	public static String genUUID() {
+		return UUID.randomUUID().toString().replaceAll("-", "");
+	}
+
+	/**
+	 * 生成11位编号，可以用作订单号，有很小几率出现重复，需要做异常处理<br/>
+	 * 左边第一位为正负标识：正数1 负数0<br/>
+	 * 剩余位数为UUID的hashcode值<br/>
+	 * 可以再生成的编号基础上嵌入其他标识编码
+	 * 
+	 * @return
+	 */
+	public static String genNum() {
+		int hashCode = UUID.randomUUID().toString().hashCode();
+		StringBuffer num = new StringBuffer();
+		;
+		if (hashCode < 0) {
+			hashCode = 0 - hashCode;
+			num.append("0");
+		} else {
+			num.append("1");
+		}
+		return num.append(String.format("%010d", hashCode)).toString();
+	}
+
+	/**
+	 * 解析aa=bb&cc=dd&ee=ff格式的字符串，返回HashMap
+	 * 
+	 * @param urlencoded
+	 * @return
+	 */
+	public static Map<String, String> parseUrlencoded(String urlencoded) {
+		if (isEmpty(urlencoded)) {
+			return null;
+		}
+		String[] entrys = urlencoded.split("&");
+		if (isEmpty(entrys)) {
+			return null;
+		}
+
+		Map<String, String> map = new HashMap<String, String>();
+		String[] kv = null;
+		for (String entry : entrys) {
+			if (isEmpty(entry)) {
+				continue;
+			}
+			kv = entry.split("=");
+			if (isEmpty(kv)) {
+				continue;
+			}
+			if (kv.length > 1) {
+				map.put(kv[0], kv[1]);
+			} else {
+				map.put(kv[0], null);
+			}
+		}
+		return map;
+	}
+
+	/**
+	 * 字符串转换方法 把字节数组转换成16进制字符串
+	 * 
+	 * @param buf
+	 *            初始字节数组
+	 * @return 转换后字符串
+	 */
+	public static String toHex(byte buf[]) {
+		StringBuffer strbuf = new StringBuffer(buf.length * 2);
+		int i;
+		for (i = 0; i < buf.length; i++) {
+			if (((int) buf[i] & 0xff) < 0x10) {
+				strbuf.append("0");
+			}
+			strbuf.append(Long.toString((int) buf[i] & 0xff, 16));
+		}
+		return strbuf.toString();
+	}
+
+	/**
+	 * 获取字符串的MD5码
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static String toMD5(String str) {
+		if (str == null) {
+			return null;
+		}
+		MessageDigest md = null;
+		try {
+			md = java.security.MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return null;
+		}
+		md.update(str.getBytes());
+		byte tmp[] = md.digest();
+		return toHex(tmp);
+	}
+
+	/**
+	 * 用ISO-8859-1解码 再用UFT-8编码
+	 * 
+	 * @param oldCharset
+	 * @param newCharset
+	 * @return
+	 */
+	public static String iso2utf(String str) {
+		String utfStr = null;
+		try {
+			utfStr = new String(str.getBytes("ISO-8859-1"), "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return utfStr;
+	}
+	
+	/**获取随机数**/
+	public static String getRandomNum(int count){
+        StringBuffer sb = new StringBuffer();
+        String str = "0123456789";
+        Random r = new Random();
+        for(int i=0;i<count;i++){
+            int num = r.nextInt(str.length());
+            sb.append(str.charAt(num));
+            str = str.replace((str.charAt(num)+""), "");
+        }
+        return sb.toString();
+    }
+	
+	 
+	    /**
+	      * 逗号表达式_单一删除
+	      * @param commaexpress  原逗号表达式 如 A,B,C
+	      * @param delelement 删除元素 C
+	      * @return A,B
+	      */
+	    public static String comma_delone(String commaexpress, String delelement) {
+	        if ((commaexpress == null) || (delelement == null) || (commaexpress.trim().equals(delelement.trim()))) {
+	           return "";
+	         }
+	        String[] strlist = commaexpress.split(",");
+	        StringBuffer result = new StringBuffer();
+	        for (String str : strlist) {
+	          if ((!str.trim().equals(delelement.trim())) && (!"".equals(str.trim()))) {
+	        	  result.append(str.trim() + ",");
+	           }
+	        }
+	        return result.toString().substring(0, result.length() - 1 > 0 ? result.length() - 1 : 0);
+       }
+	    
+	    /**
+	      * 逗号表达式_判断是否包含元素
+	      * @param commaexpress 逗号表达式 A,B,C
+	      * @param element C
+	      * @return true
+	      */
+	    public static boolean comma_contains(String commaexpress, String element) {
+	       boolean flag = false;
+	       commaexpress = FilterNull(commaexpress);
+	       element = FilterNull(element);
+	       if (!"".equals(commaexpress) && !"".equals(element)) {
+	            String[] strlist = commaexpress.split(",");
+	            for (String str : strlist) {
+	                if (str.trim().equals(element.trim())) {
+	                     flag = true;
+	                     break;
+	                }
+	              }
+	         }
+	       return flag;
+	     }
+	         
+	      /**
+	       * 过滤空NULL
+	       * @param o
+	       * @return 
+	       */
+	      public static String FilterNull(Object o) {
+	              return o != null && !"null".equals(o.toString()) ? o.toString().trim() : "" ;
+	      }
+	      
+	      public static void main(String[] args) {
+			System.out.println(StrUtil.comma_delone("aaa,asda","aaa"));
+	      }
+}

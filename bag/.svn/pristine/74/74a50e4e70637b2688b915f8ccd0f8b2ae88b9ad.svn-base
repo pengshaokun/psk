@@ -1,0 +1,12 @@
+#绑定门闸,同步门闸数据
+port.bindingTenement = /bindingTenement
+#同步停车场计费二规则
+port.bingdingYardBillingTwo = /bingdingYardBillingTwo
+#同步停车场计费三规则
+port.bingdingYardBillingThree = /bingdingYardBillingThree
+#同步停车场计费四规则
+port.bingdingYardBillingFour = /bingdingYardBillingFour
+#同步停车场业主信息
+port.bingdingFreeCar = /bingdingFreeCar
+#同步停车场共享车位信息
+port.bingdingPrivatePark /bingdingPrivatePark

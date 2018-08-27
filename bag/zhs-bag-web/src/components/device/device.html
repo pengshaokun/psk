@@ -1,0 +1,52 @@
+<div id="grid-toolbar">
+    <div class="grid-search">
+        <form id="searchForm">
+            <ul class="search-table clearBox">
+                <li class="clearBox">
+                    <div class="select-condition clearBox">
+                        <div class="label">设备编号：</div>
+                        <div class="select-input"><input name="clientId" style="width: 140px" data-options="prompt:'请输入设备ID'"
+                               class="easyui-textbox" type="text"/></div>
+                    </div>
+                    <div class="select-condition clearBox">
+                        <div class="label">设备状态：</div>
+                        <div class="select-input">
+                            <select id="stockState" name="stockState" class="easyui-combobox" >
+                                <option value="">--全部--</option>
+                                <option value="2">出库</option>
+                                <option value="1">入库</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <!--<table class="search-table">-->
+                <!--<tr>-->
+                    <!--<td class="label">设备编号：</td>-->
+                    <!--<td><input name="clientId" style="width: 140px" data-options="prompt:'请输入设备ID'"-->
+                               <!--class="easyui-textbox" type="text"/></td>-->
+                    <!--<td class="label">设备状态：</td>-->
+                    <!--<td>-->
+                        <!--<select id="stockState" name="stockState" class="easyui-combobox" >-->
+                            <!--<option value="">&#45;&#45;请选择&#45;&#45;</option>-->
+                            <!--<option value="2">出库</option>-->
+                            <!--<option value="1">入库</option>-->
+                        <!--</select>-->
+                    <!--</td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        </form>
+        <div class="search-toolbar">
+            <a id="btnSearch" href="javascript:void(0)" class="c1" style="width:80px">查询</a>
+            <a id="btnClear" href="javascript:void(0)" class="c4" style="width:80px">清空</a>
+        </div>
+    </div>
+</div>
+<table id="grid"></table>
+<div id="dlg" style="display: none;"></div>
+<div id="editDlg" style="display: none;"></div>
+<div id="dlg-buttons">
+    <a id="btnSave" href="javascript:void(0)" style="width:80px">保存</a>
+    <a id="btnCancel" href="javascript:void(0)" style="width:80px">取消</a>
+</div>

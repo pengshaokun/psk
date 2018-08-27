@@ -1,0 +1,132 @@
+package com.zhs.core.util.search.paginate;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+@SuppressWarnings("rawtypes" )
+public class PagedNativeQuery {
+
+	Pattern ptn = Pattern.compile("select\\s([a-zA-Z0-9\\.\\*]+)\\sfrom");
+
+	private EntityManager entityManager;
+
+	private String ql;
+
+	private String countQl;
+
+	private Map<String, Object> paramters;
+
+	private Class entityClass;
+
+	public Class getEntityClass() {
+		return entityClass;
+	}
+
+	public void setEntityClass(Class entityClass) {
+		this.entityClass = entityClass;
+	}
+
+	public EntityManager getEntityManager() {
+		return entityManager;
+	}
+
+	public static PagedNativeQuery createPagedQuery(String sql,
+			EntityManager entityManager) {
+		PagedNativeQuery result = new PagedNativeQuery();
+		result.setEntityManager(entityManager);
+		result.setQueryString(sql);
+		return result;
+	}
+
+	public void setEntityManager(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
+
+	public PagedNativeQuery setQueryString(String ql) {
+		this.ql = ql;
+		return this;
+	}
+
+	public PagedNativeQuery setParamters(Map<String, Object> paramters) {
+		this.paramters = paramters;
+		return this;
+	}
+
+	public PagedNativeQuery setParamter(String name, Object value) {
+		if (paramters == null) {
+			paramters = new HashMap<String, Object>();
+		}
+		paramters.put(name, value);
+		return this;
+	}
+
+	/**
+	 * @param pageAndOrder
+	 *            鍒嗛〉鍙婃帓搴忛檺瀹�浼犲叆鐨刾ageAndOrder,瀵硅薄涓嶈兘涓虹┖锛屽苟搴斿寘鍚�
+	 *            褰撳墠椤点�鎺掑簭銆佹瘡椤靛璞℃暟绛変俊鎭紝濡傛湭璁剧疆锛屽綋鍓嶉〉榛樿涓�,姣忛〉瀵硅薄鏁伴粯璁や负
+	 *            PageAndOrder.DEFAULT_PAGE_SIZE <br>
+	 *            <strong>娉ㄦ剰:</strong>pageAndOrder瀵硅薄鐨�
+	 *            fullListSize灞炴�灏嗕細琚慨鏀逛负鎸囧畾鏌ヨ鏉′欢鐨勮褰曟潯鏁般�
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	public <E> List<E> executeQuery(PageAndOrder pageAndOrder) {
+		ql = pageAndOrder.order(ql);
+		pageAndOrder.setTotalRows(countRows());
+		Query query;
+		if (getEntityClass() != null) {
+			query = entityManager.createNativeQuery(ql, getEntityClass());
+		} else {
+			query = entityManager.createNativeQuery(ql);
+		}
+		query.setMaxResults(pageAndOrder.getPageSize());
+		query.setFirstResult((pageAndOrder.getCurrentPage() - 1)
+				* pageAndOrder.getPageSize());
+		if (paramters != null) {
+			for (Map.Entry<String, Object> param : paramters.entrySet()) {
+				query.setParameter(param.getKey(), param.getValue());
+			}
+		}
+
+		List<E> result = query.getResultList();
+
+		return result;
+	}
+
+	public int countRows() {
+		if (countQl == null) {
+			// countQl =
+			// ql.replaceFirst("select\\s[a-zA-Z0-9\\.\\,\\_\\*\\s\\)\\(]+\\sfrom",
+			// "select count(*) from");
+			countQl = "select count(*) from (" + ql + ")"; // ql.replaceFirst("select[^from]+from",
+			// "select count(*)
+			// from");
+		}
+		Query query = entityManager.createNativeQuery(countQl);
+		if (paramters != null) {
+			for (Map.Entry<String, Object> param : paramters.entrySet()) {
+				query.setParameter(param.getKey(), param.getValue());
+			}
+		}
+		return new Integer(query.getSingleResult().toString()).intValue();
+	}
+
+	public static void main(String[] args) {
+		String ql = "select a.LENDER_ID,nvl(b.WIN_AMOUNT,0)WIN_AMOUNT,nvl(b.WIN_COUNT,0)WIN_COUNT from FEATURED_LENDER a left join ( select br.USER_ID, sum(br.WIN_AMOUNT) as WIN_AMOUNT, count  as WIN_COUNT from BID_RECORD br inner join LISTING l on br.LISTING_ID = l.LISTING_ID where br.STATUS <> '0' and (l.STATUS = '9' or l.STATUS = 'A') group by br.USER_ID ) b on a.LENDER_ID = b.USER_ID where 1 = 1";
+		String countQl = ql.replaceFirst(
+				"select\\s[a-zA-Z0-9\\.\\,\\_\\*\\s\\)\\(]+\\sfrom",
+				"select count(*) from");
+		String countQ2 = ql.replaceFirst(
+				"select\\s[a-zA-Z0-9\\.\\,\\_\\*\\)\\(]+\\sfrom",
+				"select count(*) from");
+		// String countQl = ql.replaceFirst("select\\s[.]+\\sfrom", "select
+		// count(*) from");
+		System.out.println(">>>>>>>>>>" + countQl);
+		System.out.print(">>>>>>>>>>" + countQ2);
+	}
+}

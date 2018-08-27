@@ -1,0 +1,20 @@
+package com.zhs.core.util.search.paginate;
+
+/**
+ * 
+ */
+public interface OrderBy {
+
+	String order(String queryString);
+
+	String order(StringBuffer queryString);
+
+	String order(StringBuilder queryString);
+
+	OrderBy setModelAlias(String modelAlias);
+
+	Order getOrder();
+
+	String getColumn();
+
+}

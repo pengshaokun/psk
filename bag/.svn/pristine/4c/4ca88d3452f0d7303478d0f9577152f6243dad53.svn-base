@@ -1,0 +1,114 @@
+package com.zhs.common.model.carpush;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.alibaba.fastjson.annotation.JSONField;
+import com.zhs.common.constant.FreeCarType;
+import com.zhs.core.model.BaseModel;
+
+/**
+ * 业主车辆
+ * @author ZHSKG YANH
+ *
+ */
+@Table
+@Entity(name="tb_free_car")
+public class FreeCar extends BaseModel{
+
+    /**
+     * 业主 id
+     */
+    @Column(name = "user_id")
+    private long userId;
+
+    /**
+     * 车牌号
+     */
+    @Column(name="car_num")
+    private String carNum;
+
+    /**
+     * 开始时间
+     */
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "start_time")
+    private Date startTime;
+
+    /**
+     * 结束时间
+     */
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "end_time")
+    private Date endTime;
+
+    /**
+     * 免费类型
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "free_car_type")
+    private FreeCarType freeCarType;
+
+    /**
+     * 业主共享车位ID
+     */
+    @Column(name = "private_park_id")
+    private long privateParkId;
+
+    public String getCarNum() {
+        return carNum;
+    }
+
+    public void setCarNum(String carNum) {
+        this.carNum = carNum;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public FreeCarType getFreeCarType() {
+        return freeCarType;
+    }
+
+    public void setFreeCarType(FreeCarType freeCarType) {
+        this.freeCarType = freeCarType;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public long getPrivateParkId() {
+        return privateParkId;
+    }
+
+    public void setPrivateParkId(long privateParkId) {
+        this.privateParkId = privateParkId;
+    }
+}

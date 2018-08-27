@@ -1,0 +1,24 @@
+package Test;
+
+public class Object1 {
+
+    private String name;
+
+    private Object str;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Object getStr() {
+        return str;
+    }
+
+    public void setStr(Object str) {
+        this.str = str;
+    }
+}

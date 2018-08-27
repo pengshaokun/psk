@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.MessageSystemMapper">
+
+    <!-- messageSystemMap -->
+    <resultMap id="messageSystemMap" type="com.zhskg.bag.model.MessageSystemEntry">
+        <id column="s_id" property="id" />
+        <result column="s_title" property="title" />
+        <result column="s_content" property="content" />
+        <result column="s_createtime" property="createtime" />
+    </resultMap>
+
+    <!-- 添加系统通知 -->
+    <insert id="add" parameterType="com.zhskg.bag.entity.MessageSystem" useGeneratedKeys="true" keyProperty="id">
+        insert into tm_message_system
+        (
+            s_title,
+            s_content,
+            s_createtime,
+            s_userid,
+            s_deleted
+        )
+        values
+        (
+            #{title},
+            #{content},
+            #{createtime},
+            #{userId},
+            1
+        )
+    </insert>
+
+    <!-- 根据ID删除系统通知 -->
+    <update id="delete" parameterType="int">
+        update tm_message_system set s_deleted = 0 where s_id = #{id}
+    </update>
+
+    <!-- 根据ID修改系统通知 -->
+    <update id="update" parameterType="com.zhskg.bag.entity.MessageSystem">
+        update tm_message_system
+        <set>
+            <if test="title != null and title != ''">
+                s_title = #{title},
+            </if>
+            <if test="content != null and content != ''">
+                s_content = #{content}
+            </if>
+        </set>
+        where s_id = #{id}
+    </update>
+
+    <!-- 根据id查看系统通知详情 -->
+    <select id="queryById" parameterType="int" resultMap="messageSystemMap">
+        select *
+        from
+        (
+            select S.s_id,
+                   S.s_title,
+                   S.s_content,
+                   S.s_createtime,
+                   S.s_userid
+            from
+            tm_message_system S
+            where S.s_id = #{id} and S.s_deleted = 1
+        ) T1
+        where 1 = 1
+    </select>
+
+    <!-- 查询条件 -->
+    <sql id="whereQueryMessageSystem">
+        <if test="messageSystemParam.title != null and messageSystemParam.title != ''">
+            and s_title like '%${messageSystemParam.title}%'
+        </if>
+        <if test="messageSystemParam.content != null and messageSystemParam.content != ''">
+            and s_content like '%${messageSystemParam.content}%'
+        </if>
+    </sql>
+
+    <!-- 排序 -->
+    <sql id="orderQueryMessageSystem">
+        order by s_createtime desc
+    </sql>
+
+    <!-- 分页 -->
+    <sql id="limitQueryMessageSystem">
+        limit #{pageIndex}, #{pageSize}
+    </sql>
+
+    <!-- 根据参数查询系统通知列表 -->
+    <select id="query" parameterType="com.zhskg.bag.param.MessageSystemParam" resultMap="messageSystemMap">
+        select *
+        from
+        (
+            select S.s_id,
+                   S.s_title,
+                   S.s_content,
+                   S.s_createtime,
+                   S.s_userid
+            from
+            tm_message_system S
+            where S.s_deleted = 1
+        ) T1
+        where 1 = 1
+        <!-- 查询条件 -->
+        <include refid="whereQueryMessageSystem" />
+        <!-- 排序 -->
+        <include refid="orderQueryMessageSystem" />
+        <!-- 分页 -->
+        <include refid="limitQueryMessageSystem" />
+    </select>
+
+    <!-- 根据参数查询系统通知列表数量 -->
+    <select id="queryAllMessageSystemCount" parameterType="com.zhskg.bag.param.MessageSystemParam" resultType="int">
+        select count(1)
+        from
+        (
+            select S.s_id,
+                   S.s_title,
+                   S.s_content,
+                   S.s_createtime,
+                   S.s_userid
+            from
+            tm_message_system S
+            where S.s_deleted = 1
+        ) T1
+        where 1 = 1
+        <!-- 查询条件 -->
+        <include refid="whereQueryMessageSystem" />
+    </select>
+
+</mapper>

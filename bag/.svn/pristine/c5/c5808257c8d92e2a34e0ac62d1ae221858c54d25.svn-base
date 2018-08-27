@@ -1,0 +1,28 @@
+﻿#服务器虚拟文件目录
+
+window.file.dir = F:\\tradeApiFileDir
+
+linux.file.dir = /opt/tradeApi/fileDir
+
+#文件服务器的路径
+file.server.path = file
+
+#---------------分页参数配置-------------------
+#页码
+pagination.page = page
+#每行页数
+pagination.perPage = rows
+#排序列
+pagination.column = sort
+#降序升序
+pagination.order = order
+#预留高级搜索字段名-页面控件预留封装字段，暂不用
+pagination.serch = serch
+
+#---------------融云配置-------------------
+#key
+rongyun.key = z3v5yqkbvmif0
+#密匙
+rongyun.secret = SBwG2e0pr0Q
+
+

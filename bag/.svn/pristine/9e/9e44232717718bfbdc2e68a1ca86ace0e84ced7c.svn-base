@@ -1,0 +1,17 @@
+package com.zhs.base.dao.impl;
+
+import com.zhs.base.dao.BaseModelDao;
+import com.zhs.core.dao.AbstractGenericHibernateDao;
+import com.zhs.core.model.BaseModel;
+import org.springframework.stereotype.Repository;
+
+@Repository("baseModelDao")
+public class BaseModelDaoImpl extends AbstractGenericHibernateDao<BaseModel>
+		implements BaseModelDao {
+
+	public BaseModelDaoImpl() {
+		super();
+		setClazz(BaseModel.class);
+	}
+
+}

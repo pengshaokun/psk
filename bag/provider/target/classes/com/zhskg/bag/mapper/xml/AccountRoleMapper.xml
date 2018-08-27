@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.AccountRoleMapper">
+    <resultMap id="accountRoleMap" type="com.zhskg.bag.entity.AccountRole">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="account_id" jdbcType="BIGINT" property="accountId"/>
+        <result column="role_id" jdbcType="BIGINT" property="roleId"/>
+        <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
+        <result column="enable_flag" jdbcType="INTEGER" property="enableFlag"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="default_flag" jdbcType="INTEGER" property="defaultFlag"/>
+        <result column="checked" jdbcType="BOOLEAN" property="checked"/>
+    </resultMap>
+    <!--数据库字段-->
+    <sql id="columns"> 
+        id,
+        account_id,
+        role_id,
+        default_flag
+    </sql>
+    <!--插入记录-->
+    <insert id="add" parameterType="com.zhskg.bag.entity.AccountRole">
+        INSERT INTO ts_account_role (
+        <include refid="columns"/>
+        ) VALUES (
+        #{id, jdbcType=BIGINT},
+        #{accountId, jdbcType=BIGINT},
+        #{roleId, jdbcType=BIGINT},
+        #{defaultFlag, jdbcType=INTEGER}
+        )
+    </insert>
+    <!--插入记录并返回主键(主键必须是自增列)-->
+    <insert id="addAndId" parameterType="com.zhskg.bag.entity.AccountRole">
+        INSERT INTO ts_account_role (
+        <include refid="columns"/>
+        ) VALUES (
+        #{id, jdbcType=BIGINT},
+        #{accountId, jdbcType=BIGINT},
+        #{roleId, jdbcType=BIGINT},
+        #{defaultFlag, jdbcType=INTEGER}
+        )
+        <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Long">SELECT @@IDENTITY as id</selectKey>
+    </insert>
+    <!--批量插入-->
+    <insert id="batchAdd" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO ts_account_role (
+        <include refid="columns"/>
+        ) VALUES
+        <foreach separator="," index="index" item="item" collection="list">
+            (
+            #{item.id, jdbcType=BIGINT},
+            #{item.accountId, jdbcType=BIGINT},
+            #{item.roleId, jdbcType=BIGINT},
+            #{item.defaultFlag, jdbcType=INTEGER}
+            )
+        </foreach>
+    </insert>
+    <!--根据主键删除-->
+    <delete id="realRemoveById" parameterType="java.lang.Long"> 
+        delete from ts_account_role where id = #{id,jdbcType=BIGINT} 
+    </delete>
+    <!--根据条件删除-->
+    <delete id="realRemove" parameterType="com.zhskg.bag.param.AccountRoleParam">
+        delete from ts_account_role
+        <where>
+            <if test="accountId!=null and accountId!=0">AND account_id = #{accountId,jdbcType=BIGINT}</if>
+            <if test="roleId!=null and roleId!=0">AND role_id = #{roleId,jdbcType=BIGINT}</if>
+        </where>
+    </delete>
+    <delete id="realRemoveByAccountId">
+        DELETE FROM ts_account_role
+        WHERE account_id = #{accountId,jdbcType=BIGINT} AND role_id IN (SELECT role_id FROM ts_role WHERE delete_flag=0)
+    </delete>
+    <!--根据主键查询-->
+    <select id="get" resultMap="accountRoleMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_account_role WHERE id = #{id,jdbcType=BIGINT}
+    </select>
+    <!--根据条件查询返回第一行-->
+    <!--<select id="getFirst" resultMap="accountRoleMap" parameterType="com.zhskg.bag.param.AccountRoleParam">
+        SELECT  
+        <include refid="columns"/> 
+        FROM ts_account_role 
+        <where>
+            <if test=" param1 != 0 and param1 != null "> AND column1 = #{param1,jdbcType=INTEGER} </if>
+            <if test=" param2 != '' and param2 != null "> AND column2 = #{param2,jdbcType=VARCHAR} </if>
+        </where>
+        ORDER BY column3 DESC LIMIT 0,1
+    </select>-->
+    <!--根据条件查询-->
+    <select id="getList" resultMap="accountRoleMap" parameterType="com.zhskg.bag.param.AccountRoleParam">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_account_role
+    </select>
+    <select id="getRoleByAccountId" resultMap="accountRoleMap">
+        SELECT a.*,
+        IFNULL(b.default_flag, 0) AS default_flag,
+        IF(b.role_id > 0, 1, 0) AS checked,
+        b.account_id
+        FROM ts_role a
+        LEFT JOIN (SELECT * FROM ts_account_role WHERE account_id = #{accountId, jdbcType=BIGINT}) b ON
+        a.role_id=b.role_id
+        <where>
+            AND a.delete_flag=0
+            <if test="roleCode != null and roleCode != ''">AND a.role_code = #{roleCode,jdbcType=VARCHAR}</if>
+        </where>
+        ORDER BY a.role_id
+    </select>
+    <!--根据条件分页查询-->
+    <!--<select id="getPageList" resultMap="accountRoleMap">
+        SELECT 
+        <include refid="columns"/>
+        FROM ts_account_role 
+        <where>
+            <if test=" condition.keywords != '' and condition.keywords != null "> AND (column2 LIKE '%${condition.param2}%' OR column3 LIKE '%${condition.param3}%') </if>
+            <if test=" condition.param1 != 0 and condition.param1 != null "> AND column1 = #{condition.param1,jdbcType=INTEGER} </if>
+            <if test=" condition.param2 != '' and condition.param2 != null "> AND column2 LIKE '%${condition.param2}%' </if>
+            <if test=" condition.param3 != '' and condition.param3 != null "> AND column3 LIKE '%${condition.param3}%' </if>
+        </where>
+        ORDER BY column3 DESC LIMIT #{pageIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} 
+    </select>-->
+    <!--根据条件查询记录总数-->
+    <select id="getCount" parameterType="com.zhskg.bag.param.AccountRoleParam" resultType="java.lang.Integer">
+        SELECT COUNT(*) 
+        FROM ts_account_role 
+    </select>
+    <!--根据主键修改-->
+    <update id="updateById" parameterType="com.zhskg.bag.entity.AccountRole">
+        UPDATE ts_account_role
+        <trim prefix="set" suffixOverrides=",">
+            <if test="accountId != null">account_id = #{accountId, jdbcType=BIGINT},</if>
+            <if test="roleId != null">role_id = #{roleId, jdbcType=BIGINT},</if>
+            <if test="defaultFlag != null">default_flag = #{defaultFlag, jdbcType=INTEGER}</if>
+        </trim>
+        WHERE id = #{id,jdbcType=BIGINT}
+    </update>
+    <!--根据条件修改-->
+    <!--<update id="update">
+        UPDATE ts_account_role
+        <trim prefix="set" suffixOverrides=",">
+            <if test="accountRole.accountId != null">account_id = #{accountRole.accountId, jdbcType=BIGINT}, </if>
+            <if test="accountRole.roleId != null">role_id = #{accountRole.roleId, jdbcType=BIGINT}, </if>
+            <if test="accountRole.defaultFlag != null">default_flag = #{accountRole.defaultFlag, jdbcType=INTEGER}</if>
+        </trim>
+        WHERE column1 = #{condition.param1,jdbcType=INTEGER} AND column2 = #{condition.param2,jdbcType=VARCHAR}
+    </update>-->
+    <!--获取用户角色列表-->
+    <select id="getAccountRoleList" parameterType="map" resultMap="accountRoleMap">
+        SELECT a.*,b.role_name FROM ts_account_role a
+        LEFT JOIN ts_role b ON a.role_id=b.role_id
+        WHERE a.account_id=#{accountId,jdbcType=BIGINT}
+    </select>
+</mapper>

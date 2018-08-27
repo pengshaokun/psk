@@ -1,0 +1,153 @@
+package com.zhs.common.model.carpush;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import com.zhs.core.model.BaseModel;
+
+/**
+ * 共享车位信息
+ * @author ZHSKG YANH
+ *
+ */
+@Entity
+@Table(name="tb_private_park")
+public class PrivatePark extends BaseModel{
+
+    /**
+     * 车位 id
+     */
+    @Column(name = "private_park_id")
+    private long privateParkId;
+	/**
+	 * 车场id
+	 */
+	@Column(name = "tenement_id")
+	private long tenementId;
+	/**
+	 * 免费时间
+	 */
+	@Column(name="free_time")
+	private int freeTime;
+	/**
+	 * 首次收费时间  单位 小时
+	 */
+	@Column(name="first_change_time")
+	private int firstChangeTime;
+	/**
+	 * 首次收费  多少元
+	 */
+	@Column(name="first_change_money")
+	private int firstChangeMoney;
+	/**
+	 * 单价收费
+	 */
+	@Column(name="unit_price")
+	private int unitPrice;
+    /**
+     * 一口价（单位分）
+     */
+    @Column(name = "fixed_money")
+	private int fixedMoney;
+    /**
+     * 包月价（单位分）
+     */
+    @Column(name = "month_money")
+    private int monthMoney;
+    /**
+     * 收费方式 1：时段收费，2：一口价，3：包月收费
+     */
+    @Column(name = "change_type")
+	private int changeType;
+	/**
+	 * 车位开启状态
+	 */
+	private boolean state;
+
+	public int getFreeTime() {
+		return freeTime;
+	}
+
+	public void setFreeTime(int freeTime) {
+		this.freeTime = freeTime;
+	}
+
+	public Integer getFirstChangeTime() {
+		return firstChangeTime;
+	}
+
+	public void setFirstChangeTime(Integer firstChangeTime) {
+		this.firstChangeTime = firstChangeTime;
+	}
+
+	public void setFirstChangeTime(int firstChangeTime) {
+		this.firstChangeTime = firstChangeTime;
+	}
+
+	public int getFirstChangeMoney() {
+		return firstChangeMoney;
+	}
+
+	public void setFirstChangeMoney(int firstChangeMoney) {
+		this.firstChangeMoney = firstChangeMoney;
+	}
+
+	public int getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(int unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
+	public long getPrivateParkId() {
+        return privateParkId;
+    }
+
+    public void setPrivateParkId(long privateParkId) {
+        this.privateParkId = privateParkId;
+    }
+
+    public long getTenementId() {
+        return tenementId;
+    }
+
+    public void setTenementId(long tenementId) {
+        this.tenementId = tenementId;
+    }
+
+    public int getFixedMoney() {
+        return fixedMoney;
+    }
+
+    public void setFixedMoney(int fixedMoney) {
+        this.fixedMoney = fixedMoney;
+    }
+
+    public int getMonthMoney() {
+        return monthMoney;
+    }
+
+    public void setMonthMoney(int monthMoney) {
+        this.monthMoney = monthMoney;
+    }
+
+    public int getChangeType() {
+        return changeType;
+    }
+
+    public void setChangeType(int changeType) {
+        this.changeType = changeType;
+    }
+
+    public boolean isState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
+    }
+    
+    
+}

@@ -1,0 +1,10 @@
+package com.zhs.base.service;
+
+import com.zhs.core.model.BaseModel;
+import com.zhs.core.service.IOpertionService;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface BaseModelService extends IOpertionService<BaseModel> {
+	
+}

@@ -1,0 +1,42 @@
+package com.zhs.common.model.carpush;
+
+import com.zhs.core.model.BaseModel;
+
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+
+/**
+ * Created with Intellij IDEA
+ *
+ * @author:ZHS-CZJiang
+ * @date:2018/5/24
+ */
+@Entity
+@Table(name = "push_data")
+public class PushData extends BaseModel {
+
+    @Lob
+    private String AlarmInfoPlate;
+
+    /**
+     * 是否发送到服务器
+     */
+    private boolean push;
+
+    public String getAlarmInfoPlate() {
+        return AlarmInfoPlate;
+    }
+
+    public void setAlarmInfoPlate(String alarmInfoPlate) {
+        AlarmInfoPlate = alarmInfoPlate;
+    }
+
+    public boolean isPush() {
+        return push;
+    }
+
+    public void setPush(boolean push) {
+        this.push = push;
+    }
+}

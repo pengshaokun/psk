@@ -1,0 +1,103 @@
+package com.zhs.core.util.search.paginate;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zhs.core.util.json.HibernateProxyTypeAdapter;
+import com.zhs.core.util.resource.ResourceFileUtil;
+import org.apache.commons.lang.StringUtils;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+public class PaginationUtil {
+
+	public static final PageAndOrder getPageAndOrder() {
+
+		PageAndOrder result = new PageAndOrderImpl("", null, true);
+
+		return result;
+	}
+
+	/**
+	 * 通过request取得分页信息
+	 * 
+	 * @param request
+	 * @return
+	 */
+	public static final PageAndOrder getPageAndOrder(HttpServletRequest request) {
+		String column = request.getParameter(COLUMN);
+		String serch = request.getParameter(SERCH);
+
+		String order = null == request.getParameter(ORDER) ? Order.ASC
+				.getValue() : request.getParameter(ORDER);
+		PageAndOrder result = new PageAndOrderImpl(column,
+				order.equalsIgnoreCase(Order.ASC.getValue()) ? Order.ASC
+						: Order.DESC, true);
+
+		int currentPage = 0;
+		String currentPageStr = request.getParameter(ResourceFileUtil.getPaginationParam("pagination.page"));
+		if (StringUtils.isNotEmpty(currentPageStr)) {
+			try {
+				currentPage = Integer.parseInt(currentPageStr);
+			} catch (Throwable e) {
+				currentPage = 1;
+			}
+		}
+		if (currentPage < 1) {
+			currentPage = 1;
+		}
+
+		result.setCurrentPage(currentPage);
+		result.setSerch(serch == null ? "" : serch);
+
+		int pageSize = 0;
+		String rows = request.getParameter(ResourceFileUtil.getPaginationParam("pagination.perPage"));
+		if (StringUtils.isNotEmpty(rows)) {
+			try {
+				pageSize = Integer.parseInt(rows);
+				result.setObjectsPerPage(pageSize);
+			} catch (Throwable e) {
+
+			}
+		}else{
+			result.setObjectsPerPage(PageAndOrder.DEFAULT_PAGE_SIZE);
+		}
+
+		return result;
+	}
+
+
+	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
+	public static final void setPageAndOrder(HttpServletResponse response,
+			PageAndOrder pageAndOrder) {
+		EasyUiPage page = new EasyUiPage();
+		if (pageAndOrder != null) {
+			page.setTotal(pageAndOrder.getTotalRows());
+		}
+		page.setRows(pageAndOrder.getResult());
+        GsonBuilder b = new GsonBuilder();
+        b.registerTypeAdapterFactory(HibernateProxyTypeAdapter.FACTORY);
+        b.setDateFormat("yyyy/MM/dd HH:mm");
+		Gson gson = b.create();
+        String text = gson.toJson(page);
+		try {
+			PrintWriter out = response.getWriter();
+			if (text != null && !text.equals("")) {
+				out.write(text);
+			}
+
+		} catch (IOException e) {
+		}
+	}
+
+	private static final String SERCH = ResourceFileUtil.getPaginationParam("pagination.serch");
+
+	private static final String COLUMN = ResourceFileUtil.getPaginationParam("pagination.column");
+
+	private static final String ORDER = ResourceFileUtil.getPaginationParam("pagination.order");
+
+}

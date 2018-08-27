@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.DeviceFaultMapper">
+    <resultMap id="deviceMap" type="com.zhskg.bag.entity.DeviceFault">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="product_name" property="productName"/>
+        <result column="client_id" property="clientId"/>
+        <result column="reason" property="reason"/>
+        <result column="status" property="status"/>
+        <result column="tel" property="tel"/>
+        <result column="create_time" property="createTime"/>
+        <result column="remark" property="remark"/>
+        <result column="img" property="img"/>
+        <result column="dispose_user_id" property="disposeUserId"/>
+        <result column="create_name" property="createName"/>
+    </resultMap>
+    <!--数据库字段-->
+    <sql id="columns">
+        id, user_id,product_name,client_id,reason,status,tel, create_time,remark,img,create_name,dispose_user_id
+</sql>
+    <!--根据主键查询-->
+    <select id="get" resultMap="deviceMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="columns"/>
+        FROM tr_device_fault
+        WHERE id = #{id}
+    </select>
+    <!--根据主键删除-->
+    <delete id="remove" parameterType="int">
+        delete from tr_device_fault WHERE id = #{id}
+    </delete>
+    <!--添加记录-->
+    <insert id="add" parameterType="com.zhskg.bag.entity.RepairPoint">
+        INSERT INTO tr_device_fault (user_id,product_name,client_id,reason,status,tel,create_time,remark,img,create_name,dispose_user_id
+        ) VALUES (
+        #{userId},
+        #{productName},
+        #{clientId},
+        #{reason},
+        #{status},
+        #{tel},
+        #{createTime},
+        #{remark},
+        #{img},
+        #{createName},
+        #{disposeUserId}
+        )
+        <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">SELECT @@IDENTITY as id
+        </selectKey>
+    </insert>
+
+    <!--根据主键修改-->
+    <update id="update" parameterType="com.zhskg.bag.entity.DeviceFault">
+        UPDATE tr_device_fault
+        <trim prefix="set" suffixOverrides=",">
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="clientId != null">client_id = #{clientId},</if>
+            <if test="status > 0">status = #{status},</if>
+            <if test="tel != null">tel = #{tel},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="img != null">img = #{img},</if>
+            <if test="createName != null">create_name = #{createName},</if>
+            <if test="disposeUserId != null">dispose_user_id = #{disposeUserId},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <!--根据条件分页查询-->
+    <select id="getList" resultMap="deviceMap" parameterType="map">
+        SELECT
+        <include refid="columns"/>
+        FROM tr_device_fault
+        <include refid="sqlFilter"/>
+        ORDER BY create_time DESC LIMIT #{start,jdbcType=INTEGER},#{end,jdbcType=INTEGER}
+    </select>
+    <!--根据条件查询记录总数-->
+    <select id="getCount" parameterType="map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM tr_device_fault
+        <include refid="sqlFilter"/>
+    </select>
+
+    <sql id="sqlFilter">
+        <where>
+            <if test="userId>0">
+                AND user_id =#{userId}
+            </if>
+            <if test="status!=null and status!=2">
+                AND status=#{status}
+            </if>
+            <if test="status!=null and status==2">
+                AND status IN (0,1)
+            </if>
+            <if test="startTime!=null and startTime!=0">
+                AND create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime!=null and endTime!=0">
+                AND create_time &lt;= #{endTime}
+            </if>
+            <if test="clientId!=null and clientId!=''">
+                AND client_id = #{clientId}
+            </if>
+            <if test="createName!=null and createName!=''">
+                AND create_name LIKE '%${createName}%'
+            </if>
+            <if test="disposeUserId!=null and disposeUserId!=''">
+                AND dispose_user_id = #{disposeUserId}
+            </if>
+        </where>
+    </sql>
+</mapper>

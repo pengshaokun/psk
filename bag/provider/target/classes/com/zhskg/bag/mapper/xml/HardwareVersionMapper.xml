@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.HardwareVersionMapper">
+    <resultMap id="HardwareVersionMap" type="com.zhskg.bag.entity.HardwareVersion">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="version_name" jdbcType="VARCHAR" property="versionName"/>
+        <result column="version_number" jdbcType="SMALLINT" property="versionNumber"/>
+        <result column="describe" jdbcType="VARCHAR" property="describe"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag"/>
+        <result column="operator" jdbcType="INTEGER" property="operator"/>
+    </resultMap>
+    <!--数据库字段-->
+    <sql id="columns">
+        id,`type`,version_name,version_number,`describe`,url,create_time,update_time,delete_flag,operator
+    </sql>
+    <!--根据主键查询-->
+    <select id="get" resultMap="HardwareVersionMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_hardware_version
+        WHERE id = #{id,jdbcType=INTEGER} and delete_flag = 0
+    </select>
+    <!--逻辑删除-->
+    <update id="removeById" parameterType="java.lang.Integer">
+        UPDATE ts_hardware_version
+        SET delete_flag = 1
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+    <!--物理删除-->
+    <delete id="realRemoveById" parameterType="java.lang.Integer">
+        delete from ts_hardware_version
+        WHERE id = #{id,jdbcType=INTEGER}
+    </delete>
+    <!--添加记录-->
+    <insert id="add" parameterType="com.zhskg.bag.entity.HardwareVersion">
+        INSERT INTO ts_hardware_version (
+        `type`,version_name,version_number,`describe`,url,create_time,update_time,delete_flag,operator
+        ) VALUES (
+        #{type, jdbcType=INTEGER},
+        #{versionName, jdbcType=VARCHAR},
+        #{versionNumber, jdbcType=SMALLINT},
+        #{describe, jdbcType=VARCHAR},
+        #{url, jdbcType=VARCHAR},
+        #{createTime, jdbcType=TIMESTAMP},
+        #{updateTime, jdbcType=TIMESTAMP},
+        #{deleteFlag, jdbcType=INTEGER},
+        #{operator, jdbcType=INTEGER}
+        )
+    </insert>
+
+    <!--添加记录并返回主键(主键必须是自增列)-->
+    <insert id="addAndId" parameterType="com.zhskg.bag.entity.HardwareVersion">
+        INSERT INTO ts_hardware_version (
+        <include refid="columns"/>
+        ) VALUES (
+        #{id, jdbcType=INTEGER},
+        #{type, jdbcType=INTEGER},
+        #{versionName, jdbcType=VARCHAR},
+        #{versionNumber, jdbcType=SMALLINT},
+        #{describe, jdbcType=VARCHAR},
+        #{url, jdbcType=VARCHAR},
+        #{createTime, jdbcType=TIMESTAMP},
+        #{updateTime, jdbcType=TIMESTAMP},
+        #{deleteFlag, jdbcType=TINYINT},
+        #{operator, jdbcType=INTEGER}
+        )
+        <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">SELECT @@IDENTITY as id
+        </selectKey>
+    </insert>
+    <!--根据主键修改-->
+    <update id="updateById" parameterType="com.zhskg.bag.entity.HardwareVersion">
+        UPDATE ts_hardware_version
+        <trim prefix="set" suffixOverrides=",">
+            <if test="type != null">`type` = #{type, jdbcType=INTEGER},</if>
+            <if test="versionName != null">version_name = #{versionName, jdbcType=VARCHAR},</if>
+            <if test="versionNumber != null">version_number = #{versionNumber, jdbcType=SMALLINT},</if>
+            <if test="describe != null">`describe` = #{describe, jdbcType=VARCHAR},</if>
+            <if test="url != null">url = #{url, jdbcType=VARCHAR},</if>
+            <if test="createTime != null">create_time = #{createTime, jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">update_time = #{updateTime, jdbcType=TIMESTAMP},</if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag, jdbcType=INTEGER},</if>
+            <if test="operator != null">operator = #{operator, jdbcType=INTEGER}</if>
+        </trim>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--根据类型或版本号查询-->
+    <select id="getList" resultMap="HardwareVersionMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_hardware_version
+        <where>
+            <if test="_parameter.containsKey('type')">
+                AND `type` = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="_parameter.containsKey('versionNumber')">
+                AND version_number = #{versionNumber, jdbcType=INTEGER}
+            </if>
+            <if test="_parameter.containsKey('delete_flag')">
+                AND version_number = #{delete_flag, jdbcType=INTEGER}
+            </if>
+        </where>
+        ORDER BY version_number DESC,update_time DESC
+    </select>
+    <!--&lt;!&ndash;根据类型、版本号查询是否存在&ndash;&gt;-->
+    <!--<select id="isExistCode" resultMap="HardwareVersionMap" parameterType="java.util.Map">-->
+        <!--SELECT-->
+        <!--<include refid="columns"/>-->
+        <!--FROM ts_hardware_version-->
+        <!--<where>-->
+            <!--<if test="_parameter.containsKey('type')">-->
+                <!--AND `type` = #{type,jdbcType=INTEGER}-->
+            <!--</if>-->
+            <!--<if test="_parameter.containsKey('versionNumber')">-->
+                <!--AND version_number = #{versionNumber, jdbcType=INTEGER}-->
+            <!--</if>-->
+            <!--<if test="_parameter.containsKey('versionNumber')">-->
+                <!--AND version_number = #{delete_flag, jdbcType=INTEGER}-->
+            <!--</if>-->
+        <!--</where>-->
+    <!--</select>-->
+
+    <!--根据条件分页查询-->
+    <select id="getPageList" resultMap="HardwareVersionMap" parameterType="java.util.Map">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_hardware_version
+        <include refid="filterSql"/>
+        ORDER BY update_time DESC,version_number DESC LIMIT #{start,jdbcType=INTEGER},#{end,jdbcType=INTEGER}
+    </select>
+    <!--根据条件查询记录总数-->
+    <select id="getCount" parameterType="map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM tp_file_temp
+        <include refid="filterSql"/>
+    </select>
+    <sql id="filterSql">
+        <where>
+            <if test="url!=null and filePath!=''">
+            	<bind name="_par_filePath" value="'%'+_parameter.url+'%'"/>
+               AND url like #{_par_filePath}
+            </if>
+        </where>
+    </sql>
+</mapper>

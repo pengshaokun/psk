@@ -1,0 +1,1010 @@
+html {
+    font-family: sans-serif;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+    display: block;
+}
+
+audio,
+canvas,
+progress,
+video {
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+audio:not([controls]) {
+    display: none;
+    height: 0;
+}
+
+[hidden],
+template {
+    display: none;
+}
+
+a {
+    background-color: transparent;
+}
+
+a:active,
+a:hover {
+    outline: 0;
+}
+
+abbr[title] {
+    border-bottom: 1px dotted;
+}
+
+b,
+strong {
+    font-weight: bold;
+}
+
+dfn {
+    font-style: italic;
+}
+
+h1 {
+    margin: .67em 0;
+    font-size: 2em;
+}
+
+mark {
+    color: #000;
+    background: #ff0;
+}
+
+small {
+    font-size: 80%;
+}
+
+sub,
+sup {
+    position: relative;
+    font-size: 75%;
+    line-height: 0;
+    vertical-align: baseline;
+}
+
+sup {
+    top: -.5em;
+}
+
+sub {
+    bottom: -.25em;
+}
+
+img {
+    border: 0;
+}
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+figure {
+    margin: 1em 40px;
+}
+
+hr {
+    height: 0;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+pre {
+    overflow: auto;
+}
+
+code,
+kbd,
+pre,
+samp {
+    font-family: monospace, monospace;
+    font-size: 1em;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+    margin: 0;
+    font: inherit;
+    color: inherit;
+}
+
+button {
+    overflow: visible;
+}
+
+button,
+select {
+    text-transform: none;
+}
+
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+    -webkit-appearance: button;
+    cursor: pointer;
+}
+
+button[disabled],
+html input[disabled] {
+    cursor: default;
+}
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+}
+
+input {
+    line-height: normal;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    height: auto;
+}
+
+input[type="search"] {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    -webkit-appearance: textfield;
+}
+
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+fieldset {
+    padding: .35em .625em .75em;
+    margin: 0 2px;
+    border: 1px solid #c0c0c0;
+}
+
+legend {
+    padding: 0;
+    border: 0;
+}
+
+textarea {
+    overflow: auto;
+}
+
+optgroup {
+    font-weight: bold;
+}
+
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+td,
+th {
+    padding: 0;
+}
+
+@media print {
+    *,
+    *:before,
+    *:after {
+        color: #000 !important;
+        text-shadow: none !important;
+        background: transparent !important;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    a[href^="#"]:after,
+    a[href^="javascript:"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
+
+#nav-tree .tree-node {
+    padding: 12px 20px 12px 30px;
+}
+
+#nav-tree .tree-node .tree-file {
+    background: none;
+}
+
+#nav-tree .tree-node .tree-folder {
+    margin-right: 10px;
+}
+
+#nav-tree .tree-node .tree-hit:first-child,
+#nav-tree .tree-node .tree-indent:first-child {
+    float: right;
+}
+
+#nav-tree .tree-title {
+    font-size: 14px;
+    color: #676767;
+}
+
+#nav-tree .tree-node-selected {
+    border-right: 3px solid #639751;
+    background-color: #EAEDEC;
+}
+
+#nav-tree > li > .tree-node-selected {
+    background: none;
+    border-right: none;
+}
+
+#nav-tree .tree-node-selected .tree-title {
+    color: #639751;
+}
+
+#nav-tree > li > .tree-node-selected .tree-title {
+    color: #676767;
+}
+
+#content-container {
+    border: none;
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+#content-header {
+    line-height: 30px;
+    height: 30px;
+    font-size: 12px;
+    margin: 0;
+    padding: 0 10px;
+    background-color: #F2F2F2;
+    background: -webkit-linear-gradient(top, #ffffff 0, #F2F2F2 100%);
+    background: -o-linear-gradient(top, #ffffff 0, #F2F2F2 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), to(#F2F2F2));
+    background: linear-gradient(to bottom, #ffffff 0, #F2F2F2 100%);
+}
+
+.grid-search {
+    border: 1px solid #ccd1cd;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.search-table td {
+    /*border: 1px solid #ccd1cd;*/
+    padding: 5px;
+    font-size: 12px;
+}
+
+.search-toolbar {
+    text-align: right;
+}
+
+.grid-toolbar {
+    margin: 10px;
+}
+
+.grid-info {
+    margin: 5px;
+}
+
+.form-container {
+    padding: 0 20px;
+}
+
+.form-container .form-table {
+    margin: 30px;
+    border-spacing: 0;
+    border-collapse: collapse;
+    border: solid 1px #add9c0;
+    min-width: 900px;
+}
+
+.form-container .form-table td {
+    border: solid 1px #add9c0;
+    padding: 8px;
+    font-size: 14px;
+}
+
+.form-container .inner-table td {
+    border: none;
+    padding: 0 3px;
+    height: 32px;
+}
+
+.form-container .form-table .label {
+    background-color: #D9EDE1;
+}
+
+.form-container .form-table .datagrid td {
+    padding: 0px;
+}
+
+.search-table .label {
+    text-align: right;
+}
+
+.form-table label {
+    cursor: pointer;
+}
+
+.search-table input[type=checkbox],
+.search-table input[type=radio],
+.form-table input[type=checkbox],
+.form-table input[type=radio] {
+    display: none;
+    position: absolute;
+    left: 2px;
+    top: 3px;
+    margin: 0;
+    z-index: -1;
+}
+
+.search-table input[type=checkbox] + span,
+.search-table input[type=radio] + span,
+.form-table input[type=checkbox] + span,
+.form-table input[type=radio] + span {
+    position: relative;
+    left: 0;
+    display: inline-block;
+    width: 23px;
+    height: 23px;
+    background: url(./images/checkbox.gif) no-repeat;
+}
+
+.search-table input[type=checkbox] + span,
+.search-table input[type=radio] + span,
+.form-table input[type=checkbox] + span,
+.form-table input[type=radio] + span {
+    background-position: -12px -12px;
+}
+
+.search-table input[type=checkbox]:checked + span,
+.search-table input[type=radio]:checked + span,
+.form-table input[type=checkbox]:checked + span,
+.form-table input[type=radio]:checked + span {
+    background-position: -12px -212px;
+}
+
+.form-table .f1 {
+    width: 30px;
+}
+
+.form-table .f2 {
+    width: 60px;
+}
+
+.form-table .f3 {
+    width: 120px;
+}
+
+.form-table .f4 {
+    width: 160px;
+}
+
+.form-table .f5 {
+    width: 200px;
+}
+
+.form-table .f6 {
+    width: 260px;
+}
+
+.form-table .f7 {
+    width: 320px;
+}
+
+.form-table .f8 {
+    width: 400px;
+}
+
+.form-table .f9 {
+    width: 500px;
+}
+
+.form-table .s1 {
+    width: 28px;
+}
+
+.form-table .s2 {
+    width: 58px;
+}
+
+.form-table .s3 {
+    width: 118px;
+}
+
+.form-table .s4 {
+    width: 158px;
+}
+
+.form-table .s5 {
+    width: 198px;
+}
+
+.form-table .s6 {
+    width: 258px;
+}
+
+.form-table .s7 {
+    width: 318px;
+}
+
+.form-table .s8 {
+    width: 398px;
+}
+
+.form-table .s9 {
+    width: 498px;
+}
+
+.form-toolbar .b1 {
+    width: 60px;
+}
+
+.form-toolbar .b2 {
+    width: 80px;
+}
+
+.form-toolbar .b3 {
+    width: 100px;
+}
+
+.form-table .textbox-text {
+    margin: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    height: 22px;
+    line-height: 22px;
+}
+
+.form-tab {
+    margin-top: 20px;
+}
+
+.form-grid,
+.form-toolbar {
+    display: block;
+    border: 1px solid #add9c0;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 30px;
+    max-width: 878px;
+}
+
+.form-grid {
+    min-height: 300px;
+}
+
+.form-container .tabs-panels {
+    border-color: #D4D4D4;
+}
+
+.combo-p .tabs-panels li {
+    float: left;
+    list-style: none;
+    display: block;
+    margin: 0;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.datagrid-header-row,
+.datagrid-row {
+    height: 30px;
+}
+
+.btn-save,
+.btn-clear,
+.btn-save-file,
+.btn-cancel {
+    width: 80px;
+}
+
+.c1 {
+    width: 80px;
+}
+
+.datagrid td {
+    border-color: #ccc;
+}
+
+
+.datagrid-row-selected {
+    background: #EAEDEC;
+    color: #639751;
+}
+
+.datagrid-cell .l-btn {
+    color: #444;
+    background: none;
+    border: none;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff,endColorstr=#e6e6e6,GradientType=0);
+}
+.datagrid-cell .l-btn:hover {
+    background: none;
+    color: #639751;
+    border: none;
+    filter: none;
+}
+
+
+/* 添加样式 解决页面在不同分辨率下的响应式问题  */
+/*  下面部分是系统管理中 用户管理的部分  */
+.clearBox:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.clearBox {
+    zoom: 1;
+}
+/* 工厂class 加了class="left-box"属性的元素。它里面的div都 左浮动  */
+.left-box div {
+    float: left;
+}
+
+#grid-toolbar .grid-search #searchForm .search-table li {
+    list-style: none;
+}
+
+#grid-toolbar .grid-search #searchForm .search-table {
+    padding: 0px;
+}
+
+#grid-toolbar .grid-search #searchForm .search-table li .select-condition div {
+    float: left;
+}
+
+#grid-toolbar .grid-search #searchForm .search-table li .select-condition {
+    display: block;
+    box-sizing: border-box;
+    folat: left;
+    width: 25%;
+    float: left;
+}
+
+#grid-toolbar .grid-search #searchForm .search-table li .select-condition .label {
+    font-size: 15px;
+    margin-top: 3px;
+    width: 35% !important;
+    text-aling: right;
+}
+
+#grid-toolbar .grid-search #searchForm .third-party-main .third-party-box .third-party-time {
+    width: 50%;
+}
+
+@media all and (max-width:1466px) {
+    #grid-toolbar .grid-search #searchForm .search-table li .select-condition {
+        width: 50% !important;
+    }
+
+    #grid-toolbar .grid-search #searchForm .search-table li .select-condition .label {
+        width: 30% !important;
+        font-size: 12px;
+    }
+}
+/* 角色管理部分完 */
+
+/*  下面部分是 弹出框和 查询条件样式的基本样式设置  例如： 系统管理中 用户管理的部分  */
+#form1 .response-table .row-divide {
+    display: -webkit-flex;
+    display: flex;
+    justify-content: space-around;
+}
+
+#form1 .response-table ul,li{
+    list-style: none;
+}
+
+#form1 .response-table ul {
+    padding: 0px;
+    width: 100%;
+    padding: 0px !important;
+    margin: 0px auto;
+}
+
+.form-table .float-li div{
+    float: left;
+}
+
+.form-table li .title-box {
+    width: 30%;
+}
+
+.form-table li .content-box {
+    width: 70%;
+}
+
+.response-table {
+    list-style: none;
+    width: 100%;
+    margin: 0px auto;
+    padding: 0px;
+}
+
+#form1 .response-table li{
+    display: -webkit-flex;
+    display:flex;
+    align-items: center;
+    border-bottom: 1px solid #add9c0;
+}
+
+#form1 .response-table .note-box {
+    height: 30%;
+}
+
+#form1 .response-table li .float-box {
+    float: left;
+}
+
+#form1 .response-table li .title-box {
+    width: 30%;
+    text-align: center;
+    border-right: 1px solid #add9c0;
+}
+
+#form1 .response-table li .content-box {
+    width: 68%;
+    padding-left: 2%;
+}
+
+#form1 .response-table .note-box .note-title {
+    float: left;
+    width: 30%;
+    height: 100%;
+    line-height: 520%;
+}
+
+#form1 .response-table li .content-box .textbox {
+    display: block;
+    width: 75% !important;
+    height: 88% !important;
+}
+
+/*设置备注text框的宽高*/
+#form1 .response-table .note-box .content-box .textbox .textbox-text {
+    width: 95% !important;
+    height: 90% !important;
+}
+/*  下面部分是 弹出框和 查询条件样式的基本样式设置  完 */
+
+/*  去掉弹出框里每个div的右边框颜色  */
+#all-electric #form1 .form-table li div {
+    border-right: 1px solid transparent;
+}
+/*  去掉弹出框里每个 li 的下边框颜色  */
+#all-electric #form1 .form-table li {
+    border-bottom: 1px solid transparent;
+}
+/*  设备管理 参数设置弹出框 各项参数名称的边框距离 */
+#all-electric #form1 .form-table li .title-box {
+    width: 60% !important;
+}
+/*  设备管理 参数设置弹出框 各项参数的边框距离 */
+#all-electric #form1 .form-table li .content-box {
+    width: 17%;
+    padding: 0px !important;
+}
+#all-electric #form1 .form-table li .content-box .textbox {
+    width: 90% !important;
+}
+#all-electric #form1 .form-table li .content-box .textbox #_easyui_textbox_input5 {
+    width: 100% !important;
+}
+/*  设备管理 参数设置弹出框 包括单位的div  */
+#all-electric #form1 .form-table li .unit-box {
+    text-align: left;
+}
+/*  设备管理完  */
+
+/*  设置弹出款的响应式  */
+@media all and (min-width:600px) {
+    #form1 {
+        margin-top: 13px;
+    }
+
+    #form1 .response-table li{
+        height: 25px;
+        border-bottom: 1px solid #add9c0;
+    }
+
+    #form1 .response-table li .title-box {
+        height: 25px;
+        line-height: 25px;
+        font-size: 10px;
+    }
+
+    /*#form1 .response-table .note-box .note-title {*/
+        /*line-height: 90px;*/
+    /*}*/
+}
+
+@media all and (min-width: 1000px) {
+    #form1 {
+        margin-top: 18px;
+    }
+
+    #form1 .response-table li{
+        height: 30px;
+        border-bottom: 1px solid #add9c0;
+    }
+
+    #form1 .response-table li .title-box {
+        height: 30px;
+        line-height: 30px;
+        font-size: 11px;
+    }
+
+    /*#form1 .response-table .note-box .note-title {*/
+        /*line-height: 100px;*/
+    /*}*/
+}
+
+@media all and (min-width: 1366px) {
+    #form1 {
+        margin-top: 20px;
+    }
+
+    #form1 .response-table li{
+        height: 33px;
+        border-bottom: 1px solid #add9c0;
+    }
+
+    #form1 .response-table li .title-box {
+        height: 33px;
+        line-height: 33px;
+        font-size: 13px;
+    }
+
+    /*#form1 .response-table .note-box .note-title {*/
+        /*line-height: 110px;*/
+    /*}*/
+}
+
+@media all and (min-width: 1440px) {
+    #form1 {
+        margin-top: 25px;
+    }
+
+    #form1 .response-table li{
+        height: 38px;
+        border-bottom: 1px solid #add9c0;
+    }
+
+    #form1 .response-table li .title-box {
+        height: 38px;
+        line-height: 38px;
+        font-size: 14px;
+    }
+
+    /*#form1 .response-table .note-box .note-title {*/
+        /*line-height: 130px;*/
+    /*}*/
+}
+
+@media all and (min-width: 1920px) {
+    #form1 {
+        margin-top: 30px;       /*要用响应式*/
+    }
+
+    #form1 .response-table li{
+        /*padding: 8px 0px;*/
+        height: 43px;     /*要用响应式*/
+        border-bottom: 1px solid #add9c0;
+    }
+
+    #form1 .response-table li .title-box {
+        height: 43px;    /*要用响应式*/
+        line-height: 43px;  /*要用响应式*/
+        font-size: 15px;    /*要用响应式*/
+    }
+
+    /*#form1 .response-table .note-box .note-title {*/
+        /*line-height: 150px;    */
+    /*}*/
+}
+/*  弹出框响应式完  */
+
+/* 帮助中心--》第三方用户信息的查询部份  */
+#grid-toolbar .grid-search #searchForm .third-party-main .third-party-box .third-party-title{
+    display: block;
+    box-sizing: border-box;
+    align-items: center;
+    /*width: 25%;*/
+    float: left;
+}
+/* 帮助中心--》第三方用户信息的查询部份 分辨率小于1011px时 起始结束时间在一行 昵称和授权类别在一行  */
+@media all and (max-width: 1011px) {
+    #grid-toolbar .grid-search #searchForm .third-party-main .third-party-box .third-party-title{
+        width: 45%;
+    }
+    #grid-toolbar .grid-search #searchForm .third-party-main .third-party-box .third-party-time{
+        width: 100% !important;
+    }
+}
+@media all and (min-width: 1012px) and(max-width: 1101px) {
+    #grid-toolbar .grid-search #searchForm .third-party-main .third-party-box .third-party-title{
+        width: 30%;
+    }
+    #grid-toolbar .grid-search #searchForm .third-party-main .third-party-box .third-party-time{
+        width: 40% !important;
+    }
+}
+@media all and (min-width: 1101px) and (max-width: 1400px) {
+    #grid-toolbar .grid-search #searchForm .third-party-main .third-party-box {
+        width: 85% !important;
+    }
+    #grid-toolbar .grid-search #searchForm .third-party-main .third-party-box .third-party-title{
+        width: 27% !important;
+    }
+    #grid-toolbar .grid-search #searchForm .third-party-main .third-party-box .third-party-time{
+        width: 46% !important;
+    }
+}
+@media all and (min-width: 1401px) {
+    #grid-toolbar .grid-search #searchForm .third-party-main .third-party-box {
+        width: 65% !important;
+    }
+    #grid-toolbar .grid-search #searchForm .third-party-main .third-party-box .third-party-title{
+        width: 25% !important;
+    }
+    #grid-toolbar .grid-search #searchForm .third-party-main .third-party-box .third-party-time{
+        width: 50% !important;
+    }
+}
+/* 第三方用户信息完  */
+
+/*  故障申报查询消息头  */
+#grid-toolbar .grid-search #searchForm .search-table .fault-box {
+    float: left;
+    margin-right: 50px;
+}
+
+/*  个人信息修改弹出框 */
+#headerForm .form-table li .title-box {
+    width: 21% !important;
+}
+#headerForm .form-table li .note-title {
+    width: 9% !important;
+}
+#headerForm .form-table li .content-box {
+    width: 95% !important;
+}
+
+/*  系统通知里的发送按钮样式  */
+.send-float, .send-float li {
+    display: flex !important;
+    padding: 0px;
+}
+.send-float li, .send-float li div{
+    margin: auto !important;
+    height: 30px;
+    line-height: 30px;
+}
+.send-float li div input[class="check-box"] {
+    diaplay: block;
+}
+.send-float li div:nth-of-type(1) {
+    padding: 0px 5px;
+    background-color: #add9c0;
+}
+.send-float li div:nth-of-type(2) {
+    padding: 10px 5px;
+}
+
+/*  丢失信息里百度地图样式  */
+.mapmain{
+    height: 70% !important;
+    position: relative;
+}
+
+.map-title {
+    width:100% !important;
+    position: relative;
+    height: 100% !important;
+
+}
+.map-name {
+    width:100% !important;
+    height: 5%;
+    background-color: #add9c0;
+    line-height: 100%;
+    text-align: center;
+}
+#mapbox {
+    width: 97% !important;
+    height: 90% !important;
+    overflow: hidden;
+    margin:0 auto !important;
+    font-family:"微软雅黑";
+    position: relative !important;
+    top: 1% !important;
+    left: 0px !important;
+}

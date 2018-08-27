@@ -1,0 +1,114 @@
+package com.zhs.core.dao;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import com.google.common.base.Preconditions;
+import com.zhs.core.model.BaseModel;
+import com.zhs.core.model.Constant.ModelStatus;
+
+@SuppressWarnings("unchecked")
+public abstract class AbstractGenericHibernateDao<T extends Serializable>
+		extends HibernateDao implements IGenericOperations<T> {
+
+	private Class<T> clazz;
+
+	protected final void setClazz(final Class<T> clazzToSet) {
+		this.clazz = Preconditions.checkNotNull(clazzToSet);
+	}
+
+	@Override
+	public final T findOne(final long id) {
+		return (T) getCurrentSession().get(clazz, id);
+	}
+
+	@Override
+	public final List<T> findAll() {
+		return getCurrentSession().createQuery(
+				"from " + clazz.getName() + " where isDelete= "+ModelStatus.NORMAL).list();
+	}
+
+	@Override
+	public final void create(final T entity) {
+		Preconditions.checkNotNull(entity);
+		BaseModel model = (BaseModel) entity;
+		if (model != null) {
+			model.setCreateTime(new Date());
+			model.setUpdateTime(new Date());
+			model.setId(null);
+		}
+		getCurrentSession().saveOrUpdate(entity);
+		//getCurrentSession().flush();
+	}
+
+	@Override
+	public final T update(final T entity) {
+		Preconditions.checkNotNull(entity);
+		
+		BaseModel model = (BaseModel) entity;
+		if (model != null) {
+			if (model.getCreateTime() == null) {
+				model.setCreateTime(new Date());
+			}
+			model.setUpdateTime(new Date());
+		}
+		getCurrentSession().update(entity);
+		
+		return entity;
+	}
+
+	@Override
+	public final void delete(final T entity) {
+		getCurrentSession().delete(entity);
+	}
+
+	@Override
+	public final void deleteById(final long entityId) {
+		Object entity = findOne(entityId);
+		Preconditions.checkState(entity != null);
+		delete(entity);
+
+	}
+
+	/**
+	 * 查询某一条数据，根据属性
+	 * 
+	 * @param property
+	 * @param value
+	 * @return
+	 */
+	@Override
+	public T findOneByProperty(String property, Object value) {
+		return (T) super.findOneByProperty(clazz, property, value);
+	}
+	
+	@Override
+	public T findOneByProperty(String property, Object value, boolean getDelete) {
+
+		return (T) super.findOneByProperty(clazz, property, value,getDelete);
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public String getNum(String propertyName, Class t, Integer createType,
+			String before, Boolean ifCenterDate, Date CenterDate,
+			String dateFormat, Integer afterNum) {
+		return super.getNum(propertyName, t, createType, before, ifCenterDate,
+				CenterDate, dateFormat, afterNum);
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public boolean checkNum(String propertyName, Class t, String num) {
+		return super.checkNum(propertyName, t, num);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public HashMap<String, BigDecimal> sumValue(String[] sumVals, Class cla,String idKey,Long idVal){
+		return super.sumValue(sumVals, cla, idKey, idVal);
+	}
+}

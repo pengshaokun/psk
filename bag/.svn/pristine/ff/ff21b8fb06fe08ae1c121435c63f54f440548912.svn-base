@@ -1,0 +1,11 @@
+package com.zhs.core.util.search.paginate;
+/**
+ * 
+ */
+public enum Order {
+	ASC, DESC;
+
+	public String getValue() {
+		return toString();
+	}
+}

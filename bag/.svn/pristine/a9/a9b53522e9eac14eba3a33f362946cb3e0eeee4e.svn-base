@@ -1,0 +1,107 @@
+package com.zhs.common.model.parking.space;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.alibaba.fastjson.annotation.JSONField;
+import com.zhs.core.model.BaseModel;
+import lombok.Data;
+
+/**
+ * 车场计费
+ * @author ZHSKG YANH
+ *
+ */
+@Data
+@Table
+@Entity(name="tb_yard_billing_two")
+public class YardBillingTwo extends BaseModel{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1978584305433776598L;
+
+
+	/**
+	 * 免费时长
+	 */
+	@Column(name="free_time")
+	private Integer freeTime;
+	
+	 /**
+     * 车场计费规则2 id
+     */
+    private Integer lid;
+	
+	
+	/**
+	 * 固定时间段开始时间
+	 */
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fixation_start_time")
+	private Date fixationStartTime;
+	
+	/**
+	 * 固定时间段结束时间
+	 */
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fixation_end_time")
+	private Date fixationEndTime;
+    
+    /**
+     * 固定时间首次收费(1小时/xxxx分)
+     */
+    @Column(name = "fixation_first_charge")
+	private int fixationFirstCharge;
+    
+    /**
+     * 固定时间单价 (单位 分)
+     */
+    @Column(name = "fixation_price")
+    private int fixationPrice;
+    
+    /**
+     * 其他时间收费类型(0：按小时收费,1:一口价) (单位 分)
+     */
+    @Column(name = "other_change_type")
+    private int otherChangeType;
+    
+    /**
+     * 其他时间首次收费（1小时/xxxx分） type  按小时收费  (单位 分)
+     */
+    @Column(name = "other_first_charge")
+    private int otherFirstCharge;
+    
+    /**
+     * 其他时间单价  小时/分  type 按小时收费  (单位 分)
+     */
+    @Column(name = "other_price")
+    private int otherPrice;
+	/**
+	 * 其他时间收费类型 0：按时收费 ，1：一口价
+	 */
+	@Column(name = "other_type")
+	private int otherType;
+    
+    /**
+     * 一口价    type 一口价  (单位 分)
+     */
+    @Column(name = "fixed_price")
+    private int fixedPrice;
+    
+    /**
+     * 超时价格  24小时  (单位 分)
+     */
+    @Column(name = "timeout_price")
+    private int timeoutPrice;
+	
+}

@@ -1,0 +1,96 @@
+package com.zhs.core.model;
+
+import java.io.Serializable;
+import java.util.Date;
+
+import javax.persistence.*;
+
+import com.alibaba.fastjson.annotation.JSONField;
+import com.zhs.core.util.json.NoJson;
+import org.hibernate.annotations.GenericGenerator;
+
+/**
+ * 实体类 基础类
+ */
+@MappedSuperclass
+public abstract class BaseModel implements Serializable {
+
+	private static final long serialVersionUID = 6437555839438152547L;
+
+	@Id
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid")
+	@Column(name = "id")
+	private String id;
+
+	/**
+	 * 创建时间
+	 */
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false, name = "create_time")
+	private Date createTime;
+
+	/**
+	 * 修改时间
+	 */
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false, name = "update_time")
+	private Date updateTime;
+
+	/**
+	 * 逻辑删除状态   0为正常数据，1：注销(删除)，2：冻结
+	 */
+	@Column(name = "is_delete")
+	private int isDelete;
+
+	/**
+	 * 版本
+	 */
+	@Version
+	@NoJson
+	@JSONField(serialize = false)
+	@Column(name = "version_num")
+	private int versionNum;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	public int getIsDelete() {
+		return isDelete;
+	}
+
+	public void setIsDelete(int isDelete) {
+		this.isDelete = isDelete;
+	}
+
+	public int getVersionNum() {
+		return versionNum;
+	}
+
+	public void setVersionNum(int versionNum) {
+		this.versionNum = versionNum;
+	}
+}

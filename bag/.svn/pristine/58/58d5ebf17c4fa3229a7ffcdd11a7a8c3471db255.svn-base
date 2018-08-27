@@ -1,0 +1,30 @@
+package com.zhs.core.util.search.paginate;
+
+import java.util.List;
+
+@SuppressWarnings("rawtypes")
+public class EasyUiPage {
+
+	/** 返回数据集 **/
+	List rows;
+
+	/** 总条数 **/
+	Integer total;
+
+	public List getRows() {
+		return rows;
+	}
+
+	public void setRows(List rows) {
+		this.rows = rows;
+	}
+
+	public Integer getTotal() {
+		return total;
+	}
+
+	public void setTotal(Integer total) {
+		this.total = total;
+	}
+
+}

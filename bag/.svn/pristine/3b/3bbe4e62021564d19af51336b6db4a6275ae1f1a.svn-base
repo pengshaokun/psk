@@ -1,0 +1,124 @@
+package com.zhs.core.model;
+
+
+import com.zhs.core.util.StringUtil;
+
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+/**
+ * 用户底层
+ * 
+ * @author yurui
+ */
+@Entity(name = "tb_base_user")
+public class BaseUser extends BaseModel {
+
+	/**
+	 * 真实姓名
+	 */
+	@Column(name = "r_name")
+	private String rName;
+
+	/** 登陆名 **/
+	@Column(nullable = false)
+	private String username;
+
+	/** 密码 **/
+	private String password;
+
+	/**
+	 * 手机号码
+	 */
+	private String phone;
+
+	/**
+	 * 是否登记注册 当baseUser被关联到相应的用户表后，此字段需要更新为true
+	 */
+	private boolean register;
+
+	/**
+	 * 验证码
+	 */
+	@Column(name="verification_code")
+	private String verificationCode;
+
+	/**
+	 * 验证码有效时间
+	 */
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "effective_time")
+	private Date effectiveTime;
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getVerificationCode() {
+		return verificationCode;
+	}
+
+	public void setVerificationCode(String verificationCode) {
+		if(verificationCode==null | "".equals(verificationCode)){
+//			this.verificationCode = "9999";
+			this.verificationCode = StringUtil.getRandomNum(6);
+		}else{
+			this.verificationCode = verificationCode;
+		}
+	}
+
+	public Date getEffectiveTime() {
+		return effectiveTime;
+	}
+
+	public void setEffectiveTime(Date effectiveTime) {
+		if(effectiveTime==null){
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.MINUTE, 5);
+			this.effectiveTime =cal.getTime();
+		}else{
+			this.effectiveTime = effectiveTime;
+		}
+	}
+
+	public boolean isRegister() {
+		return register;
+	}
+
+	public void setRegister(boolean register) {
+		this.register = register;
+	}
+
+    public String getrName() {
+        return rName;
+    }
+
+    public void setrName(String rName) {
+        this.rName = rName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+}

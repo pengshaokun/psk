@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/consumer/consumer.iml" filepath="$PROJECT_DIR$/consumer/consumer.iml" />
+      <module fileurl="file://D:\workspace\bag\lib\lib.iml" filepath="D:\workspace\bag\lib\lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/provider/provider.iml" filepath="$PROJECT_DIR$/provider/provider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/server-netty/server-netty.iml" filepath="$PROJECT_DIR$/server-netty/server-netty.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service/service.iml" filepath="$PROJECT_DIR$/service/service.iml" />
+      <module fileurl="file://D:\workspace\bag\zhs-bag-web\zhs-bag-web.iml" filepath="D:\workspace\bag\zhs-bag-web\zhs-bag-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zks-bag.iml" filepath="$PROJECT_DIR$/zks-bag.iml" />
+    </modules>
+  </component>
+</project>

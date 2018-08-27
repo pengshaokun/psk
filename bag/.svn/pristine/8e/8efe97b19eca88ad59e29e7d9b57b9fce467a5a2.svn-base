@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="bags-service">
+    <output-path>$PROJECT_DIR$/out/artifacts/bags_service</output-path>
+    <root id="archive" name="bags-service.jar">
+      <element id="module-output" name="service" />
+    </root>
+  </artifact>
+</component>

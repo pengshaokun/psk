@@ -1,0 +1,181 @@
+package com.zhs.common.model.bill;
+
+import com.zhs.core.model.BaseModel;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * Created with Intellij IDEA
+ * @User:ZHS-CZJiang
+ * @Date:2018/5/23
+ * 车辆进出订单
+ */
+
+@Entity
+@Table(name = "tb_car_bill")
+public class CarBill extends BaseModel {
+
+    /**
+     * 车牌号码
+     */
+    @Column(name = "car_num")
+    private String carNum;
+
+    /**
+     * 车辆类型 0：没有入场时间车辆 ， 1：APP预约车辆，2：业主车辆，3：包月车辆（物业），4：临时车辆，5：业主超期车辆，6：包月车辆（物业）超期车辆 7:永久免费车辆
+     */
+    @Column(name = "car_type")
+    private int carType;
+    /**
+     * 停车位ID
+     */
+    @Column(name = "private_park_id")
+    private Integer privateParkId;
+    /**
+     * 进场时间
+     */
+    @Column(name = "in_time")
+    private Date inTime;
+    /**
+     * 出场时间
+     */
+    @Column(name = "out_time")
+    private Date outTime;
+    /**
+     * 账单金额
+     */
+    @Column(name = "bill_money")
+    private Integer billMoney;
+
+    /**
+     * 出入状态 1：进场，2：出场
+     */
+    private int state;
+    /**
+     * 实际支付金额
+     */
+    @Column(name = "pay_money")
+    private Integer payMoney;
+    /**
+     * 是否支付
+     */
+    private boolean pay;
+    /**
+     * 支付时间
+     */
+    @Column(name = "pay_time")
+    private Date payTime;
+    /**
+     * 计费规则
+     */
+    @Lob
+    @Column(name = "bill_model")
+    private String billModel;
+
+    /**
+     * 停车时长
+     */
+    @Column(name = "parking_time")
+    private long parkingTime;
+
+    public String getCarNum() {
+        return carNum;
+    }
+
+    public void setCarNum(String carNum) {
+        this.carNum = carNum;
+    }
+
+    public Integer getPrivateParkId() {
+        return privateParkId;
+    }
+
+    public void setPrivateParkId(Integer privateParkId) {
+        this.privateParkId = privateParkId;
+    }
+
+    public Date getInTime() {
+        return inTime;
+    }
+
+    public void setInTime(Date inTime) {
+        this.inTime = inTime;
+    }
+
+    public Date getOutTime() {
+        return outTime;
+    }
+
+    public void setOutTime(Date outTime) {
+        this.outTime = outTime;
+    }
+
+    public Integer getPayMoney() {
+        return payMoney;
+    }
+
+    public void setPayMoney(Integer payMoney) {
+        this.payMoney = payMoney;
+    }
+
+    public Integer getBillMoney() {
+        return billMoney;
+    }
+
+    public void setBillMoney(Integer billMoney) {
+        this.billMoney = billMoney;
+    }
+
+    public boolean isPay() {
+        return pay;
+    }
+
+    public void setPay(boolean pay) {
+        this.pay = pay;
+    }
+
+    public Date getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(Date payTime) {
+        this.payTime = payTime;
+    }
+
+    public String getBillModel() {
+        return billModel;
+    }
+
+    public void setBillModel(String billModel) {
+        this.billModel = billModel;
+    }
+
+    public int getCarType() {
+        return carType;
+    }
+
+    public void setCarType(int carType) {
+        this.carType = carType;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public long getParkingTime() {
+        return parkingTime;
+    }
+
+    public void setParkingTime(long parkingTime) {
+        this.parkingTime = parkingTime;
+    }
+}

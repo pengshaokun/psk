@@ -1,0 +1,42 @@
+package com.zhs.core.util.search.paginate;
+
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * 
+ */
+public class OrderUtil {
+
+	private static final String COLUMN = "sortColumn";
+
+	private static final String ORDER = "order";
+
+	private OrderUtil() {
+		super();
+	}
+
+	public static final OrderBy getOrder(HttpServletRequest request) {
+		return getOrder(request, Boolean.TRUE);
+	}
+
+	public static final OrderBy getOrder(String column, String order) {
+		return getOrder(Boolean.TRUE, column, order);
+	}
+
+	public static final OrderBy getOrder(HttpServletRequest request,
+			Boolean isHQL) {
+		String column = request.getParameter(COLUMN);
+		String order = null == request.getParameter(ORDER) ? Order.ASC
+				.getValue() : request.getParameter(ORDER);
+		OrderBy orderBy = getOrder(isHQL, column, order);
+		return orderBy;
+	}
+
+	public static final OrderBy getOrder(Boolean isHQL, String column,
+			String order) {
+		OrderBy orderBy = new OrderByImpl(column,
+				order.equalsIgnoreCase(Order.ASC.getValue()) ? Order.ASC
+						: Order.DESC, isHQL);
+		return orderBy;
+	}
+}

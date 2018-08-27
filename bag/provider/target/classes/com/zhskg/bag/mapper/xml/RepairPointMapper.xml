@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.RepairPointMapper">
+    <resultMap id="repairMap" type="com.zhskg.bag.entity.RepairPoint">
+        <id column="id" property="id"/>
+        <result column="area_code" property="areaCode"/>
+        <result column="repair_name" property="repairName"/>
+        <result column="address" property="address"/>
+        <result column="tel" property="tel"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    <!--数据库字段-->
+    <sql id="columns">
+        id,
+        area_code,
+        repair_name,
+        address,
+        tel,
+        remark,
+        create_time
+</sql>
+    <!--根据主键查询-->
+    <select id="get" resultMap="repairMap" parameterType="int">
+        SELECT
+        <include refid="columns"/>
+        FROM tr_repairpoint
+        WHERE id = #{id}
+    </select>
+
+    <!--根据主键删除-->
+    <delete id="remove" parameterType="int">
+        delete from tr_repairpoint WHERE id = #{id}
+    </delete>
+    <!--添加记录-->
+    <insert id="add" parameterType="com.zhskg.bag.entity.RepairPoint">
+        INSERT INTO tr_repairpoint ( area_code,repair_name,address,tel,remark,create_time
+        ) VALUES (
+        #{areaCode},
+        #{repairName},
+        #{address},
+        #{tel},
+        #{remark},
+        #{createTime}
+        )
+        <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">SELECT @@IDENTITY as id
+        </selectKey>
+    </insert>
+
+    <!--根据主键修改-->
+    <update id="updateById" parameterType="com.zhskg.bag.entity.RepairPoint">
+        UPDATE tr_repairpoint
+        <trim prefix="set" suffixOverrides=",">
+            <if test="areaCode != null">area_code = #{areaCode},</if>
+            <if test="repairName != null">repair_name = #{repairName},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="tel != null">tel = #{tel},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <!--根据条件分页查询-->
+    <select id="getList" resultMap="repairMap" parameterType="map">
+        SELECT
+        <include refid="columns"/>
+        FROM tr_repairpoint
+        <where>
+            <if test="areaCode >0">
+                AND area_code=#{areaCode}
+            </if>
+        </where>
+        ORDER BY create_time DESC LIMIT #{start,jdbcType=INTEGER},#{end,jdbcType=INTEGER}
+    </select>
+    <!--根据条件查询记录总数-->
+    <select id="getCount" parameterType="map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM tr_repairpoint
+        <where>
+        <if test="areaCode!=null and areaCode!='' ">
+            AND area_code=#{areaCode}
+        </if>
+    </where>
+    </select>
+
+    <!--<sql id="sqlFilter">-->
+        <!--<where>-->
+            <!--<if test="orderCode!=null and orderCode!='' ">-->
+                <!--AND order_code=#{orderCode,jdbcType=VARCHAR}-->
+            <!--</if>-->
+            <!--<if test="sellerId!=null and sellerId!=0">-->
+                <!--AND seller_id=#{sellerId}-->
+            <!--</if>-->
+        <!--</where>-->
+    <!--</sql>-->
+</mapper>

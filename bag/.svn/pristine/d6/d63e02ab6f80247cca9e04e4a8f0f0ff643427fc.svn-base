@@ -1,0 +1,386 @@
+package com.zhs.core.util;
+
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+public class DateUtil {
+	
+	/**
+	 * 取得当月第一天
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("static-access")
+	public static Date getNowMonth() {
+		Calendar cal = Calendar.getInstance();
+		cal.set(cal.DATE, 1);
+		cal.set(cal.MINUTE, 0);
+		cal.set(cal.HOUR_OF_DAY, 0);
+		cal.set(cal.SECOND, 0);
+		return cal.getTime();
+	}
+
+	/**
+	 * 取得当月第一天
+	 * 
+	 * @return
+	 */
+	public static Date getSettingDate(int year, int month, int day) {
+		Calendar c = Calendar.getInstance(Locale.CHINA);
+		c.set(year, month - 1, day);
+		return c.getTime();
+
+	}
+
+	public static Date getEndNowMonth() {
+		Calendar c = Calendar.getInstance(Locale.CHINA);
+		c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DATE));
+		return c.getTime();
+	}
+
+	public static long intervalDay(Date startTime, Date endTime) {
+		long diff = endTime.getTime() - startTime.getTime();
+		return diff / (1000 * 60 * 60 * 24);
+	}
+
+	/**
+	 * 取得中文的月份
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static String getMonthCh(Date date) {
+		Calendar cal = Calendar.getInstance();// 使用日历类
+		cal.setTime(date);
+		int month = cal.get(Calendar.MONTH);
+
+		switch (month) {
+		case 0:
+			return "一";
+		case 1:
+			return "二";
+		case 2:
+			return "三";
+		case 3:
+			return "四";
+		case 4:
+			return "五";
+		case 5:
+			return "六";
+		case 6:
+			return "七";
+		case 7:
+			return "八";
+		case 8:
+			return "九";
+		case 9:
+			return "十";
+		case 10:
+			return "十一";
+		case 11:
+			return "十二";
+		}
+
+		return null;
+	}
+
+	/**
+	 * 取得中文的月份
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static String getDay(Date date) {
+		Calendar cal = Calendar.getInstance();// 使用日历类
+		cal.setTime(date);
+		return cal.get(Calendar.DAY_OF_MONTH) + "";
+	}
+
+	public static Date getDate(int year, int month, int day) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.YEAR, year);
+		calendar.set(Calendar.MONTH, month - 1);
+		calendar.set(Calendar.DAY_OF_MONTH, day);
+		return calendar.getTime();
+	}
+
+	public static Date getDateBeforeDay(Date date, int day) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.DAY_OF_MONTH, -day);
+		return calendar.getTime();
+	}
+
+	public static String getDateComentFormat(Date date, String pattern) {
+		try {
+			java.text.SimpleDateFormat format = new java.text.SimpleDateFormat(
+					pattern);
+			return format.format(date);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return "";
+	}
+
+	public static Date getMonthFristDate(String dateText, String pattern) {
+		try {
+			java.text.SimpleDateFormat format = new java.text.SimpleDateFormat(
+					pattern);
+			Date date = format.parse(dateText);
+			Calendar cal = Calendar.getInstance();// 使用日历类
+			cal.setTime(date);
+			cal.set(Calendar.DAY_OF_MONTH, 1);
+			cal.set(Calendar.HOUR, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			return cal.getTime();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return null;
+
+	}
+
+	public static Date getMonthEndDate(String dateText, String pattern) {
+		try {
+			java.text.SimpleDateFormat format = new java.text.SimpleDateFormat(
+					pattern);
+			Date date = format.parse(dateText);
+			Calendar cal = Calendar.getInstance();// 使用日历类
+			cal.setTime(date);
+			cal.set(Calendar.DAY_OF_MONTH,
+					cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+			cal.set(Calendar.HOUR, 23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.MILLISECOND, 59);
+			return cal.getTime();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 获取某一天结束的时间点
+	 * @param date
+	 * @return
+	 */
+	public static Date getDateEnd(Date date) {
+		try {
+			Calendar cal = Calendar.getInstance();// 使用日历类
+			cal.setTime(date);
+			cal.set(Calendar.HOUR, 23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.MILLISECOND, 59);
+			return cal.getTime();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 获取某一天最开始的时间
+	 * @param date
+	 * @return
+	 */
+	public static Date getDateStart(Date date) {
+		try {
+			Calendar cal = Calendar.getInstance();// 使用日历类
+			cal.setTime(date);
+			cal.set(Calendar.HOUR, 00);
+			cal.set(Calendar.MINUTE, 00);
+			cal.set(Calendar.MILLISECOND, 00);
+			return cal.getTime();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/** 
+     * 计算两个日期之间相差的天数 
+     * @param date1 
+     * @param date2 
+     * @return 
+     */  
+    public static int daysBetween(Date date1,Date date2)  
+    {  
+        Calendar cal = Calendar.getInstance();  
+        cal.setTime(date1);  
+        long time1 = cal.getTimeInMillis();               
+        cal.setTime(date2);  
+        long time2 = cal.getTimeInMillis();       
+        long between_days=(time2-time1)/(1000*3600*24);  
+          
+       return Integer.parseInt(String.valueOf(between_days));         
+    }  
+    
+    /** 
+     * 计算两个日期之间相差的分钟数 
+     * @param date1 
+     * @param date2 
+     * @return 
+     */  
+    public static int daysBetweenMinutes(Date date1,Date date2)  
+    {  
+        Calendar cal = Calendar.getInstance();  
+        cal.setTime(date1);  
+        long time1 = cal.getTimeInMillis();               
+        cal.setTime(date2);  
+        long time2 = cal.getTimeInMillis();       
+        long between_minutes=(time2-time1)/(1000*60);  
+          
+       return Integer.parseInt(String.valueOf(between_minutes));         
+    }  
+    
+    /**
+    * <p>Title: timeStampToString</p>
+    * <p>Description: 时间戳转化为Sting</p>
+    * @param time
+    * @return
+    */
+    public static String timeStampToString(Long time){
+        SimpleDateFormat sdf =  new SimpleDateFormat("yyyy-MM-dd HH:mm");   
+        String d = sdf.format(time*1000);  
+        return d;
+    }
+    
+    /** 
+     * 计算两个日期之间相差x天x时x分x秒
+     * @param startTime 
+     * @param endTime 
+     * @return 
+     */  
+    public static String dateDiff(Date startTime, Date endTime){
+    	long nd = 1000*24*60*60;//一天的毫秒数
+    	long nh = 1000*60*60;//一小时的毫秒数
+    	long nm = 1000*60;//一分钟的毫秒数
+//    	long ns = 1000;//一秒钟的毫秒数long diff;try {
+    	//获得两个时间的毫秒时间差异
+    	long diff = endTime.getTime() - startTime.getTime();
+    	long day = diff/nd;//计算差多少天
+    	long hour = diff%nd/nh;//计算差多少小时
+    	long min = diff%nd%nh/nm;//计算差多少分钟
+//    	long sec = diff%nd%nh%nm/ns;//计算差多少秒//输出结果
+//    	return day+"天"+hour+"小时"+min+"分钟";
+    	return (day*24 + hour)+"小时"+min+"分钟";
+    }
+    
+    /***
+	 * 日期加减
+	 * 
+	 * @param date  日期
+	 *         
+	 * @param day 加减天数 传负数为减,正数为加
+	 *            
+	 * @return 日期
+	 */
+	public static String dateAddOrSub(Date date, int day) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DAY_OF_MONTH, day);
+		date = cal.getTime();
+		return sdf.format(date);
+	}
+	
+	/***
+	 * 通过日期算出本周的开始日期和结束日期
+	 * 
+	 * @param date  日期
+	 *         
+	 *            
+	 * @return map
+	 */
+	public static Map<String, Object> getWeekStartAndEnd(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		int times = cal.get(Calendar.DAY_OF_WEEK);
+		if(times == 1){
+			times = 8;
+		}
+		int timess = times -1;	
+		String startDate = null;
+		String endDate = null;
+		startDate = dateAddOrSub(date, -(timess-1));
+		endDate = dateAddOrSub(date, 7-timess);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		return map;
+	}
+	
+	 /** 
+     * 计算两个日期之间相差的小时数 
+     * @param date1 
+     * @param date2 
+     * @return 
+     */  
+    public static int daysBetweenHours(Date date1,Date date2)  
+    {  
+        Calendar cal = Calendar.getInstance();  
+        cal.setTime(date1);  
+        long time1 = cal.getTimeInMillis();               
+        cal.setTime(date2);  
+        long time2 = cal.getTimeInMillis();       
+        long between_hours=(time2-time1)/(1000*60*60);  
+          
+       return Integer.parseInt(String.valueOf(between_hours));         
+    }  
+    
+	/***
+	 * 根据时间判断日期显示格式(如：今天为XX小时前，昨天为昨天XX时XX分，再之前则返回对应日期)
+	 * 
+	 * @param createTime  日期
+	 *         
+	 *            
+	 * @return 字符串时间
+	 */
+	public static String releaseTime(Date createTime){
+		String releaseTime = "";
+		Calendar cal = Calendar.getInstance();
+		Date nowTime = cal.getTime();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		int day = daysBetween(createTime, nowTime);
+		if(sdf.format(nowTime).equals(sdf.format(createTime))){
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+			String time = format.format(createTime);
+			releaseTime = time;
+			return releaseTime;
+		}else if(!sdf.format(nowTime).equals(sdf.format(createTime)) && day <= 1){
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+			String time = format.format(createTime);
+			releaseTime = "昨天" + time;
+			return releaseTime;
+		}else{
+			SimpleDateFormat sdfs = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			releaseTime = sdfs.format(createTime);
+			return releaseTime;
+		}
+	}
+	
+	/**
+	 * date转local dateTime
+	 * @param date
+	 * @return
+	 */
+	public static LocalDateTime UDateToLocalDateTime(Date date) {
+	    Instant instant = date.toInstant();
+	    ZoneId zone = ZoneId.systemDefault();
+	    LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zone);
+	    return localDateTime;
+	}
+}

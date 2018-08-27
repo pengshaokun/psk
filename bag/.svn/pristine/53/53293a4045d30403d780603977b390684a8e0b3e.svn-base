@@ -1,0 +1,258 @@
+package com.zhs.core.dao;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.zhs.core.util.search.AbstractQueryForm;
+import com.zhs.core.util.search.paginate.PageAndOrder;
+
+/*
+ * 通用的操作接口
+ */
+@SuppressWarnings("rawtypes")
+public interface IOperations {
+	
+	Object findOne(final long id, Class T);
+
+	List<Object> findAll(Class T);
+
+	void create(final Object entity);
+
+	Object update(final Object entity);
+
+	void delete(final Object entity);
+
+	void deleteById(final long entityId, Class T);
+
+	List find(String hql);
+
+	List find2Size(String hql, Integer size);
+
+	List find2Size(String hql, Integer size, Map<String, Object> params);
+
+	/**
+	 * 查询一条数据，通过id
+	 * 
+	 * @param T
+	 * @param id
+	 * @return
+	 */
+
+	Object findOne(Class T, Long id);
+
+	Object findOne(Class T, String id);
+
+	/**
+	 * 查询一条数据，hsql
+	 *
+	 * @return
+	 */
+
+	Object findOne(String hql, Map params);
+
+	/**
+	 * 查询list,该方法设置param，
+	 * 
+	 * @param hql
+	 * @param params
+	 * @return
+	 */
+	List find(String hql, Map<String, Object> params);
+
+	/**
+	 * 查询通过sql进行查询,param 为参数列表
+	 *
+	 * @param params
+	 * @return
+	 */
+	List findBySQL(String sql, Map<String, Object> params);
+	/**
+	 *<p>Title: findBySQL</p>
+	 *<p>Description:   sql带参数查询</p>
+	 * @param @param sql
+	 * @param @param t
+	 * @param @param value
+	 * @param @return 设定文件
+	 * @return  List<T> 返回类型
+	 * @throws
+	 */
+	public List<Object> findBySQLMap(String sql, Object ...value) ;
+	/**
+	 * 
+	 * 判断字段是否重复
+	 *
+	 * @param field
+	 * @param id
+	 * @param value
+	 * @return
+	 */
+	boolean checkDuplicate(Class T, String field, Object id, Object value);
+
+	/**
+	 * 结果只取一条数据
+	 *
+	 * @return
+	 */
+	Object singleFind(String hql);
+
+	/**
+	 * 简单分页查询 通过from生成条件，其使用hql；
+	 * 
+	 * @param T
+	 * @param form
+	 * @param pageAndOrder
+	 * @return
+	 */
+	List findListByPaginate(Class T, AbstractQueryForm form,
+			PageAndOrder pageAndOrder);
+
+	/**
+	 * 通过HQL分页查询
+	 * 
+	 * @param hql
+	 * @param countHql
+	 * @param paramters
+	 * @param pageAndOrder
+	 * @return
+	 */
+	List findListPaginateByHql(String hql, String countHql,
+			Map<String, Object> paramters, PageAndOrder pageAndOrder);
+
+	/**
+	 * 简单查询 通过from生成条件，其使用hql；
+	 * 
+	 * @param T
+	 * @param form
+	 * @return
+	 */
+	List findListByForm(Class T, AbstractQueryForm form,
+			Map<String, Object> paramters);
+
+	/**
+	 * 通过sql分页查询
+	 * 
+	 * @param sql
+	 * @param paramters
+	 * @return
+	 */
+	List findListByForm2Sql(String sql, AbstractQueryForm form,
+			Map<String, Object> paramters);
+
+	/**
+	 * 通过sql分页查询
+	 * 
+	 * @param sql
+	 * @param countSql
+	 * @param paramters
+	 * @param pageAndOrder
+	 * @return
+	 */
+	List findListPaginateBySql(String sql, String countSql,
+			Map<String, Object> paramters, PageAndOrder pageAndOrder);
+	
+	/**
+	 * 通过sql分页查询返回可转换map对象的实体数组
+	 * 
+	 * @param sql
+	 * @param countSql
+	 * @param pageAndOrder
+	 * @return
+	 */
+	public List<Map> findListPaginateBySqlToMap(String sql, String countSql,
+			Map<String, Object> paramters, PageAndOrder pageAndOrder);
+
+	/**
+	 * 查询某一条数据，根据属性
+	 * 
+	 * @param property
+	 * @param value
+	 * @return
+	 */
+	Object findOneByProperty(Class T, String property, Object value);
+
+	/**
+	 * 获取编号
+	 * 
+	 * @param propertyName
+	 *            字段名
+	 * @param t
+	 *            实体
+	 * @param createType
+	 *            创建类型，默认0（0自增长，1随机数）
+	 * @param before
+	 *            编号前缀
+	 * @param ifCenterDate
+	 *            时间，默认为当前时间
+	 * @param dateFormat
+	 *            时间转换格式， 默认为 yyyyMMdd
+	 * @param afterNum
+	 *            结尾数的长度，默认3（创建类型为0时： 001 ，为1时： 934）
+	 * @return
+	 */
+	public String getNum(String propertyName, Class t, Integer createType,
+			String before, Boolean ifCenterDate, Date CenterDate,
+			String dateFormat, Integer afterNum);
+
+	/**
+	 * 验证编号是否可用
+	 * 
+	 * @param propertyName
+	 *            字段名
+	 * @param t
+	 *            实体
+	 * @param num
+	 *            编号
+	 */
+	public boolean checkNum(String propertyName, Class t, String num);
+
+	public List findListByIds(Class t, AbstractQueryForm form,
+			PageAndOrder pageAndOrder, String ids);
+
+	public HashMap<String, BigDecimal> sumValue(String[] sumVals, Class cla,String idKey,Long idVal);
+	/**
+	 *<p>Title: findListByFormPaginateSql</p>
+	 *<p>Description:   form分页查询返回list map</p>
+	 * @param @param sql
+	 * @param @param form
+	 * @param @param T
+	 * @param @param pageAndOrder
+	 * @param @return 设定文件
+	 * @return  List 返回类型
+	 */
+	List findListByFormPaginateSql(String sql, AbstractQueryForm form, PageAndOrder pageAndOrder);
+	
+	public void updateSql(String sql) ;
+	
+	public List findListByHql(String hql, Object ...obj) ;
+
+	public Object findOneBySql(String sql);
+
+    Object findOneBySql(String sql, Map<String, Object> params, Class T);
+
+    List findBySql(String sql, Map<String, Object> params, Class T);
+
+    Object findOneByToken(Class T,String token);
+
+	List findListByPaginateSql(String sql,Map<String, Object> params,PageAndOrder pageAndOrder,Class T);
+	/**
+	 * 执行更新的sql语句(如果存在In语句sql用Map的parameters)
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	public int executeUpdate(String sql,Object... parameters);
+	/**
+	 * 执行更新的sql语句(in更新语句中用集合,不要用数组)
+	 * @param sql
+	 * @param parameters
+	 * @return
+	 */
+	public int executeUpdate(String sql,Map<String, Object> parameters);
+
+	boolean batchCreate(List list);
+
+	void batchUpdate(List list);
+}

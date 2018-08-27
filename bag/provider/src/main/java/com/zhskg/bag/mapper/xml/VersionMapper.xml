@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.VersionMapper">
+
+    <!-- resultMap VersionType -->
+    <resultMap id="versionTypeMap" type="com.zhskg.bag.model.VersionTypeEntry">
+        <id property="id" column="t_id" />
+        <result property="dictvalue" column="t_dictvalue" />
+        <result property="dictname" column="t_dictname" />
+        <result property="description" column="t_description" />
+    </resultMap>
+
+    <!-- resultMap VersionEntry -->
+    <resultMap id="versionEntryMap" type="com.zhskg.bag.model.VersionEntry">
+        <id property="id" column="v_id" />
+        <result property="name" column="v_name" />
+        <result property="number" column="v_number" />
+        <result property="createtime" column="v_createtime" />
+        <result property="createor" column="v_createor" />
+        <result property="binPath" column="v_bin_path" />
+        <result property="description" column="v_description" />
+        <result property="status" column="v_status" />
+        <collection property="versionTypeList" resultMap="versionTypeMap"
+                    javaType="ArrayList"
+                    ofType="com.zhskg.bag.model.VersionTypeEntry"
+        />
+    </resultMap>
+
+    <!-- resultMap VersionParam  -->
+    <resultMap id="versionParamMap" type="com.zhskg.bag.param.VersionParam">
+        <id property="id" column="v_id" />
+        <result property="name" column="v_name" />
+        <result property="number" column="v_number" />
+        <result property="createtime" column="v_createtime" />
+        <result property="createor" column="v_createor" />
+        <result property="binPath" column="v_bin_path" />
+        <result property="type" column="v_type" />
+        <result property="description" column="v_description" />
+        <result property="status" column="v_status" />
+    </resultMap>
+
+    <!-- 添加版本号 -->
+    <insert id="add" parameterType="com.zhskg.bag.entity.Version" useGeneratedKeys="true" keyProperty="id">
+        insert into
+        tv_version
+        (
+            v_name,
+            v_number,
+            v_createtime,
+            v_createor,
+            v_bin_path,
+            v_type,
+            v_description,
+            v_status,
+            v_deleted
+        )
+        values
+        (
+            #{name},
+            #{number},
+            #{createtime},
+            #{createor},
+            #{binPath},
+            #{type},
+            #{description},
+            #{status},
+            1
+        )
+    </insert>
+
+    <!-- 根据id删除版本号 -->
+    <update id="delete" parameterType="long">
+        update tv_version set v_deleted = 0 where v_id = #{id}
+    </update>
+
+    <!-- 根据id修改版本 -->
+    <update id="update" parameterType="com.zhskg.bag.entity.Version">
+        update tv_version
+        <set>
+            <if test="name != null and name != ''">
+                v_name = #{name},
+            </if>
+            <if test="number != null and number != ''">
+                v_number = #{number},
+            </if>
+            <if test="binPath != null and binPath != ''">
+                v_binPath = #{binPath},
+            </if>
+            <if test="description != null and description != ''">
+                v_description = #{description},
+            </if>
+            <if test="status != null and status != ''">
+                v_status = #{status},
+            </if>
+            <if test="type != null and type != ''">
+                v_type = #{type}
+            </if>
+        </set>
+        where v_id = #{id}
+    </update>
+
+    <!-- 根据id获取版本详情 -->
+    <select id="queryById" parameterType="long" resultMap="versionEntryMap">
+        select *
+        from
+        (
+            select V.v_id,
+                   V.v_bin_path,
+                   V.v_createor,
+                   V.v_createtime,
+                   V.v_description,
+                   V.v_name,
+                   V.v_number,
+                   V.v_status,
+                   T.t_id,
+                   T.t_dictname,
+                   T.t_dictvalue,
+                   T.t_description
+            from
+            tv_version V
+            left join tv_version_type T on V.v_type = T.t_id
+            where V.v_id = #{id} and V.v_deleted = 1
+        ) T1
+        where 1 = 1
+    </select>
+
+    <!-- 查询条件 -->
+    <sql id="whereQueryVersion">
+        <if test="versionParam.binPath != null and versionParam.binPath != ''">
+            and v_bin_path =  #{versionParam.binPath}
+        </if>
+        <if test="versionParam.createor != null and versionParam.createor != ''">
+            and v_createor =  #{versionParam.createor}
+        </if>
+        <if test="versionParam.type != null and versionParam.type != ''">
+            and v_type =  #{versionParam.type}
+        </if>
+        <if test="versionParam.name != null and versionParam.name != ''">
+            and v_name =  #{versionParam.name}
+        </if>
+        <if test="versionParam.number != null and versionParam.number != ''">
+            and v_number =  #{versionParam.number}
+        </if>
+        <if test="versionParam.status != null and versionParam.status != ''">
+            and v_status =  #{versionParam.status}
+        </if>
+    </sql>
+
+    <!-- 排序 -->
+    <sql id="orderQueryVersion">
+        order by v_createtime desc
+    </sql>
+
+    <!-- 分页 -->
+    <sql id="limitQueryVersion">
+        limit #{pageIndex}, #{pageSize}
+    </sql>
+
+    <!-- 根据参数查询版本列表 -->
+    <select id="query" resultMap="versionParamMap">
+        select *
+        from
+        (
+            select V.v_id,
+                   V.v_bin_path,
+                   V.v_createor,
+                   V.v_createtime,
+                   v.v_type,
+                   V.v_description,
+                   V.v_name,
+                   V.v_number,
+                   V.v_status,
+                   V.v_deleted
+            from
+            tv_version V
+        ) T1
+        where 1 = 1 and T1.v_deleted = 1
+        <!-- 查询条件 -->
+        <include refid="whereQueryVersion" />
+        <!-- 排序 -->
+        <include refid="orderQueryVersion" />
+        <!-- 分页 -->
+        <include refid="limitQueryVersion" />
+    </select>
+
+    <!-- 根据参数查询版本列表数量 -->
+    <select id="queryAllVersionCount" resultType="int">
+        select count(1)
+        from
+        (
+            select V.v_id,
+                   V.v_bin_path,
+                   V.v_createor,
+                   V.v_createtime,
+                   v.v_type,
+                   V.v_description,
+                   V.v_name,
+                   V.v_number,
+                   V.v_status,
+                   V.v_deleted
+            from
+            tv_version V
+        ) T1
+        where 1 = 1 and T1.v_deleted = 1
+        <!-- 查询条件 -->
+        <include refid="whereQueryVersion" />
+    </select>
+</mapper>

@@ -1,0 +1,306 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.MenuMapper">
+    <resultMap id="menuMap" type="com.zhskg.bag.entity.Menu">
+        <id column="menu_id" jdbcType="BIGINT" property="menuId" />
+        <result column="menu_no" jdbcType="VARCHAR" property="menuNo" />
+        <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+        <result column="caption" jdbcType="VARCHAR" property="caption" />
+        <result column="icon_cls" jdbcType="VARCHAR" property="iconCls" />
+        <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+        <result column="path" jdbcType="VARCHAR" property="path" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="sort_no" jdbcType="BIGINT" property="sortNo" />
+        <result column="url" jdbcType="VARCHAR" property="url" />
+        <result column="comment" jdbcType="VARCHAR" property="comment" />
+        <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag" />
+        <result column="create_on" jdbcType="BIGINT" property="createOn" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="modify_on" jdbcType="BIGINT" property="modifyOn" />
+        <result column="modify_time" jdbcType="BIGINT" property="modifyTime" />
+        <result column="total" jdbcType="INTEGER" property="total"/>
+    </resultMap>
+    <!--数据库字段-->
+    <sql id="columns">
+        menu_id,
+        menu_no,
+        menu_name,
+        caption,
+        icon_cls,
+        parent_id,
+        path,
+        level,
+        sort_no,
+        url,
+        comment,
+        delete_flag,
+        create_on,
+        create_time,
+        modify_on,
+        modify_time
+    </sql>
+    <!--插入记录-->
+    <insert id="add" parameterType="com.zhskg.bag.entity.Menu">
+        INSERT INTO ts_menu (
+        <include refid="columns"/>
+        ) VALUES (
+        #{menuId, jdbcType=BIGINT},
+        #{menuNo, jdbcType=VARCHAR},
+        #{menuName, jdbcType=VARCHAR},
+        #{caption, jdbcType=VARCHAR},
+        #{iconCls, jdbcType=VARCHAR},
+        #{parentId, jdbcType=BIGINT},
+        #{path, jdbcType=VARCHAR},
+        #{level, jdbcType=INTEGER},
+        #{sortNo, jdbcType=BIGINT},
+        #{url, jdbcType=VARCHAR},
+        #{comment, jdbcType=VARCHAR},
+        #{deleteFlag, jdbcType=INTEGER},
+        #{createOn, jdbcType=BIGINT},
+        #{createTime, jdbcType=BIGINT},
+        #{modifyOn, jdbcType=BIGINT},
+        #{modifyTime, jdbcType=BIGINT}
+        )
+    </insert>
+    <!--插入记录并返回主键(主键必须是自增列)-->
+    <insert id="addAndId" parameterType="com.zhskg.bag.entity.Menu">
+        INSERT INTO ts_menu (
+        <include refid="columns"/>
+        ) VALUES (
+        #{menuId, jdbcType=BIGINT},
+        #{menuNo, jdbcType=VARCHAR},
+        #{menuName, jdbcType=VARCHAR},
+        #{caption, jdbcType=VARCHAR},
+        #{iconCls, jdbcType=VARCHAR},
+        #{parentId, jdbcType=BIGINT},
+        #{path, jdbcType=VARCHAR},
+        #{level, jdbcType=INTEGER},
+        #{sortNo, jdbcType=BIGINT},
+        #{url, jdbcType=VARCHAR},
+        #{comment, jdbcType=VARCHAR},
+        #{deleteFlag, jdbcType=INTEGER},
+        #{createOn, jdbcType=BIGINT},
+        #{createTime, jdbcType=BIGINT},
+        #{modifyOn, jdbcType=BIGINT},
+        #{modifyTime, jdbcType=BIGINT}
+        )
+        <selectKey order="AFTER" keyProperty="menuId" resultType="java.lang.Long"> SELECT @@IDENTITY as menuId </selectKey>
+    </insert>
+    <!--批量插入-->
+    <insert id="batchAdd" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO ts_menu (
+        <include refid="columns"/>
+        ) VALUES
+        <foreach separator="," index="index" item="item" collection="list">
+            (
+            #{item.menuId, jdbcType=BIGINT},
+            #{item.menuNo, jdbcType=VARCHAR},
+            #{item.menuName, jdbcType=VARCHAR},
+            #{item.caption, jdbcType=VARCHAR},
+            #{item.iconCls, jdbcType=VARCHAR},
+            #{item.parentId, jdbcType=BIGINT},
+            #{item.path, jdbcType=VARCHAR},
+            #{item.level, jdbcType=INTEGER},
+            #{item.sortNo, jdbcType=BIGINT},
+            #{item.url, jdbcType=VARCHAR},
+            #{item.comment, jdbcType=VARCHAR},
+            #{item.deleteFlag, jdbcType=INTEGER},
+            #{item.createOn, jdbcType=BIGINT},
+            #{item.createTime, jdbcType=BIGINT},
+            #{item.modifyOn, jdbcType=BIGINT},
+            #{item.modifyTime, jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
+    <!--根据主键假删除-->
+    <update id="removeById" parameterType="java.lang.Long">
+        UPDATE ts_menu SET delete_flag = 1 where menu_id = #{menuId,jdbcType=BIGINT}
+    </update>
+    <update id="removeByPath" parameterType="java.lang.String">
+        UPDATE ts_menu SET delete_flag = 1 where path LIKE '${path}%'
+    </update>
+    <!--根据条件假删除-->
+    <update id="remove" parameterType="com.zhskg.bag.param.MenuParam">
+        UPDATE ts_menu
+        SET delete_flag = 1
+        <where>
+            <if test="menuNo !=null and menuNo !=''"> AND menu_no LIKE '%${menuNo}%'</if>
+            <if test="menuName !=null and menuName !=''"> AND menu_name LIKE '%${menuName}%'</if>
+            <if test="caption !=null and caption !=''"> AND menu_no LIKE '%${caption}%'</if>
+            <if test="parentId !=null and parentId !=0"> AND parent_id = #{parentId,jdbcType=BIGINT}</if>
+            <if test="url !=null and url !=''"> AND url LIKE '%${url}%'</if>
+            <if test="comment !=null and comment !=''"> AND comment LIKE '%${comment}%'</if>
+        </where>
+    </update>
+    <!--根据主键删除-->
+    <delete id="realRemoveById" parameterType="java.lang.Long">
+        delete from ts_menu where menu_id = #{menuId,jdbcType=BIGINT}
+    </delete>
+    <!--根据条件删除-->
+    <delete id="realRemove" parameterType="com.zhskg.bag.param.MenuParam">
+        delete from ts_menu
+        <where>
+            <if test="menuNo !=null and menuNo !=''"> AND menu_no LIKE '%${menuNo}%'</if>
+            <if test="menuName !=null and menuName !=''"> AND menu_name LIKE '%${menuName}%'</if>
+            <if test="caption !=null and caption !=''"> AND caption LIKE '%${caption}%'</if>
+            <if test="parentId !=null and parentId !=0"> AND parent_id = #{parentId,jdbcType=BIGINT}</if>
+            <if test="url !=null and url !=''"> AND url LIKE '%${url}%'</if>
+            <if test="comment !=null and comment !=''"> AND comment LIKE '%${comment}%'</if>
+        </where>
+    </delete>
+    <!--根据主键查询-->
+    <select id="get" resultMap="menuMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_menu WHERE menu_id = #{menuId,jdbcType=BIGINT}
+    </select>
+    <!--根据条件查询返回第一行-->
+    <select id="getFirst" resultMap="menuMap" parameterType="com.zhskg.bag.param.MenuParam">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_menu
+        <where>
+            AND delete_flag = 0
+            <if test="menuNo !=null and menuNo !=''"> AND menu_no LIKE '%${menuNo}%'</if>
+            <if test="menuName !=null and menuName !=''"> AND menu_name LIKE '%${menuName}%'</if>
+            <if test="caption !=null and caption !=''"> AND caption LIKE '%${caption}%'</if>
+            <if test="parentId !=null and parentId !=0"> AND parent_id = #{parentId,jdbcType=BIGINT}</if>
+            <if test="url !=null and url !=''"> AND url LIKE '%${url}%'</if>
+            <if test="comment !=null and comment !=''"> AND comment LIKE '%${comment}%'</if>
+        </where>
+        ORDER BY create_on DESC LIMIT 0,1
+    </select>
+    <!--根据条件查询-->
+    <select id="getList" resultMap="menuMap" parameterType="com.zhskg.bag.param.MenuParam">
+        SELECT
+        <include refid="columns"/>
+        ,(SELECT COUNT(*) FROM ts_menu WHERE parent_id = t.menu_id AND delete_flag = 0) AS total
+        FROM ts_menu t
+        <where>
+            AND t.delete_flag = 0
+            <if test="keywords !=null and keywords !=''"> AND (t.menu_no LIKE '%${keywords}%' OR t.menu_name LIKE '%${keywords}%' OR t.caption LIKE '%${keywords}%' OR t.url LIKE '%${keywords}%' OR t.comment LIKE '%${keywords}%')</if>
+            <if test="menuNo !=null and menuNo !=''"> AND t.menu_no LIKE '%${menuNo}%'</if>
+            <if test="menuName !=null and menuName !=''"> AND t.menu_name LIKE '%${menuName}%'</if>
+            <if test="caption !=null and caption !=''"> AND t.caption LIKE '%${caption}%'</if>
+            <if test="parentId !=null"> AND t.parent_id = #{parentId,jdbcType=BIGINT}</if>
+            <if test="url !=null and url !=''"> AND t.url LIKE '%${url}%'</if>
+            <if test="comment !=null and comment !=''"> AND t.comment LIKE '%${comment}%'</if>
+        </where>
+        ORDER BY t.level,t.sort_no
+    </select>
+    <!--根据条件分页查询-->
+    <select id="getPageList" resultMap="menuMap">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_menu
+        <where>
+            AND delete_flag = 0
+            <if test="condition.keywords !=null and condition.keywords !=''"> AND (menu_no LIKE '%${condition.keywords}%' OR menu_name LIKE '%${condition.keywords}%' OR caption LIKE '%${condition.keywords}%' OR url LIKE '%${condition.keywords}%' OR comment LIKE '%${condition.keywords}%')</if>
+            <if test="condition.menuNo !=null and condition.menuNo !=''"> AND menu_no LIKE '%${condition.menuNo}%'</if>
+            <if test="condition.menuName !=null and condition.menuName !=''"> AND menu_name LIKE '%${condition.menuName}%'</if>
+            <if test="condition.caption !=null and condition.caption !=''"> AND caption LIKE '%${condition.caption}%'</if>
+            <if test="condition.parentId !=null and condition.parentId !=0"> AND parent_id = #{condition.parentId,jdbcType=BIGINT}</if>
+            <if test="condition.url !=null and condition.url !=''"> AND url LIKE '%${condition.url}%'</if>
+            <if test="condition.comment !=null and condition.comment !=''"> AND comment LIKE '%${condition.comment}%'</if>
+        </where>
+        ORDER BY create_on DESC LIMIT #{pageIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+    <!--根据条件查询记录总数-->
+    <select id="getCount" parameterType="com.zhskg.bag.param.MenuParam" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM ts_menu
+        <where>
+            AND delete_flag = 0
+            <if test="keywords !=null and keywords !=''"> AND (menu_no LIKE '%${keywords}%' OR menu_name LIKE '%${keywords}%' OR caption LIKE '%${keywords}%' OR url LIKE '%${keywords}%' OR comment LIKE '%${keywords}%')</if>
+            <if test="menuNo !=null and menuNo !=''"> AND menu_no LIKE '%${menuNo}%'</if>
+            <if test="menuName !=null and menuName !=''"> AND menu_name LIKE '%${menuName}%'</if>
+            <if test="caption !=null and caption !=''"> AND caption LIKE '%${caption}%'</if>
+            <if test="parentId !=null and parentId !=0"> AND parent_id = #{parentId,jdbcType=BIGINT}</if>
+            <if test="url !=null and url !=''"> AND url LIKE '%${url}%'</if>
+            <if test="comment !=null and comment !=''"> AND comment LIKE '%${comment}%'</if>
+        </where>
+    </select>
+    <select id="getRoleMenu" resultMap="menuMap">
+        SELECT
+        <include refid="columns"/>
+        ,(SELECT COUNT(*) FROM ts_role_menu WHERE role_id = #{roleId,jdbcType=BIGINT} AND menu_id = t.menu_id) AS total
+        FROM ts_menu t
+        <where>
+            AND t.delete_flag = 0 AND menu_id IN (SELECT menu_id FROM ts_role_menu WHERE role_id = #{roleId,jdbcType=BIGINT})
+        </where>
+        ORDER BY t.parent_id,t.level,t.sort_no
+    </select>
+    <select id="getCheckedRoleMenu" resultMap="menuMap">
+        SELECT
+        <include refid="columns"/>
+        ,(SELECT COUNT(*) FROM ts_role_menu WHERE role_id = #{roleId,jdbcType=BIGINT} AND checked = 1 AND menu_id = t.menu_id) AS total
+        FROM ts_menu t
+        <where>
+            AND t.delete_flag = 0
+            <if test="condition.keywords !=null and condition.keywords !=''"> AND (t.menu_no LIKE '%${condition.keywords}%' OR t.menu_name LIKE '%${condition.keywords}%' OR t.caption LIKE '%${condition.keywords}%' OR t.url LIKE '%${condition.keywords}%' OR t.comment LIKE '%${condition.keywords}%')</if>
+            <if test="condition.menuNo !=null and condition.menuNo !=''"> AND t.menu_no LIKE '%${condition.menuNo}%'</if>
+            <if test="condition.menuName !=null and condition.menuName !=''"> AND t.menu_name LIKE '%${condition.menuName}%'</if>
+            <if test="condition.caption !=null and condition.caption !=''"> AND t.caption LIKE '%${condition.caption}%'</if>
+            <if test="condition.parentId !=null"> AND t.parent_id = #{condition.parentId,jdbcType=BIGINT}</if>
+            <if test="condition.url !=null and condition.url !=''"> AND t.url LIKE '%${condition.url}%'</if>
+            <if test="condition.comment !=null and condition.comment !=''"> AND t.comment LIKE '%${condition.comment}%'</if>
+        </where>
+        ORDER BY t.level,t.sort_no
+    </select>
+    <!--根据主键修改-->
+    <update id="updateById" parameterType="com.zhskg.bag.entity.Menu">
+        UPDATE ts_menu
+        <trim prefix="set" suffixOverrides=",">
+            <if test="menuNo != null">menu_no = #{menuNo, jdbcType=VARCHAR}, </if>
+            <if test="menuName != null">menu_name = #{menuName, jdbcType=VARCHAR}, </if>
+            <if test="caption != null">caption = #{caption, jdbcType=VARCHAR}, </if>
+            <if test="iconCls != null">icon_cls = #{iconCls, jdbcType=VARCHAR}, </if>
+            <if test="parentId != null">parent_id = #{parentId, jdbcType=BIGINT}, </if>
+            <if test="path != null">path = #{path, jdbcType=VARCHAR}, </if>
+            <if test="level != null">level = #{level, jdbcType=INTEGER}, </if>
+            <if test="sortNo != null">sort_no = #{sortNo, jdbcType=BIGINT}, </if>
+            <if test="url != null">url = #{url, jdbcType=VARCHAR}, </if>
+            <if test="comment != null">comment = #{comment, jdbcType=VARCHAR}, </if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag, jdbcType=INTEGER}, </if>
+            <if test="createOn != null">create_on = #{createOn, jdbcType=BIGINT}, </if>
+            <if test="createTime != null">create_time = #{createTime, jdbcType=BIGINT}, </if>
+            <if test="modifyOn != null">modify_on = #{modifyOn, jdbcType=BIGINT}, </if>
+            <if test="modifyTime != null">modify_time = #{modifyTime, jdbcType=BIGINT}</if>
+        </trim>
+        WHERE menu_id = #{menuId,jdbcType=BIGINT}
+    </update>
+    <!--根据条件修改-->
+    <update id="update">
+        UPDATE ts_menu
+        <trim prefix="set" suffixOverrides=",">
+            <if test="menu.menuNo != null">menu_no = #{menu.menuNo, jdbcType=VARCHAR}, </if>
+            <if test="menu.menuName != null">menu_name = #{menu.menuName, jdbcType=VARCHAR}, </if>
+            <if test="menu.caption != null">caption = #{menu.caption, jdbcType=VARCHAR}, </if>
+            <if test="menu.iconCls != null">icon_cls = #{menu.iconCls, jdbcType=VARCHAR}, </if>
+            <if test="menu.parentId != null">parent_id = #{menu.parentId, jdbcType=BIGINT}, </if>
+            <if test="menu.path != null">path = #{menu.path, jdbcType=VARCHAR}, </if>
+            <if test="menu.level != null">level = #{menu.level, jdbcType=INTEGER}, </if>
+            <if test="menu.sortNo != null">sort_no = #{menu.sortNo, jdbcType=BIGINT}, </if>
+            <if test="menu.url != null">url = #{menu.url, jdbcType=VARCHAR}, </if>
+            <if test="menu.comment != null">comment = #{menu.comment, jdbcType=VARCHAR}, </if>
+            <if test="menu.deleteFlag != null">delete_flag = #{menu.deleteFlag, jdbcType=INTEGER}, </if>
+            <if test="menu.createOn != null">create_on = #{menu.createOn, jdbcType=BIGINT}, </if>
+            <if test="menu.createTime != null">create_time = #{menu.createTime, jdbcType=BIGINT}, </if>
+            <if test="menu.modifyOn != null">modify_on = #{menu.modifyOn, jdbcType=BIGINT}, </if>
+            <if test="menu.modifyTime != null">modify_time = #{menu.modifyTime, jdbcType=BIGINT}</if>
+        </trim>
+        <where>
+            AND delete_flag = 0
+            <if test="menuNo !=null and menuNo !=''"> AND menu_no LIKE '%${menuNo}%'</if>
+            <if test="menuName !=null and menuName !=''"> AND menu_name LIKE '%${menuName}%'</if>
+            <if test="caption !=null and caption !=''"> AND caption LIKE '%${caption}%'</if>
+            <if test="parentId !=null and parentId !=0"> AND parent_id = #{parentId,jdbcType=BIGINT}</if>
+            <if test="url !=null and url !=''"> AND url LIKE '%${url}%'</if>
+        </where>
+    </update>
+    <update id="updatePath" parameterType="map">
+        UPDATE ts_menu
+        SET path = #{path, jdbcType=VARCHAR}
+        WHERE menu_id = #{menuId,jdbcType=BIGINT}
+    </update>
+</mapper>

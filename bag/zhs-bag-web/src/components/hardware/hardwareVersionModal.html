@@ -1,0 +1,28 @@
+<div class="form-container">
+    <form id="form1">
+        <input id="id" name="id" type="hidden"/>
+        <ul class="form-table clearBox response-table" style="min-width:35%;margin: 0px auto;">
+
+            <li class="clearBox" id="vType">
+                <div class="label title-box float-box">类型：</div>
+                <div class="content-box float-box"><input id="type" name="type" class="f6 easyui-textbox" type="text"/></div>
+            </li>
+            <li class="clearBox " id="vNum">
+                <div class="label title-box float-box">版本号：</div>
+                <div class="content-box float-box"><input id="versionNumber" name="versionNumber" class="f6 easyui-textbox"
+                                                          data-options="required:true,prompt:'请输入版本号'" type="text"/></div>
+            </li>
+            <li class="clearBox" id="vFile">
+                <div class="label title-box float-box">文件：</div>
+                <div class="content-box float-box">
+                    <input id="file" name="file"  class="easyui-filebox" data-options="width:260,buttonText:'点击上传文件'" type="text"/>
+                </div>
+            </li>
+            <li class="clearBox note-box" id="vDescribed">
+                <div class="label note-title title-box float-box">版本描述：</div>
+                <div class="content-box float-box"><input name="described" class="easyui-textbox"
+                                                          data-options="multiline:true,width:320,height:80" type="text"/></div>
+            </li>
+        </ul>
+    </form>
+</div>

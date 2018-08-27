@@ -1,0 +1,30 @@
+<div class="form-container">
+    <form id="form1">
+        <input id="id" name="id" class="easyui-numberbox" type="hidden"/>
+        <ul class="form-table clearBox response-table" style="min-width:39%;margin: 0px auto;">
+            <li class="clearBox note-box" style="height: 39% !important;">
+                <div class="label title-box note-title float-box">标题:</div>
+                <div class="content-box float-box"><input name="title" class="f5 easyui-textbox" type="text" multiline="true"
+                            style="width: 100% !important;"/></div>
+            </li>
+            <li class="clearBox note-box" style="height: 39% !important;">
+                <div class="label title-box note-title float-box">内容:</div>
+                <div class="content-box float-box"><input name="contxt" class="f8 easyui-textbox" type="text" multiline="true"
+                            style="width: 100% !important;"/></div>
+            </li>
+        </ul>
+
+        <!--<table class="form-table" style="min-width:400px;">-->
+            <!--<tr>-->
+                <!--<td class="label">标题:</td>-->
+                <!--<td ><input name="title" class="f5 easyui-textbox" type="text" multiline="true"-->
+                            <!--style="height: 60px;width: 500px"/></td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="label">内容:</td>-->
+                <!--<td ><input name="contxt" class="f8 easyui-textbox" type="text" multiline="true"-->
+                            <!--style="height: 360px;width: 500px"/></td>-->
+            <!--</tr>-->
+        <!--</table>-->
+    </form>
+</div>

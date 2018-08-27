@@ -1,0 +1,56 @@
+<div id="grid-toolbar">
+    <div class="grid-search">
+        <form id="searchForm">
+            <ul class="search-table clearBox">
+                <li class="clearBox">
+                    <div class="select-condition clearBox">
+                        <div class="label">箱包ID：</div>
+                        <div class="select-input">
+                            <input name="clientId" class="f1 easyui-textbox" data-options="prompt:'请输入箱包ID'" type="text"/>
+                        </div>
+                    </div>
+                    <div class="select-condition clearBox">
+                        <div class="label">参数下发状态:</div>
+                        <div class="select-input">
+                            <select id="setFlag" class="easyui-combobox" >
+                                <option value="2">全部</option>
+                                <option value="0">已下发</option>
+                                <option value="1">待下发</option>
+                            </select>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <!--<table class="search-table">-->
+                <!--<tr>-->
+                    <!--<td class="label">箱包ID：</td>-->
+                    <!--<td>-->
+                        <!--<input name="clientId" class="f1 easyui-textbox" data-options="prompt:'请输入箱包ID'" type="text"/>-->
+                    <!--</td>-->
+                    <!--<td class="label">参数下发状态:</td>-->
+                    <!--<td>-->
+                        <!--<select id="setFlag" class="easyui-combobox" >-->
+                            <!--<option value="2">全部</option>-->
+                            <!--<option value="0">已下发</option>-->
+                            <!--<option value="1">待下发</option>-->
+                        <!--</select>-->
+                    <!--</td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        </form>
+        <div class="search-toolbar">
+            <a id="btnSearch" href="javascript:void(0)" class="c1" style="width:80px">查询</a>
+            <a id="btnClear" href="javascript:void(0)" class="c4" style="width:80px">清空</a>
+        </div>
+    </div>
+    <div class="grid-toolbar">
+        <a id="btnEdit" href="javascript:void(0);" class="c1">参数设置</a>
+    </div>
+</div>
+<table id="grid"></table>
+<div id="dlg" style="display: none;"></div>
+<div id="dlg-buttons">
+    <a id="btnSave" href="javascript:void(0)" style="width:80px">保存</a>
+    <a id="btnCancel" href="javascript:void(0)" style="width:80px">取消</a>
+</div>

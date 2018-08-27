@@ -1,0 +1,26 @@
+<div id="grid-toolbar">
+    <div class="grid-search">
+        <form id="searchForm">
+            <table class="search-table">
+                <tr>
+                    <td class="label">查阅状态:</td>
+                    <td>
+                       <!-- <input id="lookFlag" class="f5" type="text" />-->
+                        <select id="lookFlag" class="easyui-combobox" >
+                            <option value="">全部</option>
+                            <option value="0">未查阅</option>
+                            <option value="1">已查阅</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div class="grid-toolbar">
+    </div>
+</div>
+<table id="grid"></table>
+<div id="dlg" style="display: none;"></div>
+<div id="dlg-buttons">
+    <a id="btnClose" href="javascript:void(0)"  style="width:80px">关闭</a>
+</div>

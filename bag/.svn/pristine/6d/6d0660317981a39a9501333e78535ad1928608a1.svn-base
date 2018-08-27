@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.AppMapper">
+    <resultMap id="appMap" type="com.zhskg.bag.entity.App">
+        <id column="app_id" jdbcType="VARCHAR" property="appId" />
+        <result column="app_name" jdbcType="VARCHAR" property="appName" />
+        <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag" />
+        <result column="comment" jdbcType="VARCHAR" property="comment" />
+        <result column="create_on" jdbcType="BIGINT" property="createOn" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="modify_on" jdbcType="BIGINT" property="modifyOn" />
+        <result column="modify_time" jdbcType="BIGINT" property="modifyTime" />
+    </resultMap>
+    <!--数据库字段-->
+    <sql id="columns">
+        app_id,
+        app_name,
+        delete_flag,
+        comment,
+        create_on,
+        create_time,
+        modify_on,
+        modify_time
+    </sql>
+    <!--插入记录-->
+    <insert id="add" parameterType="com.zhskg.bag.entity.App">
+        INSERT INTO ts_app (
+        <include refid="columns"/>
+        ) VALUES (
+        #{appId, jdbcType=VARCHAR},
+        #{appName, jdbcType=VARCHAR},
+        #{deleteFlag, jdbcType=INTEGER},
+        #{comment, jdbcType=VARCHAR},
+        #{createOn, jdbcType=BIGINT},
+        #{createTime, jdbcType=BIGINT},
+        #{modifyOn, jdbcType=BIGINT},
+        #{modifyTime, jdbcType=BIGINT}
+        )
+    </insert>
+    <!--批量插入-->
+    <insert id="batchAdd" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO ts_app (
+        <include refid="columns"/>
+        ) VALUES
+        <foreach separator="," index="index" item="item" collection="list">
+            (
+            #{item.appId, jdbcType=VARCHAR},
+            #{item.appName, jdbcType=VARCHAR},
+            #{item.deleteFlag, jdbcType=INTEGER},
+            #{item.comment, jdbcType=VARCHAR},
+            #{item.createOn, jdbcType=BIGINT},
+            #{item.createTime, jdbcType=BIGINT},
+            #{item.modifyOn, jdbcType=BIGINT},
+            #{item.modifyTime, jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
+    <!--根据主键假删除-->
+    <update id="removeById" parameterType="java.lang.String">
+        UPDATE ts_app SET delete_flag = 1 where app_id = #{appId,jdbcType=VARCHAR}
+    </update>
+    <!--根据条件假删除-->
+    <update id="remove" parameterType="map">
+        UPDATE ts_app
+        SET delete_flag = 1
+        WHERE app_name LIKE '%${appName}%' AND delete_flag = 0
+    </update>
+    <!--根据主键删除-->
+    <delete id="realRemoveById" parameterType="java.lang.String">
+        delete from ts_app where app_id = #{appId,jdbcType=VARCHAR}
+    </delete>
+    <!--根据条件删除-->
+    <delete id="realRemove" parameterType="com.zhskg.bag.param.AppParam">
+        delete from ts_app
+        where app_name LIKE '%${appName}%'
+    </delete>
+    <!--根据主键查询-->
+    <select id="get" resultMap="appMap" parameterType="java.lang.String">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_app WHERE app_id = #{appId,jdbcType=VARCHAR}
+    </select>
+    <!--根据条件查询返回第一行-->
+    <select id="getFirst" resultMap="appMap" parameterType="com.zhskg.bag.param.AppParam">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_app
+        <where>
+            AND delete_flag = 0
+            <if test=" appName != '' and appName != null "> AND app_Name LIKE '%${appName}%' </if>
+            <if test=" comment != '' and comment != null "> AND comment LIKE '%${comment}%' </if>
+        </where>
+        ORDER BY create_on DESC LIMIT 0,1
+    </select>
+    <!--根据条件查询-->
+    <select id="getList" resultMap="appMap" parameterType="com.zhskg.bag.param.AppParam">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_app
+        <where>
+            AND delete_flag = 0
+            <if test=" keywords != null and keywords != '' ">AND (app_name LIKE '%${keywords}%' OR comment LIKE '%${keywords}%')</if>
+            <if test=" appName != null and appName != '' "> AND app_name LIKE '%${appName}%' </if>
+            <if test=" comment != null and comment != '' "> AND comment LIKE '%${comment}%' </if>
+        </where>
+    </select>
+    <!--根据条件分页查询-->
+    <select id="getPageList" resultMap="appMap">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_app
+        <where>
+            AND delete_flag = 0
+            <if test=" condition.keywords != null and condition.keywords != '' ">AND (app_name LIKE '%${condition.keywords}%' OR comment LIKE '%${condition.keywords}%')</if>
+            <if test=" condition.appName != null and condition.appName != '' "> AND app_name LIKE '%${condition.appName}%' </if>
+            <if test=" condition.comment != null and condition.comment != '' "> AND comment LIKE '%${condition.comment}%' </if>
+        </where>
+        ORDER BY create_on DESC LIMIT #{pageIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+    <!--根据条件查询记录总数-->
+    <select id="getCount" parameterType="com.zhskg.bag.param.AppParam" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM ts_app
+        <where>
+            AND delete_flag = 0
+            <if test=" keywords != null and keywords != '' ">AND (app_name LIKE '%${keywords}%' OR comment LIKE '%${keywords}%')</if>
+            <if test=" appName != null and appName != '' "> AND app_name LIKE '%${appName}%' </if>
+            <if test=" comment != null and comment != '' "> AND comment LIKE '%${comment}%' </if>
+        </where>
+    </select>
+    <!--根据主键修改-->
+    <update id="updateById" parameterType="com.zhskg.bag.entity.App">
+        UPDATE ts_app
+        <trim prefix="set" suffixOverrides=",">
+            <if test="appName != null">app_name = #{appName, jdbcType=VARCHAR},</if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag, jdbcType=INTEGER},</if>
+            <if test="comment != null">comment = #{comment, jdbcType=VARCHAR},</if>
+            <if test="createOn != null">create_on = #{createOn, jdbcType=BIGINT},</if>
+            <if test="createTime != null">create_time = #{createTime, jdbcType=BIGINT},</if>
+            <if test="modifyOn != null">modify_on = #{modifyOn, jdbcType=BIGINT},</if>
+            <if test="modifyTime != null">modify_time = #{modifyTime, jdbcType=BIGINT}</if>
+        </trim>
+        WHERE app_id = #{appId,jdbcType=VARCHAR}
+    </update>
+    <!--根据条件修改-->
+    <update id="update">
+        UPDATE ts_app
+        <trim prefix="set" suffixOverrides=",">
+            <if test="app.appName != null">app_name = #{app.appName, jdbcType=VARCHAR},</if>
+            <if test="app.deleteFlag != null">delete_flag = #{app.deleteFlag, jdbcType=INTEGER},</if>
+            <if test="app.comment != null">comment = #{app.comment, jdbcType=VARCHAR},</if>
+            <if test="app.createOn != null">create_on = #{app.createOn, jdbcType=BIGINT},</if>
+            <if test="app.createTime != null">create_time = #{app.createTime, jdbcType=BIGINT},</if>
+            <if test="app.modifyOn != null">modify_on = #{app.modifyOn, jdbcType=BIGINT},</if>
+            <if test="app.modifyTime != null">modify_time = #{app.modifyTime, jdbcType=BIGINT}</if>
+        </trim>
+        WHERE app_name LIKE '%${condition.appName}%' AND delete_flag = 0
+    </update>
+</mapper>

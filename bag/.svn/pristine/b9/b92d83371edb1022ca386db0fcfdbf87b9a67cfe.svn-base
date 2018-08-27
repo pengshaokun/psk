@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.LostInfoMapper">
+    <resultMap id="lostInfoMap" type="com.zhskg.bag.entity.LostInfo">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="client_id" jdbcType="VARCHAR" property="clientId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="lon" jdbcType="DOUBLE" property="lon"/>
+        <result column="lat" jdbcType="DOUBLE" property="lat"/>
+        <result column="lost_time" jdbcType="BIGINT" property="lostTime"/>
+        <result column="lost_content" jdbcType="VARCHAR" property="lostContent"/>
+        <result column="lost_flag" jdbcType="INTEGER" property="lostFlag"/>
+        <result column="modify_time" jdbcType="BIGINT" property="modifyTime"/>
+        <result column="modify_on" jdbcType="BIGINT" property="modifyOn"/>
+        <result column="full_name" jdbcType="VARCHAR" property="fullName"/>
+    </resultMap>
+
+    <!--数据库字段-->
+    <sql id="columns">
+        id,
+        client_id,
+        user_id,
+        lon,
+        lat,
+        lost_time,
+        lost_content,
+        lost_flag,
+        modify_time,
+        modify_on,
+        full_name
+    </sql>
+    <sql id="sqlFilter">
+        <where>
+            <if test="id!=null and id!=0">
+                AND id=#{id,jdbcType=INTEGER}
+            </if>
+            <if test="clientId!=null and clientId!=''">
+                AND client_id=#{clientId,jdbcType=VARCHAR}
+            </if>
+            <if test="userId!=null and userId!=0">
+                AND user_id=#{userId,jdbcType=BIGINT}
+            </if>
+            <if test="lostTime!=null and lostTime!=0">
+                AND lost_time=#{lostTime,jdbcType=BIGINT}
+            </if>
+            <if test="lostFlag!=null and lostFlag==2">
+                AND lost_flag IN (0,1)
+            </if>
+            <if test="lostFlag!=null and lostFlag!=2">
+                AND lost_flag=#{lostFlag,jdbcType=INTEGER}
+            </if>
+            <if test="lostContent!=null and lostContent!=''">
+                AND lost_content LIKE '%${lostContent}%'
+            </if>
+            <if test="fullName!=null and fullName!=''">
+                AND full_name LIKE '%${fullName}%'
+            </if>
+        </where>
+    </sql>
+
+    <!--根据主键查询-->
+    <select id="get" resultMap="lostInfoMap" parameterType="java.lang.Integer">
+        SELECT
+        <include refid="columns"/>
+        FROM tp_lost_info
+        WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <delete id="remove" parameterType="map">
+          DELETE  FROM tp_lost_info
+          <include refid="sqlFilter"/>
+    </delete>
+
+    <!--添加-->
+    <insert id="addAndId" parameterType="com.zhskg.bag.entity.LostInfo">
+        INSERT INTO tp_lost_info(
+        client_id,
+        user_id,
+        lon,
+        lat,
+        lost_time,
+        lost_content,
+        lost_flag,
+        full_name
+        ) VALUES (
+        #{clientId,jdbcType=VARCHAR},
+        #{userId,jdbcType=BIGINT},
+        #{lon,jdbcType=DOUBLE},
+        #{lat,jdbcType=DOUBLE},
+        #{lostTime,jdbcType=BIGINT},
+        #{lostContent,jdbcType=VARCHAR},
+        #{lostFlag,jdbcType=INTEGER},
+        #{fullName,jdbcType=VARCHAR}
+        )
+        <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer">
+            SELECT @@IDENTITY as id
+        </selectKey>
+    </insert>
+    
+    <!--修改-->
+    <update id="update" parameterType="com.zhskg.bag.entity.LostInfo">
+        UPDATE tp_lost_info
+        <trim prefix="set" suffixOverrides=",">
+            <if test="clientId!=null">client_id = #{clientId,jdbcType=VARCHAR},</if>
+            <if test="userId!=null">user_id = #{userId,jdbcType=BIGINT},</if>
+            <if test="lon!=null">lon = #{lon,jdbcType=DOUBLE},</if>
+            <if test="lat!=null">lat = #{lat,jdbcType=DOUBLE},</if>
+            <if test="lostTime!=null">lost_time = #{lostTime,jdbcType=BIGINT},</if>
+            <if test="lostContent!=null">lost_content = #{lostContent,jdbcType=VARCHAR},</if>
+            <if test="lostFlag!=null">lost_flag = #{lostFlag,jdbcType=INTEGER},</if>
+            <if test="fullName!=null">full_name = #{fullName,jdbcType=VARCHAR},</if>
+            <if test="modifyTime!=null">modify_time = #{modifyTime,jdbcType=BIGINT},</if>
+            <if test="modifyOn!=null">modify_on = #{modifyOn,jdbcType=BIGINT}</if>
+        </trim>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="setStatus" parameterType="map">
+        UPDATE tp_lost_info SET lost_flag = #{lostFlag} WHERE id = #{id}
+    </update>
+
+    <!--获取列表-->
+    <select id="getList" resultMap="lostInfoMap" parameterType="map">
+        SELECT
+        <include refid="columns"/>
+        FROM  tp_lost_info
+        <include refid="sqlFilter"/>
+        ORDER BY lost_time DESC
+    </select>
+
+    <!--获取分页列表-->
+    <select id="getPageList" resultMap="lostInfoMap" parameterType="map">
+        SELECT
+        <include refid="columns"/>
+        FROM tp_lost_info
+        <include refid="sqlFilter"/>
+        ORDER BY lost_time DESC LIMIT #{pageIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <!--获取记录条数-->
+    <select id="getCount" parameterType="map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM tp_lost_info
+        <include refid="sqlFilter"/>
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+

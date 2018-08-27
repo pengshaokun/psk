@@ -1,0 +1,89 @@
+package com.zhs.common.constant;
+
+/**
+ * Created with Intellij IDEA
+ *
+ * @author:ZHS-CZJiang
+ * @date:2018/5/26
+ */
+public class CmdConstant {
+
+    /**
+     * 帧头
+     */
+    public static final int CMD_HEAD = 0xfe;
+
+    /**
+     * 帧尾
+     */
+    public static final int CMD_TAIL = 0xed;
+
+    /**
+     * 上传命令
+     */
+    public static final int REGISTER = 0x01;
+    public static final int UPLOAD = 0x02;
+    public static final int NOTICE = 0x03;
+    public static final int NOTICE_RECOVERY = 0x04;
+    public static final int CONTROLLER = 0x05;
+    public static final int QUERY = 0x06;
+    public static final int SET = 0x07;
+    public static final int FAULT = 0x08;
+    public static final int FAULT_RECOVERY = 0x04;
+    public static final int HEART = 0x0a;
+    public static final int SYNTHETICAL = 0x0b;
+    public static final int CANCEL = 0x0c;
+
+
+    /**
+     * 回复命令
+     */
+    public static final int REPLY_REGISTER = 0x81;
+    public static final int REPLY_UPLOAD = 0x82;
+    public static final int REPLY_NOTICE = 0x83;
+    public static final int REPLY_NOTICE_RECOVERY = 0x84;
+    public static final int REPLY_CONTROLLER = 0x85;
+    public static final int REPLY_QUERY = 0x86;
+    public static final int REPLY_SET = 0x87;
+    public static final int REPLY_FAULT = 0x88;
+    public static final int REPLY_FAULT_RECOVERY = 0x84;
+    public static final int REPLY_HEART = 0x8a;
+    public static final int REPLY_SYNTHETICAL = 0x8b;
+    public static final int REPLY_CANCEL = 0x8c;
+
+    /**
+     * 进出场标志
+     */
+    public static final int IN = 0x00;
+    public static final int OUT = 0x01;
+
+    /**
+     * 开关输出状态
+     */
+    public static final int OPEN = 0x00;
+    public static final int CLOSE = 0x01;
+
+    /**
+     * 国家编码 00 是中国
+     */
+    public static final int COUNTRY = 0x00;
+
+    /**
+     * 车牌汉字编号
+     */
+    public static final String[] CAR = {"京","津","冀","晋","蒙","辽","吉","黑","沪","苏",
+            "浙","皖","闽", "赣","鲁","豫","鄂","湘","粤","桂",
+            "琼","渝","川","贵","云","藏","陕","甘","青","宁",
+            "新","港", "澳","台","警","使","WJ","领","学"};
+
+    public static final int CAR_NUMBER_CMD_CODE = 0X60;
+    public static final int IN_OUT_CMD_CODE = 0X61;
+    public static final int SWITCH_CMD_CODE = 0X26;
+    public static final int COUNTRY_CMD_CODE = 0X62;
+    public static final int TIME_CMD_CODE = 0X71;
+    public static final int COST_CMD_CODE = 0X72;
+    public static final int PARKING_CMD_CODE = 0X73;
+    public static final int RESULT_CMD_CODE = 0X17;
+
+
+}

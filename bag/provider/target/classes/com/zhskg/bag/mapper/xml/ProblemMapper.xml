@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.ProblemMapper">
+    <resultMap id="problemMap" type="com.zhskg.bag.entity.Problem">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="contxt" jdbcType="VARCHAR" property="contxt" />
+        <result column="cxt_type" jdbcType="INTEGER" property="cxtType" />
+        <result column="create_name" jdbcType="VARCHAR" property="createName" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="create_on" jdbcType="BIGINT" property="createOn" />
+    </resultMap>
+    <!--数据库字段-->
+    <sql id="columns">
+        id,
+        title,
+        contxt,
+        cxt_type,
+        create_name,
+        create_time,
+        create_on
+    </sql>
+    <!--根据主键查询-->
+    <select id="get" resultMap="problemMap" parameterType="int">
+        SELECT  
+        <include refid="columns"/> 
+        FROM tp_problems
+        WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <!--根据主键假删除-->
+    <delete id="removeById" parameterType="java.lang.Integer">
+        DELETE FROM tp_problems
+        WHERE id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <!--添加记录并返回主键(主键必须是自增列)-->
+    <insert id="add" parameterType="com.zhskg.bag.entity.Problem">
+        INSERT INTO tp_problems (
+        <include refid="columns"/>
+        ) VALUES (
+        #{id},
+        #{title},
+        #{contxt},
+        #{cxtType},
+        #{createName},
+        #{createTime},
+        #{createOn}
+        )
+        <selectKey order="AFTER" keyProperty="id" resultType="java.lang.Integer"> SELECT @@IDENTITY as id </selectKey>
+    </insert>
+
+    <!--根据主键修改-->
+	<update id="updateById" parameterType="com.zhskg.bag.entity.Problem">
+		UPDATE tp_problems
+        <trim prefix="set" suffixOverrides=","> 
+            <if test="title != null">title = #{title, jdbcType=VARCHAR}, </if>
+            <if test="contxt != null">contxt = #{contxt, jdbcType=VARCHAR}, </if>
+            <if test="cxtType >0">cxt_type = #{cxtType, jdbcType=INTEGER}, </if>
+        </trim>
+        WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+    <!--根据条件查询-->
+    <select id="getList" resultMap="problemMap" parameterType="map">
+        SELECT 
+        <include refid="columns"/>
+        FROM tp_problems
+        <include refid="sqlFilter"/>
+    </select>
+
+    <select id="getPageList" resultMap="problemMap" parameterType="map">
+        SELECT
+        <include refid="columns"/>
+        FROM tp_problems
+        <include refid="sqlFilter"/>
+        LIMIT #{start,jdbcType=INTEGER},#{end,jdbcType=INTEGER}
+    </select>
+
+    <select id="count" resultType="int" parameterType="map">
+        SELECT COUNT(*)
+        FROM tp_problems
+        <include refid="sqlFilter"/>
+    </select>
+
+    <sql id="sqlFilter">
+        <where>
+            <if test="id!=null and id!=0">
+                AND id=#{id,jdbcType=INTEGER}
+            </if>
+            <if test="cxtType!=null">
+                AND cxt_type=#{cxtType,jdbcType=INTEGER}
+            </if>
+            <if test="title!=null and title!=''">
+                AND title LIKE '%${title}%'
+            </if>
+            <if test="contxt!=null and contxt!=''">
+                AND contxt LIKE '%${contxt}%'
+            </if>
+        </where>
+    </sql>
+
+</mapper>

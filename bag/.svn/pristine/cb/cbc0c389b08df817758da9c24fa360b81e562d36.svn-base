@@ -1,0 +1,28 @@
+package com.zhs.base.service.impl;
+
+import javax.annotation.Resource;
+
+import com.zhs.base.dao.BaseModelDao;
+import com.zhs.base.service.BaseModelService;
+import com.zhs.core.dao.IGenericOperations;
+import com.zhs.core.model.BaseModel;
+import com.zhs.core.service.AbstractGenericService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Transactional()
+@Service("baseModeService")
+public class BaseModelServiceImpl extends AbstractGenericService<BaseModel>
+		implements BaseModelService {
+
+	@Resource(name = "baseModelDao")
+    BaseModelDao baseModelDao;
+
+	@Override
+	protected IGenericOperations<BaseModel> getDao() {
+		return baseModelDao;
+	}
+
+}

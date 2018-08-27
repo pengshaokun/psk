@@ -1,0 +1,89 @@
+package com.zhs.common.model.tenement;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import com.zhs.core.model.BaseModel;
+
+/**
+ * 门闸信息表
+ * @author ZHSKG YANH
+ *
+ */
+@Table
+@Entity(name="tb_door_lock")
+public class DoorLock extends BaseModel{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1159815841065534632L;
+	/**
+	 * 车场id
+	 */
+	@Column(name = "tenement_id")
+	private long tenementId;
+	/**
+	 * 门闸 MAC地址
+	 */
+	@Column(name = "door_mac")
+	private String doorMac;
+	/**
+	 * 门闸编码
+	 */
+	@Column(name="door_code")
+	private String doorCode;
+	/**
+	 * 出入口类型 0:进口，1：出口
+	 */
+	@Column(name = "water_gate")
+	private int waterGate;
+	/**
+	 * 是否收费门闸
+	 */
+	@Column(name="charge_door")
+	private boolean chargeDoor;
+	
+	
+
+	public String getDoorCode() {
+		return doorCode;
+	}
+
+	public void setDoorCode(String doorCode) {
+		this.doorCode = doorCode;
+	}
+
+    public String getDoorMac() {
+        return doorMac;
+    }
+
+    public void setDoorMac(String doorMac) {
+        this.doorMac = doorMac;
+    }
+
+    public int getWaterGate() {
+        return waterGate;
+    }
+
+    public void setWaterGate(int waterGate) {
+        this.waterGate = waterGate;
+    }
+
+    public boolean isChargeDoor() {
+		return chargeDoor;
+	}
+
+	public void setChargeDoor(boolean chargeDoor) {
+		this.chargeDoor = chargeDoor;
+	}
+
+	public long getTenementId() {
+		return tenementId;
+	}
+
+	public void setTenementId(long tenementId) {
+		this.tenementId = tenementId;
+	}
+}

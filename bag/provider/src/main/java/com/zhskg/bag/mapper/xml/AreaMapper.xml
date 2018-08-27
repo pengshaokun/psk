@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.AreaMapper">
+    <resultMap id="areaMap" type="com.zhskg.bag.entity.Area">
+        <id column="area_id" jdbcType="BIGINT" property="areaId" />
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+        <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+        <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+        <result column="full_name" jdbcType="VARCHAR" property="fullName" />
+        <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+        <result column="path" jdbcType="VARCHAR" property="path" />
+        <result column="level" jdbcType="INTEGER" property="level" />
+        <result column="level_code" jdbcType="VARCHAR" property="levelCode" />
+        <result column="sort_no" jdbcType="INTEGER" property="sortNo" />
+        <result column="comment" jdbcType="VARCHAR" property="comment" />
+        <result column="custom_flag" jdbcType="INTEGER" property="customFlag" />
+        <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag" />
+        <result column="create_on" jdbcType="BIGINT" property="createOn" />
+        <result column="create_time" jdbcType="BIGINT" property="createTime" />
+        <result column="modify_on" jdbcType="BIGINT" property="modifyOn" />
+        <result column="modify_time" jdbcType="BIGINT" property="modifyTime" />
+        <result column="total" jdbcType="INTEGER" property="total"/>
+    </resultMap>
+    <!--数据库字段-->
+    <sql id="columns"> 
+        area_id,
+        area_code,
+        area_name,
+        short_name,
+        full_name,
+        parent_id,
+        path,
+        level,
+        level_code,
+        sort_no,
+        comment,
+        custom_flag,
+        delete_flag,
+        create_on,
+        create_time,
+        modify_on,
+        modify_time
+    </sql>
+    <!--插入记录-->
+    <insert id="add" parameterType="com.zhskg.bag.entity.Area">
+        INSERT INTO ts_area ( 
+        <include refid="columns"/>
+        ) VALUES (
+        #{areaId, jdbcType=BIGINT},
+        #{areaCode, jdbcType=VARCHAR},
+        #{areaName, jdbcType=VARCHAR},
+        #{shortName, jdbcType=VARCHAR},
+        #{fullName, jdbcType=VARCHAR},
+        #{parentId, jdbcType=BIGINT},
+        #{path, jdbcType=VARCHAR},
+        #{level, jdbcType=INTEGER},
+        #{levelCode, jdbcType=VARCHAR},
+        #{sortNo, jdbcType=INTEGER},
+        #{comment, jdbcType=VARCHAR},
+        #{customFlag, jdbcType=INTEGER},
+        #{deleteFlag, jdbcType=INTEGER},
+        #{createOn, jdbcType=BIGINT},
+        #{createTime, jdbcType=BIGINT},
+        #{modifyOn, jdbcType=BIGINT},
+        #{modifyTime, jdbcType=BIGINT}
+        )
+    </insert>
+    <!--插入记录并返回主键(主键必须是自增列)-->
+    <insert id="addAndId" parameterType="com.zhskg.bag.entity.Area">
+        INSERT INTO ts_area ( 
+        <include refid="columns"/>
+        ) VALUES (
+        #{areaId, jdbcType=BIGINT},
+        #{areaCode, jdbcType=VARCHAR},
+        #{areaName, jdbcType=VARCHAR},
+        #{shortName, jdbcType=VARCHAR},
+        #{fullName, jdbcType=VARCHAR},
+        #{parentId, jdbcType=BIGINT},
+        #{path, jdbcType=VARCHAR},
+        #{level, jdbcType=INTEGER},
+        #{levelCode, jdbcType=VARCHAR},
+        #{sortNo, jdbcType=INTEGER},
+        #{comment, jdbcType=VARCHAR},
+        #{customFlag, jdbcType=INTEGER},
+        #{deleteFlag, jdbcType=INTEGER},
+        #{createOn, jdbcType=BIGINT},
+        #{createTime, jdbcType=BIGINT},
+        #{modifyOn, jdbcType=BIGINT},
+        #{modifyTime, jdbcType=BIGINT}
+        )
+        <selectKey order="AFTER" keyProperty="areaId" resultType="java.lang.Long"> SELECT @@IDENTITY as areaId </selectKey>
+    </insert>
+    <!--批量插入-->
+    <insert id="batchAdd" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO ts_area ( 
+        <include refid="columns"/>
+        ) VALUES 
+        <foreach separator="," index="index" item="item" collection="list"> 
+            (
+            #{item.areaId, jdbcType=BIGINT},
+            #{item.areaCode, jdbcType=VARCHAR},
+            #{item.areaName, jdbcType=VARCHAR},
+            #{item.shortName, jdbcType=VARCHAR},
+            #{item.fullName, jdbcType=VARCHAR},
+            #{item.parentId, jdbcType=BIGINT},
+            #{item.path, jdbcType=VARCHAR},
+            #{item.level, jdbcType=INTEGER},
+            #{item.levelCode, jdbcType=VARCHAR},
+            #{item.sortNo, jdbcType=INTEGER},
+            #{item.comment, jdbcType=VARCHAR},
+            #{item.customFlag, jdbcType=INTEGER},
+            #{item.deleteFlag, jdbcType=INTEGER},
+            #{item.createOn, jdbcType=BIGINT},
+            #{item.createTime, jdbcType=BIGINT},
+            #{item.modifyOn, jdbcType=BIGINT},
+            #{item.modifyTime, jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
+    <!--根据主键假删除-->
+    <update id="removeById" parameterType="java.lang.Long"> 
+        UPDATE ts_area SET delete_flag = 1 where area_id = #{areaId,jdbcType=BIGINT} 
+    </update>
+    <update id="removeByPath" parameterType="java.lang.String">
+        UPDATE ts_area SET delete_flag = 1 where path LIKE '${path}%'
+    </update>
+    <!--根据条件假删除-->
+    <update id="remove" parameterType="com.zhskg.bag.param.AreaParam">
+        UPDATE ts_area
+        SET delete_flag = 1
+        <where>
+            <if test="areaCode!=null and areaCode!=''"> AND area_code LIKE '${areaCode}%'</if>
+            <if test="areaName!=null and areaName!=''"> AND area_name LIKE '%${areaName}%'</if>
+            <if test="parentId!=null and parentId!=0"> AND parent_id = #{parentId,jdbcType=BIGINT}</if>
+        </where>
+    </update>
+    <!--根据主键删除-->
+    <delete id="realRemoveById" parameterType="java.lang.Long"> 
+        delete from ts_area where area_id = #{areaId,jdbcType=BIGINT} 
+    </delete>
+    <!--根据条件删除-->
+    <delete id="realRemove" parameterType="com.zhskg.bag.param.AreaParam">
+        delete from ts_area
+        <where>
+            <if test="areaCode!=null and areaCode!=''"> AND area_code LIKE '${areaCode}%'</if>
+            <if test="areaName!=null and areaName!=''"> AND area_name LIKE '%${areaName}%'</if>
+            <if test="parentId!=null and parentId!=0"> AND parent_id = #{parentId,jdbcType=BIGINT}</if>
+        </where>
+    </delete>
+    <!--根据主键查询-->
+    <select id="get" resultMap="areaMap" parameterType="java.lang.Long">
+        SELECT  
+        <include refid="columns"/> 
+        FROM ts_area WHERE area_id = #{areaId,jdbcType=BIGINT}
+    </select>
+    <!--根据条件查询返回第一行-->
+    <select id="getFirst" resultMap="areaMap" parameterType="com.zhskg.bag.param.AreaParam">
+        SELECT  
+        <include refid="columns"/> 
+        FROM ts_area
+        <where>
+          AND delete_flag = 0
+          <if test="areaCode!=null and areaCode!=''"> AND area_code LIKE '${areaCode}%'</if>
+          <if test="areaName!=null and areaName!=''"> AND area_name LIKE '%${areaName}%'</if>
+          <if test="parentId!=null and parentId!=0"> AND parent_id = #{parentId,jdbcType=BIGINT}</if>
+        </where>
+        ORDER BY create_on DESC LIMIT 0,1
+    </select>
+    <!--根据条件查询-->
+    <select id="getList" resultMap="areaMap" parameterType="com.zhskg.bag.param.AreaParam">
+        SELECT 
+        <include refid="columns"/>
+        ,(SELECT COUNT(*) FROM ts_area WHERE parent_id = t.area_id AND delete_flag = 0) AS total
+        FROM ts_area t
+        <where>
+            AND t.delete_flag = 0
+            <if test="areaCode!=null and areaCode!=''"> AND t.area_code LIKE '${areaCode}%'</if>
+            <if test="areaName!=null and areaName!=''"> AND t.area_name LIKE '%${areaName}%'</if>
+            <if test="parentId!=null"> AND t.parent_id = #{parentId,jdbcType=BIGINT}</if>
+            <if test="level!=null"> AND t.level = #{level,jdbcType=INTEGER}</if>
+        </where>
+    </select>
+    <!--根据条件分页查询-->
+    <select id="getPageList" resultMap="areaMap">
+        SELECT 
+        <include refid="columns"/>
+        FROM ts_area 
+        <where>
+            AND delete_flag = 0
+            <if test="condition.keywords != '' and condition.keywords != null "> AND (areaCode LIKE '%${condition.keywords}%' OR areaName LIKE '%${condition.keywords}%') </if>
+            <if test="condition.areaCode!=null and condition.areaCode!=''"> AND area_code LIKE '${condition.areaCode}%'</if>
+            <if test="condition.areaName!=null and condition.areaName!=''"> AND area_name LIKE '%${condition.areaName}%'</if>
+            <if test="condition.parentId!=null and condition.parentId!=0"> AND parent_id = #{condition.parentId,jdbcType=BIGINT}</if>
+        </where>
+        ORDER BY create_on DESC LIMIT #{pageIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+    <!--根据条件查询记录总数-->
+    <select id="getCount" parameterType="com.zhskg.bag.param.AreaParam" resultType="java.lang.Integer">
+        SELECT COUNT(*) 
+        FROM ts_area
+        <where>
+            AND delete_flag = 0
+            <if test="keywords != '' and keywords != null "> AND (areaCode LIKE '%${keywords}%' OR areaName LIKE '%${keywords}%') </if>
+            <if test="areaCode!=null and areaCode!=''"> AND area_code LIKE '${areaCode}%'</if>
+            <if test="areaName!=null and areaName!=''"> AND area_name LIKE '%${areaName}%'</if>
+            <if test="parentId!=null and parentId!=0"> AND parent_id = #{parentId,jdbcType=BIGINT}</if>
+        </where>
+    </select>
+    <!--根据主键修改-->
+	<update id="updateById" parameterType="com.zhskg.bag.entity.Area">
+		UPDATE ts_area
+        <trim prefix="set" suffixOverrides=",">
+            <if test="areaCode != null">area_code = #{areaCode, jdbcType=VARCHAR}, </if>
+            <if test="areaName != null">area_name = #{areaName, jdbcType=VARCHAR}, </if>
+            <if test="shortName != null">short_name = #{shortName, jdbcType=VARCHAR}, </if>
+            <if test="fullName != null">full_name = #{fullName, jdbcType=VARCHAR}, </if>
+            <if test="parentId != null">parent_id = #{parentId, jdbcType=BIGINT}, </if>
+            <if test="path != null">path = #{path, jdbcType=VARCHAR}, </if>
+            <if test="level != null">level = #{level, jdbcType=INTEGER}, </if>
+            <if test="levelCode != null">level_code = #{levelCode, jdbcType=VARCHAR}, </if>
+            <if test="sortNo != null">sort_no = #{sortNo, jdbcType=INTEGER}, </if>
+            <if test="comment != null">comment = #{comment, jdbcType=VARCHAR}, </if>
+            <if test="customFlag != null">custom_flag = #{customFlag, jdbcType=INTEGER}, </if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag, jdbcType=INTEGER}, </if>
+            <if test="createOn != null">create_on = #{createOn, jdbcType=BIGINT}, </if>
+            <if test="createTime != null">create_time = #{createTime, jdbcType=BIGINT}, </if>
+            <if test="modifyOn != null">modify_on = #{modifyOn, jdbcType=BIGINT}, </if>
+            <if test="modifyTime != null">modify_time = #{modifyTime, jdbcType=BIGINT}</if>
+        </trim>
+        WHERE area_id = #{areaId,jdbcType=BIGINT}
+	</update>
+    <!--根据条件修改-->
+	<update id="update">
+		UPDATE ts_area 
+        <trim prefix="set" suffixOverrides=",">
+            <if test="area.areaCode != null">area_code = #{area.areaCode, jdbcType=VARCHAR}, </if>
+            <if test="area.areaName != null">area_name = #{area.areaName, jdbcType=VARCHAR}, </if>
+            <if test="area.shortName != null">short_name = #{area.shortName, jdbcType=VARCHAR}, </if>
+            <if test="area.fullName != null">full_name = #{area.fullName, jdbcType=VARCHAR}, </if>
+            <if test="area.parentId != null">parent_id = #{area.parentId, jdbcType=BIGINT}, </if>
+            <if test="area.path != null">path = #{area.path, jdbcType=VARCHAR}, </if>
+            <if test="area.level != null">level = #{area.level, jdbcType=INTEGER}, </if>
+            <if test="area.levelCode != null">level_code = #{area.levelCode, jdbcType=VARCHAR}, </if>
+            <if test="area.sortNo != null">sort_no = #{area.sortNo, jdbcType=INTEGER}, </if>
+            <if test="area.comment != null">comment = #{area.comment, jdbcType=VARCHAR}, </if>
+            <if test="area.customFlag != null">custom_flag = #{area.customFlag, jdbcType=INTEGER}, </if>
+            <if test="area.deleteFlag != null">delete_flag = #{area.deleteFlag, jdbcType=INTEGER}, </if>
+            <if test="area.createOn != null">create_on = #{area.createOn, jdbcType=BIGINT}, </if>
+            <if test="area.createTime != null">create_time = #{area.createTime, jdbcType=BIGINT}, </if>
+            <if test="area.modifyOn != null">modify_on = #{area.modifyOn, jdbcType=BIGINT}, </if>
+            <if test="area.modifyTime != null">modify_time = #{area.modifyTime, jdbcType=BIGINT}</if>
+        </trim>
+        <where>
+            AND delete_flag = 0
+            <if test="condition.areaCode!=null and condition.areaCode!=''"> AND area_code LIKE '${condition.areaCode}%'</if>
+            <if test="condition.areaName!=null and condition.areaName!=''"> AND area_name LIKE '%${condition.areaName}%'</if>
+            <if test="condition.parentId!=null and condition.parentId!=0"> AND parent_id = #{condition.parentId,jdbcType=BIGINT}</if>
+        </where>
+	</update>
+    <update id="updatePath" parameterType="map">
+        UPDATE ts_area
+        SET path = #{path, jdbcType=VARCHAR}
+        WHERE area_id = #{areaId,jdbcType=BIGINT}
+    </update>
+</mapper>

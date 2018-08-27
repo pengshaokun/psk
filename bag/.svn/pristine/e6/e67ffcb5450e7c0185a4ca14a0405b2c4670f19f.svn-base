@@ -1,0 +1,61 @@
+package com.zhs.common.model.tenement;
+
+import com.zhs.core.model.BaseModel;
+import lombok.Data;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+
+/**
+ * @author ZHS-CZJiang
+ * @date 2018-07-07
+ * 地磁门闸
+ */
+@Data
+@Entity
+@Table(name = "tb_sparking_door_signal")
+public class DoorSignal extends BaseModel {
+
+    /**
+     * 远程服务器 id
+     */
+    @Column(name = "gate_singal_id")
+    private Integer gateSignalId;
+    /**
+     * 车场 id
+     */
+    @Column(name = "parking_id")
+    private Integer parkingId;
+    /**
+     * 地磁编码
+     */
+    @Column(name = "signal_code")
+    private String signalCode;
+    /**
+     * 绑定标记
+     */
+    @Column(name = "bind_flag")
+    private Integer bindFlag = 0;
+    /**
+     * 车场进出口　id
+     */
+    @Column(name = "door_id")
+    private Integer doorId;
+    /**
+     * 进出标记
+     */
+    @Column(name = "pass_in_flag")
+    private Integer passInFlag;
+    /**
+     * 电池电量
+     */
+    @Column(name = "battery_level")
+    private BigDecimal batteryLevel;
+    /**
+     * 是否收费
+     */
+    private boolean charge;
+
+}

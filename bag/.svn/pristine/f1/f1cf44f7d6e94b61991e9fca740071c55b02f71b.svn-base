@@ -1,0 +1,28 @@
+package com.zhs.common.constant;
+
+import com.zhs.core.model.BaseEnum;
+
+/**
+ * 出入口类型
+ * Created with Eclipse
+ *
+ * @User:ZHSKG YANH
+ * @Date:2018/5/23
+ */
+public enum WaterGateType implements BaseEnum {
+
+	imports("入口"),
+    wayOut("出口");
+	
+	
+    private String desc;
+
+    WaterGateType(String desc) {
+        this.desc = desc;
+    }
+
+    @Override
+    public String getDesc() {
+        return desc;
+    }
+}

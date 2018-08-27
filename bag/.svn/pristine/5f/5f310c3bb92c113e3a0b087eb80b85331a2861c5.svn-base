@@ -1,0 +1,52 @@
+package com.zhs.core.util.resource;
+
+import com.zhs.core.util.StringUtil;
+
+import java.io.File;
+import java.util.ResourceBundle;
+
+/**
+ * 资源工具类
+ * 
+ * @author yurui
+ */
+public class ResourceFileUtil {
+	
+	public static final ResourceBundle sysParam = ResourceBundle.getBundle("system-param");
+	
+	/**
+	 * 获取system-param.properties 中相关key的键值对
+	 * @param key
+	 * @return
+	 */
+	public static String getSysParam(String key){
+		return sysParam.getString(key);
+	}
+	
+	/**
+	 * 获取system-param.properties 中服务器的虚拟目录路径
+	 * @return
+	 */
+	public static String getServerVirtualDir(){
+		if(System.getProperty("os.name").toLowerCase().contains("windows")){
+			return sysParam.getString("window.file.dir")+File.separator;
+		}else if(System.getProperty("os.name").toLowerCase().contains("linux")){
+			return sysParam.getString("linux.file.dir")+File.separator;
+		}else{
+			return null;
+		}
+	}
+	
+	/**
+	 * 获取system-param.properties 中分页工具参数
+	 * @param pageParam
+	 * @return
+	 */
+	public static String getPaginationParam(String pageParam){
+		if(StringUtil.isNotEmpty(pageParam)){
+			return sysParam.getString(pageParam);
+		}else{
+			return null;
+		}
+	}
+}

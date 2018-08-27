@@ -1,0 +1,8 @@
+package com.zhs.base.dao;
+
+import com.zhs.core.dao.IGenericOperations;
+import com.zhs.core.model.BaseModel;
+
+public interface BaseModelDao extends IGenericOperations<BaseModel> {
+
+}

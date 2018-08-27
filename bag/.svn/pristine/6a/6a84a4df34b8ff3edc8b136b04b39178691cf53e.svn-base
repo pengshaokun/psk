@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        ">
+
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+
+		<!--天翼云服务器-->
+		<!--<property name="url"
+			value="jdbc:mysql://36.111.70.44:3306/zhskg_bag?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true" />
+		<property name="username" value="zhsmysqluser" />
+		<property name="password" value="!zhs@2018mysql" />-->
+		<!--本机-->
+		<property name="url"
+				  value="jdbc:mysql://127.0.0.1:3306/zhskg_bag?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true" />
+		<property name="username" value="root" />
+		<property name="password" value="qwe123" />
+
+		<!--测试服务器-->
+		<!--<property name="url" value="jdbc:mysql://10.10.12.12:3306/zhskg_bag?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true"/>
+		<property name="username" value="root" />
+		<property name="password" value="ZhskgMysql@2018"/> -->
+		<property name="initialSize" value="5" />
+		<property name="minIdle" value="5" />
+		<property name="maxActive" value="20" />
+		<property name="maxWait" value="60000" />
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		<property name="validationQuery" value="SELECT 'x'" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize"
+			value="20" />
+		<!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 <property name="filters" value="stat" 
+			/> -->
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager"
+		proxy-target-class="true" />
+	<bean name="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- 生成表配置文件 -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan">
+			<list>
+				<value>com.zhskg.bag.entity</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="current_session_context_class">thread</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- 这会从类路径下加载在 sample.config.mappers 包和它的子包中所有的 MyBatis 映射器 XML文件。 -->
+		<!-- <property name="mapperLocations" value="classpath*:com/lwb/map/*.xml" 
+			/> -->
+		<property name="configLocation" value="classpath:sqlMapConfig.xml" />
+		<property name="mapperLocations" value="classpath:com/zhskg/bag/mapper/xml/*.xml"></property>
+	</bean>
+	<!-- mapper扫描器 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.zhskg.bag.mapper"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+
+	<!-- 提供方应用信息，用于计算依赖关系 -->
+	<dubbo:application name="provider" />
+	<dubbo:registry address="zookeeper://36.111.70.44:2181"
+		check="false" subscribe="false"></dubbo:registry>
+	<!--<dubbo:registry address="zookeeper://test3:2181?backup=test4:2181,test5:2181" 
+		check="false" subscribe="false"></dubbo:registry> -->
+
+	<!-- 用dubbo协议在20880端口暴露服务 -->
+	<dubbo:protocol name="dubbo" port="20881" />
+	<dubbo:annotation package="com.zhskg.bag.service.impl" />
+
+	<!--测试服务器 -->
+	<!--<dubbo:protocol name="dubbo" port="21881"/> <dubbo:annotation package="com.zhskg.bag.service.impl"/> -->
+
+</beans>

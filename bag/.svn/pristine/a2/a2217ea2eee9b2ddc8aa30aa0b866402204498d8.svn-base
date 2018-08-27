@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.OpinionMapper">
+    <resultMap id="opinionMap" type="com.zhskg.bag.entity.Opinion">
+        <id column="opinion_id" jdbcType="INTEGER" property="opinionId"/>
+        <result column="full_name" jdbcType="VARCHAR" property="fullName"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="options" jdbcType="VARCHAR" property="options"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="consult_status" jdbcType="INTEGER" property="consultStatus"/>
+        <result column="consult_on" jdbcType="BIGINT" property="consultOn"/>
+        <result column="consult_time" jdbcType="BIGINT" property="consultTime"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+    </resultMap>
+    <!--数据库字段-->
+    <sql id="columns">
+        opinion_id,
+        full_name,
+        mobile,
+        options,
+        create_time,
+        consult_status,
+        consult_on,
+        consult_time,
+        user_id
+    </sql>
+    <select id="get" parameterType="java.lang.Integer" resultMap="opinionMap">
+        SELECT
+        <include refid="columns"/>
+        FROM tp_opinion WHERE opinion_id=#{opinionId,jdbcType=INTEGER}
+    </select>
+    <select id="getPageList" parameterType="map" resultMap="opinionMap">
+        SELECT
+        <include refid="columns"/>
+        FROM tp_opinion
+        <where>
+            <if test="_parameter.containsKey('consultStatus')">
+                AND consult_status = #{consultStatus}
+            </if>
+            <if test="_parameter.containsKey('userId')">
+                AND user_id = #{userId}
+            </if>
+        </where>
+        ORDER BY consult_status,create_time DESC
+        <if test="start!=''&amp;&amp;start!=null&amp;&amp; end!=''&amp;&amp;end!=null">
+        LIMIT #{start,jdbcType=INTEGER},#{end,jdbcType=INTEGER}
+        </if>
+    </select>
+    <select id="getCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tp_opinion
+        <where>
+            <if test="consultStatus!=null">
+                 consult_status=#{consultStatus,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+    <insert id="addAndId" parameterType="com.zhskg.bag.entity.Opinion">
+        INSERT INTO tp_opinion(
+        full_name,
+        mobile,
+        options,
+        create_time,
+        user_id
+        ) VALUES (
+        #{fullName,jdbcType=VARCHAR},
+        #{mobile,jdbcType=VARCHAR},
+        #{options,jdbcType=VARCHAR},
+        #{createTime,jdbcType=BIGINT},
+        #{userId,jdbcType=BIGINT}
+        )
+        <selectKey order="AFTER" keyProperty="opinionId" resultType="java.lang.Integer"> SELECT @@IDENTITY as opinionId </selectKey>
+    </insert>
+    <update id="updateById" parameterType="com.zhskg.bag.entity.Opinion">
+        UPDATE tp_opinion
+        SET
+        consult_status=1,
+        consult_on=#{consultOn,jdbcType=BIGINT},
+        consult_time=#{consultTime,jdbcType=BIGINT}
+        WHERE opinion_id=#{opinionId,jdbcType=INTEGER}
+    </update>
+</mapper>

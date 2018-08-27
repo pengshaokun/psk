@@ -1,0 +1,86 @@
+package com.zhs.core.util.jpush;
+
+import cn.jpush.api.JPushClient;
+import cn.jpush.api.common.ClientConfig;
+import cn.jpush.api.push.model.Message;
+import cn.jpush.api.push.model.Platform;
+import cn.jpush.api.push.model.PushPayload;
+import cn.jpush.api.push.model.audience.Audience;
+import cn.jpush.api.push.model.notification.AndroidNotification;
+import cn.jpush.api.push.model.notification.IosNotification;
+import cn.jpush.api.push.model.notification.Notification;
+import com.zhs.core.util.StringUtil;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class JPushUtil {
+
+    private static ClientConfig getConfig(){
+        ClientConfig config = ClientConfig.getInstance();
+        config.setApnsProduction(true);    //开发环境或生成环境
+        config.setTimeToLive(60 * 60 * 24); // one day
+        return config;
+    }
+
+
+    private static JPushClient jpush = new JPushClient(JPushConfig.MASTER_SECRET, JPushConfig.APP_KEY,null,getConfig());
+
+    public static void main(String[] args) {
+//        JPushUtil.sendMessage("7586093124","标题", "hehe","charge","hehe");
+//		JPushUtil.sendMessage("", "还有5个小时..........", "心跳加速中.........还有5个小时就可以见到#Pristin#了", "activity", "222");
+    }
+
+    /**
+     * 极光推送
+     * @param tagId 推送别名，为空则为所有用户推送
+     * @param title 标题
+     * @param msgContent  内容
+     * @param keyType  键值
+     * @param keyValue 值
+     */
+    public static void sendMessage(String tagId,String title,String msgContent,String keyType,String keyValue) throws Exception{
+        Map<String,String> ha = new HashMap<String,String>();
+        if(StringUtil.isNotEmpty(keyValue)){
+            ha.put("keyType", keyType);
+            ha.put("keyValue", keyValue);
+        }
+        PushPayload payload = StringUtil.isNotEmpty(tagId)?buildPushObject_all_alias_alert(tagId,title,msgContent,ha):buildPushObject_all_alert(title, msgContent, ha);
+        jpush.sendPush(payload);
+    }
+
+    public static PushPayload buildPushObject_all_alias_alert(String to,String title,String msgContent,Map<String,String> ha) {
+        return PushPayload.newBuilder()
+                .setPlatform(Platform.all())
+                .setAudience(Audience.alias(to))
+                .setNotification(Notification.newBuilder()
+                        .addPlatformNotification(IosNotification.newBuilder()
+                                .setAlert(msgContent)
+//                                .setBadge(5)
+//                                .setSound("happy")
+                                .addExtras(ha)
+                                .build())
+                        .addPlatformNotification(AndroidNotification.newBuilder().setTitle(title).setAlert(msgContent).addExtras(ha).build())
+                        .build())
+                .setMessage(Message.content(msgContent))
+                .build();
+    }
+
+    public static PushPayload buildPushObject_all_alert(String title,String msgContent,Map<String,String> ha) {
+        return PushPayload.newBuilder()
+                .setPlatform(Platform.all())
+                .setAudience(Audience.all())
+                .setNotification(Notification.newBuilder()
+                        .addPlatformNotification(IosNotification.newBuilder()
+                                .setAlert(msgContent)
+//                                .setBadge(5)
+//                                .setSound("happy")
+                                .addExtras(ha)
+                                .build())
+                        .addPlatformNotification(AndroidNotification.newBuilder().setTitle(title).setAlert(msgContent).addExtras(ha).build())
+                        .build())
+                .setMessage(Message.content(msgContent))
+                .build();
+    }
+    
+}

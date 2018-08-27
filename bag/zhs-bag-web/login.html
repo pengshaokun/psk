@@ -1,0 +1,33 @@
+<html lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>智能箱包管理平台</title>
+</head>
+<body>
+<div id="loginWin" class="easyui-window" title="登录" style="width:400px;height:300px;padding:5px;display: none;"
+     minimizable="false" maximizable="false" resizable="false" collapsible="false" closable="false">
+    <div class="easyui-layout" fit="true">
+        <div region="center" border="false" style="background:#fff;border:0px solid #ccc; overflow: hidden;">
+            <form id="form1">
+                <div style="padding: 0px 30px;">
+                    <div style="margin-top: 35px;">
+                        <label id="login">帐号:</label>
+                        <input type="text" name="userName" style="width:280px;" class="easyui-textbox"/>
+                    </div>
+                    <div style="margin-top: 35px;">
+                        <label id="password">密码:</label>
+                        <input type="password" name="passWord" style="width:280px;" class="easyui-textbox"/>
+                    </div>
+                    <div style="margin-top: 20px;text-align: center;color: red;" id="showMsg"></div>
+                </div>
+            </form>
+        </div>
+        <div region="south" border="false" style="text-align:center; height: 60px; padding: 15px;">
+            <a class="easyui-linkbutton c1" style="width: 120px" href="javascript:void(0)" id="btnLogin">登录</a>
+            <a class="easyui-linkbutton c2" style="width: 120px" href="javascript:void(0)" id="btnClear">重置</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

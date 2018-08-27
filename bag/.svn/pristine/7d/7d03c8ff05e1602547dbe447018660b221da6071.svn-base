@@ -1,0 +1,38 @@
+package com.zhs.common.controller;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+public class BaseController {
+
+	protected HttpServletRequest request;
+
+	protected HttpServletResponse response;
+
+	protected Model model;
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(
+				new SimpleDateFormat("yyyy/MM/dd"), true));
+	}
+
+    @ModelAttribute
+    public void setReqAndRes(HttpServletRequest request, HttpServletResponse response, Model model){
+        this.request = request;
+        this.response = response;
+        this.model = model;
+    }
+    
+    
+   
+}

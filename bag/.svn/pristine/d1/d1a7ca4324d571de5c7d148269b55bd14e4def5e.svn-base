@@ -1,0 +1,28 @@
+package com.zhs.common.constant;
+
+
+import com.zhs.core.model.BaseEnum;
+
+/**
+ *
+ * @author yurui
+ */
+public enum SexType implements BaseEnum {
+
+	man("男"),
+	woman("女");
+
+	private String desc;
+
+    private SexType(String desc) {
+        this.desc = desc;
+    }
+	@Override
+	public String getDesc() {
+		return desc;
+	}
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
+}

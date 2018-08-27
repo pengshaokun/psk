@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.FileTempMapper">
+    <resultMap id="fileTempMap" type="com.zhskg.bag.entity.FileTemp">
+        <id column="file_id" jdbcType="BIGINT" property="fileId"/>
+        <result column="file_path" jdbcType="VARCHAR" property="filePath"/>
+        <result column="file_type" jdbcType="VARCHAR" property="fileType"/>
+        <result column="overdue_flag" jdbcType="INTEGER" property="overdueFlag"/>
+        <result column="term_validity" jdbcType="BIGINT" property="termValidity"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="create_on" jdbcType="BIGINT" property="createOn"/>
+    </resultMap>
+    <!--数据库字段-->
+    <sql id="columns">
+        file_id,
+        file_path,
+        file_type,
+        overdue_flag,
+        term_validity,
+        create_time,
+        create_on
+    </sql>
+    <!--根据主键查询-->
+    <select id="get" resultMap="fileTempMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="columns"/>
+        FROM tp_file_temp
+        WHERE file_id = #{fileId,jdbcType=BIGINT}
+    </select>
+    <!--根据条件查询返回第一行-->
+    <!--<select id="getFirst" resultMap="fileTempMap" parameterType="map">
+        SELECT
+        <include refid="columns"/>
+        FROM tp_file_temp
+        <where>
+            <if test=" param1 != 0 and param1 != null "> AND column1 = #{param1,jdbcType=INTEGER} </if>
+            <if test=" param2 != '' and param2 != null "> AND column2 = #{param2,jdbcType=VARCHAR} </if>
+        </where>
+        ORDER BY column3 DESC LIMIT 0,1
+    </select>-->
+    <!--根据主键假删除-->
+    <update id="removeById" parameterType="java.lang.Long">
+        UPDATE tp_file_temp
+        SET delete_flag = 1
+        WHERE file_id = #{fileId,jdbcType=BIGINT}
+    </update>
+    <!--根据条件假删除-->
+    <!--<update id="remove" parameterType="map">
+        UPDATE tp_file_temp SET delete_flag = 1 where column1 = #{param1,jdbcType=INTEGER} AND column2 = #{param2,jdbcType=VARCHAR}
+    </update>-->
+    <!--根据主键删除-->
+    <delete id="realRemoveById" parameterType="java.lang.Long">
+        delete from tp_file_temp
+        WHERE file_id = #{fileId,jdbcType=BIGINT}
+    </delete>
+    <!--根据条件删除-->
+    <!--<delete id="realRemove" parameterType="map">
+        delete from tp_file_temp where column1 = #{param1,jdbcType=INTEGER} AND column2 = #{param2,jdbcType=VARCHAR}
+    </delete>-->
+    <!--添加记录-->
+    <insert id="add" parameterType="com.zhskg.bag.entity.FileTemp">
+        INSERT INTO tp_file_temp (
+        file_path,
+        file_type,
+        overdue_flag,
+        term_validity,
+        create_time,
+        create_on
+        ) VALUES (
+        #{filePath, jdbcType=VARCHAR},
+        #{fileType, jdbcType=VARCHAR},
+        #{overdueFlag, jdbcType=INTEGER},
+        #{termValidity, jdbcType=BIGINT},
+        #{createTime, jdbcType=BIGINT},
+        #{createOn, jdbcType=BIGINT}
+        )
+    </insert>
+    <!--添加记录并返回主键(主键必须是自增列)-->
+    <insert id="addAndId" parameterType="com.zhskg.bag.entity.FileTemp">
+        INSERT INTO tp_file_temp (
+        <include refid="columns"/>
+        ) VALUES (
+        #{fileId, jdbcType=BIGINT},
+        #{filePath, jdbcType=VARCHAR},
+        #{fileType, jdbcType=VARCHAR},
+        #{overdueFlag, jdbcType=INTEGER},
+        #{termValidity, jdbcType=BIGINT},
+        #{createTime, jdbcType=BIGINT},
+        #{createOn, jdbcType=BIGINT}
+        )
+        <selectKey order="AFTER" keyProperty="fileId" resultType="java.lang.Long">SELECT @@IDENTITY as fileId
+        </selectKey>
+    </insert>
+    <!--批量插入记录-->
+    <insert id="batchAdd" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO tp_file_temp (
+        <include refid="columns"/>
+        ) VALUES
+        <foreach separator="," index="index" item="item" collection="list">
+            (
+            #{item.fileId, jdbcType=BIGINT},
+            #{item.filePath, jdbcType=VARCHAR},
+            #{item.fileType, jdbcType=VARCHAR},
+            #{item.overdueFlag, jdbcType=INTEGER},
+            #{item.termValidity, jdbcType=BIGINT},
+            #{item.createTime, jdbcType=BIGINT},
+            #{item.createOn, jdbcType=BIGINT}
+            )
+        </foreach>
+    </insert>
+    <!--根据主键修改-->
+    <update id="updateById" parameterType="com.zhskg.bag.entity.FileTemp">
+        UPDATE tp_file_temp
+        <trim prefix="set" suffixOverrides=",">
+            <if test="filePath != null">file_path = #{filePath, jdbcType=VARCHAR},</if>
+            <if test="fileType != null">file_type = #{fileType, jdbcType=VARCHAR},</if>
+            <if test="overdueFlag != null">overdue_flag = #{overdueFlag, jdbcType=INTEGER},</if>
+            <if test="termValidity != null">term_validity = #{termValidity, jdbcType=BIGINT},</if>
+            <if test="createTime != null">create_time = #{createTime, jdbcType=BIGINT},</if>
+            <if test="createOn != null">create_on = #{createOn, jdbcType=BIGINT}</if>
+        </trim>
+        WHERE file_id = #{fileId,jdbcType=BIGINT}
+    </update>
+    <!--根据条件修改-->
+    <!--<update id="update" parameterType="map">
+        UPDATE tp_file_temp
+        <trim prefix="set" suffixOverrides=",">
+            <if test="_parameter.containsKey('filePath')">file_path = #{filePath, jdbcType=VARCHAR}, </if>
+            <if test="_parameter.containsKey('fileType')">file_type = #{fileType, jdbcType=VARCHAR}, </if>
+            <if test="_parameter.containsKey('overdueFlag')">overdue_flag = #{overdueFlag, jdbcType=INTEGER}, </if>
+            <if test="_parameter.containsKey('termValidity')">term_validity = #{termValidity, jdbcType=BIGINT}, </if>
+            <if test="_parameter.containsKey('createTime')">create_time = #{createTime, jdbcType=BIGINT}, </if>
+            <if test="_parameter.containsKey('createOn')">create_on = #{createOn, jdbcType=BIGINT}</if>
+        </trim>
+        WHERE column1 = #{param1,jdbcType=INTEGER} AND column2 = #{param2,jdbcType=VARCHAR}
+    </update>-->
+    <!--根据条件查询-->
+    <select id="getList" resultMap="fileTempMap" parameterType="map">
+        SELECT
+        <include refid="columns"/>
+        FROM tp_file_temp
+    </select>
+    <!--根据条件分页查询-->
+    <select id="getPageList" resultMap="fileTempMap" parameterType="map">
+        SELECT
+        <include refid="columns"/>
+        FROM tp_file_temp
+        <include refid="filterSql"/>
+        ORDER BY create_time DESC LIMIT #{start,jdbcType=INTEGER},#{end,jdbcType=INTEGER}
+    </select>
+    <!--根据条件查询记录总数-->
+    <select id="getCount" parameterType="map" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM tp_file_temp
+        <include refid="filterSql"/>
+    </select>
+    <sql id="filterSql">
+        <where>
+            <if test="overdueFlag!=null">
+               AND overdue_flag=#{overdueFlag}
+            </if>
+            <if test="filePath!=null and filePath!=''">
+            	<bind name="_par_filePath" value="'%'+_parameter.filePath+'%'"/>
+               AND file_path like #{_par_filePath}
+            </if>
+        </where>
+    </sql>
+    <update id="updateOverdue" parameterType="map">
+        UPDATE tp_file_temp
+        <set>
+            overdue_flag = #{overdueFlag,jdbcType=INTEGER},
+            <if test="createTime!=null and createTime!=0">
+                create_time=#{createTime},
+            </if>
+        </set>
+        WHERE file_path=#{filePath, jdbcType=VARCHAR}
+    </update>
+    <update id="batchUpdateOverdue" parameterType="map">
+        UPDATE tp_file_temp
+        <set>
+            overdue_flag = #{overdueFlag,jdbcType=INTEGER},
+            <if test="createTime!=null and createTime!=0">
+                create_time=#{createTime},
+            </if>
+        </set>
+        WHERE file_path IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+    <select id="getOverdueList" parameterType="map" resultMap="fileTempMap">
+        SELECT * FROM (<include refid="overdueList"/>) a
+        WHERE a.endTime &lt; #{currentTime}
+    </select>
+    <delete id="removeOverdueFile" parameterType="map">
+        DELETE FROM tp_file_temp
+        WHERE file_id IN (
+        SELECT file_id FROM (<include refid="overdueList"/>) a
+        WHERE a.endTime &lt; #{currentTime}
+        )
+    </delete>
+    <sql id="overdueList">
+        SELECT file_id,file_path,SUM(term_validity+create_time) endTime FROM tp_file_temp
+        WHERE overdue_flag=1 group by file_id,file_path
+    </sql>
+</mapper>

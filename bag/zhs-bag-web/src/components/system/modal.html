@@ -1,0 +1,155 @@
+﻿<div id="tt" class="easyui-tabs" data-options="fit:true" class="response-table">
+    <div title="用户信息">
+        <div class="form-container">
+            <form id="form1" style="width:100%;" >
+                <!--  添加一个 id="accountId" 用于去除accountId 防止添加新用户会覆盖之前刚编辑过的用户 -->
+                <input id="accountId" name="accountId" type="hidden" class="easyui-textbox"/>
+                <ul class="form-table clearBox response-table" style="min-width:35%;margin: 0px auto;">
+                    <li class="clearBox">
+                        <div class="label title-box float-box">账户:</div>
+                        <div class="content-box float-box">
+                            <input name="account" class="f6 easyui-textbox" type="text" data-options="required:true"/>
+                        </div>
+                    </li>
+                    <li class="password clearBox">
+                        <div class="label title-box float-box">密码:</div>
+                        <div class="content-box float-box">
+                            <input id="password" name="password" class="f6 easyui-textbox" type="password"
+                                   data-options="required:true" maxlength="6"/>
+                        </div>
+                    </li>
+                    <li class="password clearBox">
+                        <div class="label title-box float-box">确认密码:</div>
+                        <div class="content-box float-box">
+                            <input id="confirmPassword" class="f6" type="password"/>
+                        </div>
+                    </li>
+                    <li class="clearBox">
+                        <div class="label title-box float-box">姓名:</div>
+                        <div class="content-box float-box">
+                            <input id="fullName" name="fullName" class="f6 easyui-textbox" type="text" data-options="required:true"/>
+                        </div>
+                    </li>
+                    <li class="clearBox">
+                        <div class="label title-box float-box">手机号码:</div>
+                        <div class="content-box float-box">
+                            <input id="mobileNumber" name="mobileNumber" class="f6 easyui-numberbox" type="text" data-options="required:true"/>
+                        </div>
+                    </li>
+                    <li class="clearBox">
+                        <div class="label title-box float-box">电子邮箱:</div>
+                        <div class="content-box float-box">
+                            <input id="email" name="email" class="f6 easyui-textbox" type="text" data-options="required:true"/>
+                        </div>
+                    </li>
+                    <li class="clearBox">
+                        <div class="label title-box float-box">身份证号码:</div>
+                        <div class="content-box float-box">
+                            <input id="identityCardNo" name="identityCardNo" class="f6 easyui-textbox" type="text" data-options="required:true"/>
+                        </div>
+                    </li>
+                    <li class="clearBox">
+                        <div style="width:100%;">
+                            <ul class="inner-table">
+                                <li class="clearBox row-divide">
+                                    <div class="float-box" hidden="hidden"><label><input name="enableFlag" value="1" checked="checked"
+                                                      type="checkbox"/><span></span>启用</label></div>
+                                    <div class="float-box"><label><input name="adminFlag" value="1"
+                                                      type="checkbox"/><span></span>超级管理</label></div>
+                                    <div class="float-box"><label><input name="nextChangeFlag" value="1" type="checkbox"/><span></span>首次登录修改密码</label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="clearBox note-box">
+                        <div class="label title-box note-title float-box" style="height:100%">备注:</div>
+                        <div class="content-box float-box">
+                            <!--<input name="comment" class="f8 easyui-textbox" multiline="true" type="text" style="height: 120px"/>-->
+                            <input name="comment" class="f8 easyui-textbox" multiline="true" type="text" />
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+    <div title="角色信息">
+        <table id="roles" class="easyui-textbox"></table>
+    </div>
+</div>
+
+
+
+
+<!--<div id="tt" class="easyui-tabs" data-options="fit:true">-->
+    <!--<div title="用户信息">-->
+        <!--<div class="form-container">-->
+            <!--<form id="form1">-->
+                <!--<input name="accountId" type="hidden"/>-->
+                <!--<table class="form-table" style="min-width:550px;">-->
+                    <!--<tr>-->
+                        <!--<td class="label">账户:</td>-->
+                        <!--<td colspan="3">-->
+                            <!--<input name="account" class="f6 easyui-textbox" type="text"/>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr class="password">-->
+                        <!--<td class="label">密码:</td>-->
+                        <!--<td colspan="3">-->
+                            <!--<input id="password" name="password" class="f6 easyui-textbox" type="password"-->
+                                   <!--data-options="required:true"/>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr class="password">-->
+                        <!--<td class="label">确认密码:</td>-->
+                        <!--<td colspan="3">-->
+                            <!--<input id="confirmPassword" class="f6" type="password"/>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td class="label">姓名:</td>-->
+                        <!--<td colspan="3">-->
+                            <!--<input id="fullName" name="fullName" class="f6 easyui-textbox" type="text" data-options="required:true"/>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td class="label">手机号码:</td>-->
+                        <!--<td colspan="3">-->
+                            <!--<input id="mobileNumber" name="mobileNumber" class="f6 easyui-numberbox" type="text"/>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td class="label">身份证号码:</td>-->
+                        <!--<td colspan="3">-->
+                            <!--<input id="identityCardNo" name="identityCardNo" class="f6 easyui-textbox" type="text"/>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td colspan="4">-->
+                            <!--<table class="inner-table">-->
+                                <!--<tr>-->
+                                    <!--<td><label><input name="enableFlag" value="1" checked="checked"-->
+                                                      <!--type="checkbox"/><span></span>启用</label></td>-->
+                                    <!--<td><label><input name="adminFlag" value="1"-->
+                                                      <!--type="checkbox"/><span></span>超级管理</label></td>-->
+                                    <!--<td><label><input name="nextChangeFlag" value="1" type="checkbox"/><span></span>首次登录修改密码</label>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                            <!--</table>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<td class="label">备注:</td>-->
+                        <!--<td colspan="3">-->
+                            <!--<input name="comment" class="f8 easyui-textbox" multiline="true" type="text" style="height: 120px"/>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                <!--</table>-->
+            <!--</form>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div title="角色信息">-->
+        <!--<table id="roles"></table>-->
+    <!--</div>-->
+<!--</div>-->
+

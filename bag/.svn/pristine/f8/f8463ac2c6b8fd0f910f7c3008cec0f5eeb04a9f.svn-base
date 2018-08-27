@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.MessageMapper">
+
+    <!-- messageMap -->
+    <resultMap id="messageMap" type="com.zhskg.bag.model.MessageEntry">
+        <id column="m_id" property="id" />
+        <result column="m_title" property="title" />
+        <result column="m_content" property="content" />
+        <result column="m_createtime" property="createtime" />
+        <result column="m_createor" property="createor" />
+        <result column="full_name" property="createName" />
+        <result column="t_dictname" property="typeName" />
+        <result column="mobile_number" property="phone" />
+        <association property="type" javaType="com.zhskg.bag.model.MessageTypeEntry">
+            <id column="t_id" property="id" />
+            <result column="t_dictname" property="dictname" />
+            <result column="t_dictvalue" property="dictvalue" />
+            <result column="t_description" property="description" />
+        </association>
+    </resultMap>
+
+    <!-- 添加一条消息 -->
+    <insert id="add" parameterType="com.zhskg.bag.entity.Message" useGeneratedKeys="true" keyProperty="id">
+        insert into tm_message
+        (
+            m_type,
+            m_title,
+            m_content,
+            m_createtime,
+            m_createor
+        )
+        values
+        (
+            #{type},
+            #{title},
+            #{content},
+            #{createtime},
+            #{createor}
+        )
+    </insert>
+
+    <!-- 根据id删除一条消息 真正删除 -->
+    <delete id="delete" parameterType="int">
+        delete from tm_message where m_id = #{id}
+    </delete>
+
+    <!-- 根据id修改消息 -->
+    <update id="update" parameterType="com.zhskg.bag.entity.Message">
+        update tm_message
+        <set>
+            <if test="type != null and type != ''">
+                m_type = #{type},
+            </if>
+            <if test="title != null and title != ''">
+                m_title = #{title},
+            </if>
+            <if test="content != null and content != ''">
+                m_content = #{content}
+            </if>
+        </set>
+        where m_id = #{id}
+    </update>
+
+    <!-- 根据id查看消息详情 -->
+    <select id="queryById" parameterType="int" resultMap="messageMap">
+        select *
+        from
+        (
+            select
+                   U.*,
+                   M.m_id,
+                   M.m_content,
+                   M.m_createor,
+                   M.m_createtime,
+                   M.m_title,
+                   T.t_id,
+                   T.t_dictname,
+                   T.t_dictvalue,
+                   T.t_description
+            from
+            tm_message M
+            left join tm_message_type T on M.m_type = T.t_id
+            left join tu_user U on M.m_createor = U.user_id
+            where M.m_id = #{id}
+        ) T1
+        where 1 = 1
+    </select>
+
+    <!-- 查询条件 -->
+    <sql id="whereQueryMessageParam">
+        <if test="messageParam.type != null and messageParam.type != ''">
+            and m_type = #{messageParam.type}
+        </if>
+        <if test="messageParam.phone != null and messageParam.phone != ''">
+            and mobile_number = #{messageParam.phone}
+        </if>
+    </sql>
+
+    <!-- 排序 -->
+    <sql id="orderQueryMessageParam">
+        order by m_createtime desc
+    </sql>
+
+    <!-- 分页 -->
+    <sql id="pageQueryMessageParam">
+        limit #{pageIndex}, #{pageSize}
+    </sql>
+
+    <!-- 根据参数查询消息列表 -->
+    <select id="query" parameterType="com.zhskg.bag.param.MessageParam" resultMap="messageMap">
+        select *
+        from
+        (
+            select U.*,
+                   M.m_id,
+                   M.m_type,
+                   M.m_content,
+                   M.m_createor,
+                   M.m_createtime,
+                   M.m_title,
+                   T.t_id,
+                   T.t_dictname,
+                   T.t_dictvalue,
+                   T.t_description
+            from
+            tm_message M
+            left join tm_message_type T on M.m_type = T.t_id
+            left join tu_user U on M.m_createor = U.user_id
+        ) T1
+        where 1 = 1
+        <!-- 查询条件 -->
+        <include refid="whereQueryMessageParam" />
+        <!-- 排序 -->
+        <include refid="orderQueryMessageParam" />
+        <!-- 分页 -->
+        <include refid="pageQueryMessageParam" />
+    </select>
+
+    <!-- 根据参数查询消息列表数量 -->
+    <select id="queryAllMessageCount" parameterType="com.zhskg.bag.param.MessageParam" resultType="int">
+        select count(1)
+        from
+        (
+            select U.*,
+                   M.m_id,
+                   M.m_type,
+                   M.m_content,
+                   M.m_createor,
+                   M.m_createtime,
+                   M.m_title,
+                   T.t_id,
+                   T.t_dictname,
+                   T.t_dictvalue,
+                   T.t_description
+            from
+            tm_message M
+            left join tm_message_type T on M.m_type = T.t_id
+            left join tu_user U on M.m_createor = U.user_id
+        ) T1
+        where 1 = 1
+        <!-- 查询条件 -->
+        <include refid="whereQueryMessageParam" />
+    </select>
+
+</mapper>

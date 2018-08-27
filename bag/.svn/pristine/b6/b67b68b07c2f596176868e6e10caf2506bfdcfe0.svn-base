@@ -1,0 +1,109 @@
+package com.zhs.core.util.search.paginate;
+
+import java.util.HashMap;
+import java.util.List;
+
+@SuppressWarnings( "rawtypes" )
+public interface PageAndOrder {
+
+	public static final int DEFAULT_PAGE_SIZE = 10;
+
+	public static final String ClassName = "ClassName";
+
+	String order(String queryString);
+
+	String order(StringBuffer queryString);
+
+	String order(StringBuilder queryString);
+
+	Order getOrder();
+
+	String getColumn();
+
+	PageAndOrder setOrderColumn(String column);
+
+	int getCurrentPage();
+
+	int getPageSize();
+
+	int getTotalRows();
+
+	void setObjectsPerPage(int pageSize);
+
+	void setCurrentPage(int pageNumber);
+
+	void setTotalRows(int fullListSize);
+
+	int getTotalPages();
+	
+	int getObjectsPerPage();
+
+	/**
+	 * 清空 currentPage
+	 */
+	void reset();
+
+	PageAndOrder setOrder(Order desc);
+
+	void setType(String type);
+
+	String getType();
+
+	List getResult();
+
+	void setResult(List result);
+
+	List<Footer> getFooterList();
+	
+	void setFooterUseVo(boolean flag);
+	
+	boolean isUseFooterVo();
+	
+	void setFooterVoWhere(String whereSql);
+	
+	String getFooterVoWhere();
+
+	void setFooterList(List<Footer> footerList);
+
+	void addFooterSum(String entityColumn, Object entityValue, String pageColumn);
+
+	void addFooterWhere(String entityColumn, Object entityValue);
+	
+	void addFooterWhere(String whereSql);
+
+	HashMap<String, Object> getFooter();
+
+	void setFooter(HashMap<String, Object> footer);
+
+	/**
+	 * 判断是否分页
+	 * 
+	 * @param status
+	 *            false 为不分页
+	 */
+	void setPaging(boolean status);
+
+	/**
+	 * 判断是否分页
+	 * 
+	 * @param status
+	 *            false 为不分页
+	 */
+	boolean isPaging();
+
+	/**
+	 * 设置排序的string,其中不包括order by
+	 * 
+	 * @param desc
+	 */
+	void setOrderDesc(String desc);
+
+	String getOrderDesc();
+	
+	//自定义条件
+	void setSerch(String str);
+	
+	String getSerchHql();
+
+	String getSerchsql();
+}

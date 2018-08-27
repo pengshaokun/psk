@@ -1,0 +1,410 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhskg.bag.mapper.AccountMapper">
+    <resultMap id="accountMap" type="com.zhskg.bag.entity.Account">
+        <id column="account_id" jdbcType="BIGINT" property="accountId"/>
+        <result column="account" jdbcType="VARCHAR" property="account"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="mobile_number" jdbcType="VARCHAR" property="mobileNumber"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="identity_card_no" jdbcType="VARCHAR" property="identityCardNo"/>
+        <result column="super_flag" jdbcType="INTEGER" property="superFlag"/>
+        <result column="admin_flag" jdbcType="INTEGER" property="adminFlag"/>
+        <result column="enable_flag" jdbcType="INTEGER" property="enableFlag"/>
+        <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag"/>
+        <result column="next_change_flag" jdbcType="INTEGER" property="nextChangeFlag"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="create_on" jdbcType="BIGINT" property="createOn"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="modify_on" jdbcType="BIGINT" property="modifyOn"/>
+        <result column="modify_time" jdbcType="BIGINT" property="modifyTime"/>
+        <result column="registration_id" jdbcType="VARCHAR" property="registrationID"/>
+    </resultMap>
+    <!--数据库字段-->
+    <sql id="columns"> account_id,account,name,password,mobile_number,email,identity_card_no,super_flag,admin_flag,enable_flag,delete_flag,next_change_flag,comment,create_on,create_time,modify_on,modify_time,registration_id </sql>
+    <!--插入记录-->
+    <insert id="add" parameterType="com.zhskg.bag.entity.Account">
+        INSERT INTO ts_account (
+        <include refid="columns"/>
+        ) VALUES (
+        #{accountId, jdbcType=BIGINT},
+        #{account, jdbcType=VARCHAR},
+        #{name, jdbcType=VARCHAR},
+        #{password, jdbcType=VARCHAR},
+        #{mobileNumber, jdbcType=VARCHAR},
+        #{email, jdbcType=VARCHAR},
+        #{identityCardNo, jdbcType=VARCHAR},
+        #{superFlag, jdbcType=INTEGER},
+        #{adminFlag, jdbcType=INTEGER},
+        #{enableFlag, jdbcType=INTEGER},
+        #{deleteFlag, jdbcType=INTEGER},
+        #{nextChangeFlag, jdbcType=INTEGER},
+        #{comment, jdbcType=VARCHAR},
+        #{createOn, jdbcType=BIGINT},
+        #{createTime, jdbcType=BIGINT},
+        #{modifyOn, jdbcType=BIGINT},
+        #{modifyTime, jdbcType=BIGINT},
+        #{registrationID, jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <!--插入记录并返回主键(主键必须是自增列)-->
+    <insert id="addAndId" parameterType="com.zhskg.bag.entity.Account">
+        INSERT INTO ts_account (
+        <include refid="columns"/>
+        ) VALUES (
+        #{accountId, jdbcType=BIGINT},
+        #{account, jdbcType=VARCHAR},
+        #{name, jdbcType=VARCHAR},
+        #{password, jdbcType=VARCHAR},
+        #{mobileNumber, jdbcType=VARCHAR},
+        #{email, jdbcType=VARCHAR},
+        #{identityCardNo, jdbcType=VARCHAR},
+        #{superFlag, jdbcType=INTEGER},
+        #{adminFlag, jdbcType=INTEGER},
+        #{enableFlag, jdbcType=INTEGER},
+        #{deleteFlag, jdbcType=INTEGER},
+        #{nextChangeFlag, jdbcType=INTEGER},
+        #{comment, jdbcType=VARCHAR},
+        #{createOn, jdbcType=BIGINT},
+        #{createTime, jdbcType=BIGINT},
+        #{modifyOn, jdbcType=BIGINT},
+        #{modifyTime, jdbcType=BIGINT},
+        #{registrationID, jdbcType=VARCHAR}
+        )
+        <selectKey order="AFTER" keyProperty="accountId" resultType="java.lang.Long">SELECT @@IDENTITY as accountId
+        </selectKey>
+    </insert>
+    <!--批量插入-->
+    <insert id="batchAdd" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO ts_account (
+        <include refid="columns"/>
+        ) VALUES
+        <foreach separator="," index="index" item="item" collection="list">
+            (
+            #{item.accountId, jdbcType=BIGINT},
+            #{item.account, jdbcType=VARCHAR},
+            #{item.name, jdbcType=VARCHAR},
+            #{item.password, jdbcType=VARCHAR},
+            #{item.mobileNumber, jdbcType=VARCHAR},
+            #{item.email, jdbcType=VARCHAR},
+            #{item.identityCardNo, jdbcType=VARCHAR},
+            #{item.superFlag, jdbcType=INTEGER},
+            #{item.adminFlag, jdbcType=INTEGER},
+            #{item.enableFlag, jdbcType=INTEGER},
+            #{item.deleteFlag, jdbcType=INTEGER},
+            #{item.nextChangeFlag, jdbcType=INTEGER},
+            #{item.comment, jdbcType=VARCHAR},
+            #{item.createOn, jdbcType=BIGINT},
+            #{item.createTime, jdbcType=BIGINT},
+            #{item.modifyOn, jdbcType=BIGINT},
+            #{item.modifyTime, jdbcType=BIGINT},
+            #{item.registrationID, jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+    <!--根据主键假删除-->
+    <update id="removeById" parameterType="java.lang.Long"> 
+        UPDATE ts_account SET delete_flag = 1 where account_id = #{accountId,jdbcType=BIGINT} 
+    </update>
+    <!--根据条件假删除-->
+    <update id="remove" parameterType="com.zhskg.bag.param.AccountParam">
+        UPDATE ts_account SET delete_flag = 1
+        <where>
+            AND delete_flag = 0
+            <if test="account != null and account != ''">
+                AND account LIKE '%${account}%'
+            </if>
+            <if test="mobileNumber != null and mobileNumber != ''">
+                AND mobile_number LIKE '%${mobileNumber}%'
+            </if>
+            <if test="email != null and email != ''  ">
+                AND email LIKE '%${email}%'
+            </if>
+            <if test="identityCardNo != null and identityCardNo != ''">
+                AND identity_card_no LIKE '%${identityCardNo}%'
+            </if>
+        </where>
+    </update>
+    <!--根据主键删除-->
+    <delete id="realRemoveById" parameterType="java.lang.Long"> 
+        delete from ts_account where account_id = #{accountId,jdbcType=BIGINT} 
+    </delete>
+    <!--根据条件删除-->
+    <delete id="realRemove" parameterType="com.zhskg.bag.param.AccountParam">
+        delete from ts_account
+        <where>
+            <if test="account != null and account != ''">
+                AND account LIKE '%${account}%'
+            </if>
+            <if test="mobileNumber != null and mobileNumber != ''">
+                AND mobile_number LIKE '%${mobileNumber}%'
+            </if>
+            <if test="email != null and email != ''  ">
+                AND email LIKE '%${email}%'
+            </if>
+            <if test="identityCardNo != null and identityCardNo != ''">
+                AND identity_card_no LIKE '%${identityCardNo}%'
+            </if>
+        </where>
+    </delete>
+    <!--根据主键查询-->
+    <select id="get" resultMap="accountMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_account WHERE account_id = #{accountId,jdbcType=BIGINT}
+    </select>
+
+    <!--根据条件查询返回第一行-->
+    <select id="getFirst" resultMap="accountMap" parameterType="com.zhskg.bag.param.AccountParam">
+        SELECT
+        <include refid="columns"/>
+        FROM (SELECT * FROM ts_account WHERE delete_flag = 0) t
+        <where>
+            <if test="accountId != null and accountId != 0">
+                OR account_id = #{accountId,jdbcType=BIGINT}
+            </if>
+            <if test="account != null and account != ''">
+                OR account = #{account,jdbcType=VARCHAR}
+            </if>
+            <if test="mobileNumber != null and mobileNumber != ''">
+                OR mobile_number = #{mobileNumber,jdbcType=VARCHAR}
+            </if>
+            <if test="email != null and email != ''  ">
+                OR email = #{email,jdbcType=VARCHAR}
+            </if>
+            <if test="identityCardNo != null and identityCardNo != ''">
+                OR identity_card_no = #{identityCardNo,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ORDER BY create_on DESC LIMIT 0,1
+    </select>
+    <!--根据条件查询-->
+    <select id="getList" resultMap="accountMap" parameterType="com.zhskg.bag.param.AccountParam">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_account
+        <where>
+            AND delete_flag = 0
+            <if test="condition.keywords !=null and condition.keywords !=''">
+                AND (account LIKE '%${condition.keywords}%' OR mobile_number LIKE '%${condition.keywords}%' OR email LIKE '%${condition.keywords}%' OR
+                identity_card_no LIKE '%${condition.keywords}%' OR name LIKE '%${condition.keywords}%')
+            </if>
+            <if test="condition.name !=null and condition.name!=''">
+                AND name LIKE '%${condition.name}%'
+            </if>
+            <if test="condition.account != null and condition.account != ''">
+                AND account LIKE '%${condition.account}%'
+            </if>
+            <if test="condition.mobileNumber != null and condition.mobileNumber != ''">
+                AND mobile_number LIKE '%${condition.mobileNumber}%'
+            </if>
+            <if test="condition.email != null and condition.email != ''  ">
+                AND email LIKE '%${condition.email}%'
+            </if>
+            <if test="condition.identityCardNo != null and condition.identityCardNo != ''">
+                AND identity_card_no LIKE '%${condition.identityCardNo}%'
+            </if>
+            <if test="condition.registrationID != null and condition.registrationID != ''">
+                AND registration_id = #{registrationID}
+            </if>
+            <if test="condition.roleId != null and condition.roleId != 0">
+            AND account_id IN (SELECT account_id FROM ts_account_role WHERE role_id = #{condition.roleId,jdbcType=BIGINT})
+        </if>
+            <!--AND account_id IN (SELECT account_id FROM ts_account_role WHERE role_id IN (SELECT role_id FROM ts_role))-->
+        </where>
+    </select>
+    <!--根据条件分页查询-->
+    <select id="getPageList" resultMap="accountMap">
+        SELECT
+        <include refid="columns"/>
+        FROM ts_account
+        <where>
+            AND delete_flag = 0
+            <if test="condition.keywords !=null and condition.keywords !=''">
+                AND (account LIKE '%${condition.keywords}%' OR mobile_number LIKE '%${condition.keywords}%' OR email
+                LIKE '%${condition.keywords}%' OR identity_card_no LIKE '%${condition.keywords}%' OR name LIKE '%${condition.keywords}%')
+            </if>
+            <if test="condition.name !=null and condition.name!=''">
+                AND name LIKE '%${condition.name}%'
+            </if>
+            <if test="condition.account != null and condition.account != ''">
+                AND account LIKE '%${condition.account}%'
+            </if>
+            <if test="condition.mobileNumber != null and condition.mobileNumber != ''">
+                AND mobile_number LIKE '%${condition.mobileNumber}%'
+            </if>
+            <if test="condition.email != null and condition.email != ''  ">
+                AND email LIKE '%${condition.email}%'
+            </if>
+            <if test="condition.identityCardNo != null and condition.identityCardNo != ''">
+                AND identity_card_no LIKE '%${condition.identityCardNo}%'
+            </if>
+            <if test="condition.adminFlag !=null and condition.adminFlag!=0">
+                AND admin_flag=#{condition.adminFlag,jdbcType=INTEGER}
+            </if>
+            <if test="condition.roleId != null and condition.roleId != 0">
+                AND account_id IN (SELECT account_id FROM ts_account_role WHERE role_id = #{condition.roleId,jdbcType=BIGINT})
+            </if>
+           <!-- AND account_id IN (SELECT account_id FROM ts_account_role WHERE role_id IN (SELECT role_id FROM ts_role))-->
+        </where>
+        ORDER BY create_on DESC LIMIT #{pageIndex,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+    <!--根据条件查询记录总数-->
+    <select id="getCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM ts_account
+        <where>
+            AND delete_flag = 0
+            <if test="condition.keywords !=null and condition.keywords !=''">
+                AND (account LIKE '%${condition.keywords}%' OR mobile_number LIKE '%${condition.keywords}%' OR email LIKE '%${condition.keywords}%' OR
+                identity_card_no LIKE '%${condition.keywords}%' OR name LIKE '%${condition.keywords}%')
+            </if>
+            <if test="condition.account != null and condition.account != ''">
+                AND account LIKE '%${condition.account}%'
+            </if>
+            <if test="condition.adminFlag !=null and condition.adminFlag!=0">
+                AND admin_flag=#{condition.adminFlag,jdbcType=INTEGER}
+            </if>
+            <if test="condition.name !=null and condition.name!=''">
+                AND name LIKE '%${condition.name}%'
+            </if>
+            <if test="condition.mobileNumber != null and condition.mobileNumber != ''">
+                AND mobile_number LIKE '%${condition.mobileNumber}%'
+            </if>
+            <if test="condition.email != null and condition.email != ''  ">
+                AND email LIKE '%${condition.email}%'
+            </if>
+            <if test="condition.identityCardNo != null and condition.identityCardNo != ''">
+                AND identity_card_no LIKE '%${condition.identityCardNo}%'
+            </if>
+            <if test="condition.roleId != null and condition.roleId != 0">
+                AND account_id IN (SELECT account_id FROM ts_account_role WHERE role_id = #{condition.roleId,jdbcType=BIGINT})
+            </if>
+            <!--AND account_id IN (SELECT account_id FROM ts_account_role WHERE role_id IN (SELECT role_id FROM ts_role))-->
+        </where>
+    </select>
+    <!--根据主键修改-->
+    <update id="updateById" parameterType="com.zhskg.bag.entity.Account">
+        UPDATE ts_account
+        <trim prefix="set" suffixOverrides=",">
+            <if test="account != null">account = #{account, jdbcType=VARCHAR},</if>
+            <if test="name != null">name=#{name,jdbcType=VARCHAR},</if>
+            <if test="mobileNumber != null">mobile_number = #{mobileNumber, jdbcType=VARCHAR},</if>
+            <if test="email != null">email = #{email, jdbcType=VARCHAR},</if>
+            <if test="identityCardNo != null">identity_card_no = #{identityCardNo, jdbcType=VARCHAR},</if>
+            <if test="superFlag != null">super_flag = #{superFlag, jdbcType=INTEGER},</if>
+            <if test="adminFlag != null">admin_flag = #{adminFlag, jdbcType=INTEGER},</if>
+            <if test="enableFlag != null">enable_flag = #{enableFlag, jdbcType=INTEGER},</if>
+            <if test="deleteFlag != null">delete_flag = #{deleteFlag, jdbcType=INTEGER},</if>
+            <if test="nextChangeFlag != null">next_change_flag = #{nextChangeFlag, jdbcType=INTEGER},</if>
+            <if test="comment != null">comment = #{comment, jdbcType=VARCHAR},</if>
+            <if test="createOn != null">create_on = #{createOn, jdbcType=BIGINT},</if>
+            <if test="createTime != null">create_time = #{createTime, jdbcType=BIGINT},</if>
+            <if test="modifyOn != null">modify_on = #{modifyOn, jdbcType=BIGINT},</if>
+            <if test="modifyTime != null">modify_time = #{modifyTime, jdbcType=BIGINT},</if>
+            <if test="registrationID != null">registration_id = #{registrationID, jdbcType=VARCHAR}</if>
+        </trim>
+        WHERE account_id = #{accountId,jdbcType=BIGINT}
+    </update>
+    <!--根据条件修改-->
+    <update id="update">
+        UPDATE ts_account
+        <trim prefix="set" suffixOverrides=",">
+            <if test="account.account != null">account = #{account.account, jdbcType=VARCHAR}, </if>
+            <if test="account.name != null">name=#{name,jdbcType=VARCHAR},</if>
+            <if test="account.mobileNumber != null">mobile_number = #{account.mobileNumber, jdbcType=VARCHAR}, </if>
+            <if test="account.email != null">email = #{account.email, jdbcType=VARCHAR}, </if>
+            <if test="account.identityCardNo != null">identity_card_no = #{account.identityCardNo, jdbcType=VARCHAR}, </if>
+            <if test="account.superFlag != null">super_flag = #{account.superFlag, jdbcType=INTEGER}, </if>
+            <if test="account.adminFlag != null">admin_flag = #{account.adminFlag, jdbcType=INTEGER}, </if>
+            <if test="account.enableFlag != null">enable_flag = #{account.enableFlag, jdbcType=INTEGER}, </if>
+            <if test="account.deleteFlag != null">delete_flag = #{account.deleteFlag, jdbcType=INTEGER}, </if>
+            <if test="account.nextChangeFlag != null">next_change_flag = #{account.nextChangeFlag, jdbcType=INTEGER}, </if>
+            <if test="account.comment != null">comment = #{account.comment, jdbcType=VARCHAR}, </if>
+            <if test="account.createOn != null">create_on = #{account.createOn, jdbcType=BIGINT}, </if>
+            <if test="account.createTime != null">create_time = #{account.createTime, jdbcType=BIGINT}, </if>
+            <if test="account.modifyOn != null">modify_on = #{account.modifyOn, jdbcType=BIGINT}, </if>
+            <if test="account.modifyTime != null">modify_time = #{account.modifyTime, jdbcType=BIGINT},</if>
+            <if test="account.registrationID != null">registration_id = #{account.registrationID, jdbcType=VARCHAR}</if>
+        </trim>
+        <where>
+            AND delete_flag = 0
+            <if test="condition.account != null and condition.account != ''">
+                AND account LIKE '%${condition.account}%'
+            </if>
+            <if test="condition.mobileNumber != null and condition.mobileNumber != ''">
+                AND mobile_number LIKE '%${condition.mobileNumber}%'
+            </if>
+            <if test="condition.email != null and condition.email != ''  ">
+                AND email LIKE '%${condition.email}%'
+            </if>
+            <if test="condition.identityCardNo != null and condition.identityCardNo != ''">
+                AND identity_card_no LIKE '%${condition.identityCardNo}%'
+            </if>
+        </where>
+    </update>
+    <!--修改密码-->
+    <update id="changePassword">
+        UPDATE ts_account
+        SET
+        password = #{newPassword, jdbcType=VARCHAR},
+        next_change_flag = 0
+        WHERE account_id = #{accountId,jdbcType=BIGINT}
+    </update>
+    <!--重置密码-->
+    <update id="resetPassword">
+        UPDATE ts_account
+        SET
+        password = #{newPassword, jdbcType=VARCHAR},
+        next_change_flag = 1
+        WHERE account_id = #{accountId,jdbcType=BIGINT}
+    </update>
+    <!--手机号验重-->
+    <select id="checkMobile" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(*)
+        FROM ts_account
+        <!-- WHERE delete_flag = 0 AND mobile_number = #{mobileNumber,jdbcType=VARCHAR} -->
+        <!-- 保证唯一手机号 不管用户是否删除 -->
+        WHERE mobile_number = #{mobileNumber,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 根据id,密码查询用户 -->
+    <select id="queryUserByIdAndPassword" resultMap="accountMap">
+        select * from ts_account A where A.account_id = #{accountId} and A.password = #{password}
+    </select>
+    <!-- 检查数据唯一性 -->
+    <select id="checkUser" resultMap="accountMap">
+    	SELECT
+    	<include refid="columns"/>
+        FROM ts_account
+        <where>
+        	1 = 1
+	        <if test="accountId != null">
+	        	and account_id != #{accountId}
+	        </if>
+	        and ( 1 = 0
+	        <if test="account != null and account != ''">
+	        	or account = #{account}
+	        </if>
+	        <if test="mobileNumber != null and mobileNumber != ''">
+	        	or mobile_number = #{mobileNumber}
+	        </if>
+	        <if test="email != null and email != ''">
+	        	or email = #{email}
+	        </if>
+	        <if test="identityCardNo != null and identityCardNo != ''">
+	        	or identity_card_no = #{identityCardNo}
+	        </if>
+	        )
+        </where>
+        LIMIT 0,1
+    </select>
+
+    <!-- 根据id修改用户手机号 -->
+    <update id="updatePhoneById">
+        update ts_account set ts_account.mobile_number = #{mobileNumber} where ts_account.account_id = #{accountId}
+    </update>
+    
+</mapper>

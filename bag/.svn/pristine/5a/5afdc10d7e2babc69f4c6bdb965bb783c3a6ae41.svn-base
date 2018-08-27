@@ -1,0 +1,38 @@
+wx_appid=wxfea193c6830098c2
+#\u83B7\u53D6 Mch ID
+wx_MchID=1489133612
+#\u83B7\u53D6 API \u5BC6\u94A5\u5546\u6237\u5728\u5FAE\u4FE1\u5E73\u53F0\u8BBE\u7F6E\u768432\u4F4D\u957F\u5EA6\u7684api\u79D8\u94A5\uFF0C \u4EE5\u524D\u7684 02e4fdb1f62549f3925662d317f5123a
+wx_key=02e4fdb1f62549f3925662d317f5123a
+#xi tong app_id
+SYSTEM_APP_ID=9946f00e37f54d8db5a739aac441926b
+
+#修改文件上传大小限制
+spring.http.multipart.maxFileSize=100Mb
+spring.http.multipart.maxRequestSize=1000Mb
+
+#login expree
+Login_Express=7
+
+
+#测试服务器 redis
+#redis_cluster=true
+#redis_host=10.10.12.14:7000,10.10.12.14:7001,10.10.12.16:7002,10.10.12.16:7003,10.10.12.18:7004,10.10.12.18:7005
+#redis_port=7000
+
+#本地redis
+redis_cluster=false
+redis_host=127.0.0.1
+redis_port=6379
+
+
+
+
+
+#FAST_TRACKERS_IP=192.168.0.171:22122
+#TERM_VALIDITY=240000
+#ABSOLUTE_DISK_PATH=d:/java/image/
+#RELATIVE_DISK_PATH=image/
+
+#测试服务器
+FAST_TRACKERS_IP=10.10.12.12:22122
+TERM_VALIDITY=240000

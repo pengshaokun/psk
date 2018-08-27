@@ -1,0 +1,189 @@
+package com.zhs.core.util.resource;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+
+
+/**
+ * 文件工具类
+ * 
+ * @author yurui
+ */
+public class FileUtil {
+	
+	/**
+	 * 保存文件至文件服务器
+	 * 
+	 * @param stream 文件流
+	 * @param filePath 文件在文件服务中的路径  前后缀不需要追文件/符号
+	 * @param fileName 文件名称
+	 */
+	public static String SaveToFileServer(InputStream stream,String filePath,String fileName){
+		
+		String fileServerPath = ResourceFileUtil.getServerVirtualDir()+filePath;
+		
+		File file = new File(fileServerPath);
+        if(!file .exists()  && !file .isDirectory()){
+			file .mkdirs();    
+		}
+        
+		FileOutputStream fs;
+		try {
+			fs = new FileOutputStream(fileServerPath + File.separator + fileName);
+			byte[] buffer =new byte[1024*1024];
+			int byteread = 0;
+			while ((byteread=stream.read(buffer))!=-1){
+				fs.write(buffer,0,byteread);
+				fs.flush();
+			}
+			fs.close();
+			stream.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return (filePath+File.separator+fileName).replace("\\", "/");
+	}
+	
+	/**
+	 * 保存文件至文件路径
+	 * 
+	 * @param stream 文件流
+	 * @param filePath 文件完整路径
+	 * @param fileName 文件名称
+	 */
+	public static String SaveFile(InputStream stream,String filePath,String fileName){
+		File file = new File(filePath);
+        if(!file.exists()  && !file.isDirectory()){
+			file.mkdirs();
+		}
+		FileOutputStream fs;
+		try {
+			fs = new FileOutputStream(ResourceFileUtil.getServerVirtualDir()+filePath + File.separator + fileName);
+			byte[] buffer =new byte[1024*1024];
+			int byteread = 0;
+			while ((byteread=stream.read(buffer))!=-1){
+				fs.write(buffer,0,byteread);
+				fs.flush();
+			}
+			fs.close();
+			stream.close();
+			return (filePath + File.separator + fileName).replace('\\', '/');
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * 获取文件服务器路径
+	 * @param request
+	 * @return
+	 */
+	public static String getFileServerPath(HttpServletRequest request){
+		return "http://"+request.getServerName()+":"+request.getServerPort()+"/"+ResourceFileUtil.getSysParam("file.server.path");
+	}
+	
+	/**
+	 * 从request中获取上传文件
+	 * @param request
+	 * @return
+	 */
+	public static List<MultipartFile> getMultipartFilesForRequest(HttpServletRequest request){
+		List<MultipartFile> imgs = new ArrayList<MultipartFile>();
+		CommonsMultipartResolver multpartResolver = new CommonsMultipartResolver();
+		if(multpartResolver.isMultipart(request)){
+			MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+			Iterator<String> iter = multiRequest.getFileNames();
+			while(iter.hasNext()){
+				MultipartFile file = multiRequest.getFile(iter.next());
+				String[] fis = file.getOriginalFilename().split("\\.");
+//				System.out.println(fis.length);
+				if(fis[fis.length-1].equals("jpg")||
+					fis[fis.length-1].equals("JPG")||
+					fis[fis.length-1].equals("png")||
+					fis[fis.length-1].equals("PNG")||
+					fis[fis.length-1].equals("gif")||
+					fis[fis.length-1].equals("GIF")){
+					imgs.add(file);
+				}
+			}
+		}
+		return imgs;
+	}
+	
+	/**
+	 * 获取工程路径
+	 * @param request
+	 * @return
+	 */
+	public static String getFileDir(HttpServletRequest request){
+		return "http://"+request.getServerName()+":"+request.getServerPort();
+	}
+	
+	/**读取文件内容**/
+	public static String readFile(String fileName) throws IOException{
+		File file = new File(fileName);
+		if(!file.exists()||file.isDirectory())
+            throw new FileNotFoundException();
+		FileReader fr = new FileReader(file);
+		BufferedReader br = new BufferedReader(fr);
+		String content = "";
+		String s ;
+		while((s= br.readLine())!=null){
+			System.out.println (s);
+			content += s;
+		}
+		fr.close();
+		return content;
+	}
+	
+	/** 
+	* 创建文件 
+	* 
+	* @throws IOException 
+	*/ 
+	public static boolean creatFile(String fileName) throws IOException { 
+		boolean flag = false; 
+		File file = new File(fileName); 
+		if (!file.exists()) { 
+			file.createNewFile(); 
+			flag = true; 
+		} 
+		return flag; 
+	} 
+	
+	/** 向文件写入内容(输出流)**/  
+	public static void writeFile(String fileName, String content){
+		byte bt[] = new byte[1024];  
+		bt = content.getBytes();  
+		try {  
+			File file = new File(fileName); 
+			FileOutputStream in = new FileOutputStream(file);  
+		    try {  
+		    	in.write(bt, 0, bt.length);  
+		        in.close();  
+		    } catch (IOException e) {  
+		        e.printStackTrace();  
+		    }  
+		} catch (FileNotFoundException e) {  
+		        e.printStackTrace();  
+		}  
+	}
+   
+}

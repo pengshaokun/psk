@@ -1,0 +1,58 @@
+package com.zhs.common.model.tenement;
+
+import com.zhs.core.model.BaseModel;
+import lombok.Data;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+/**
+ * Created with Intellij IDEA
+ *
+ * @author:ZHS-CZJiang
+ * @date:2018-06-02
+ * 摄像头信息
+ */
+@Data
+@Entity
+@Table(name = "tb_camera")
+public class Camera extends BaseModel {
+
+    /**
+     * 车场 id
+     */
+    private Integer tenementId;
+    /**
+     * 出入口 id
+     */
+    @Column(name = "door_id")
+    private String doorId;
+
+    /**
+     * ip地址
+     */
+    @Column(name = "ip_add")
+    private String ipAdd;
+    /**
+     * 方向 0：进口，1：出口
+     */
+    private int direction;
+    /**
+     * 设备名称
+     */
+    @Column(name = "device_name")
+    private String deviceName;
+    /**
+     * 设备序列号
+     */
+    @Column(name = "serial_num")
+    private String serialNum;
+
+    /**
+     * 是否计算费用
+     */
+    @Column(name = "cost_calculation")
+    private boolean costCalculation;
+
+}

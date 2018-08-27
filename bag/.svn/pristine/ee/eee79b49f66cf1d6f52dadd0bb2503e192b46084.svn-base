@@ -1,0 +1,61 @@
+package com.zhs.common.model.parking.space;
+
+import com.zhs.core.model.BaseModel;
+import lombok.Data;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.util.Date;
+
+/**
+ * Created with IntelliJ IDEA
+ * @User:ZHS-CZJiang
+ * @Date:2018/5/23
+ * 车位计费信息
+ */
+@Data
+@Entity
+@Table(name = "tb_parking_cost")
+public class ParkingCost extends BaseModel {
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5282585599594264360L;
+
+	/**
+     * 车牌号码
+     */
+    private String license;
+
+    /**
+     * 开始时间
+     */
+    @Column(name = "start_time")
+    private Date startTime;
+    /**
+     * 结束时间
+     */
+    @Column(name = "end_time")
+    private Date endTime;
+
+    /**
+     * 收费金额（单位：分）
+     */
+    private int money;
+    /**
+     * 是否出场
+     */
+    @Column(name = "out_parking")
+    private boolean outParking;
+    
+
+    /**
+     * 车辆标识符 管理 PrivatePark 表 token
+     */
+    @Column(name="private_park_token")
+    private String privateParkToken;
+    
+    
+}

@@ -1,0 +1,11 @@
+package com.zhs.core.service;
+
+import java.io.Serializable;
+
+import com.zhs.core.dao.IGenericOperations;
+
+
+public interface IOpertionService<T extends Serializable> extends
+        IGenericOperations<T> {
+
+}

@@ -1,0 +1,136 @@
+package com.zhs.core.util.zxing;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.zhs.core.util.resource.ResourceFileUtil;
+
+
+public class ZxingUtil {
+	public static final int EAN13 = 0;
+	public static final int EAN8 = 1;
+	public static final int UPCA = 2;
+	public static final int UPCE = 3;
+	public static final int CODE39 = 4;
+	public static final int CODE11 = 5;
+	public static final int CODE93 = 6;
+	public static final int CODE128 = 7;
+
+	/**
+	 * 生成二维码保存至文件服务器
+	 *
+	 * @param content
+	 *            内容信息
+	 * @param filePath
+	 *            文件路径
+	 * @param fileName
+	 *            文件名称
+	 * @param width
+	 *            宽度 默认200
+	 * @param height
+	 *            高度 默认200
+	 * @return
+	 */
+	public static String SaveToFileServer(String content, String filePath,
+			String fileName, Integer width, Integer height) {
+		width = width == null ? 200 : width;
+		height = height == null ? 200 : height;
+		String fileServerPath = ResourceFileUtil.getServerVirtualDir() + filePath;
+
+		File file = new File(fileServerPath);
+		if (!file.exists() && !file.isDirectory()) {
+			file.mkdirs();
+		}
+		MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+		Map<EncodeHintType, Object> hints = new HashMap<EncodeHintType, Object>();
+		hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+
+		try {
+			BitMatrix bitMatrix = multiFormatWriter.encode(content,
+					BarcodeFormat.QR_CODE, width, height, hints);
+			File file1 = new File(fileServerPath, fileName);
+			MatrixToImageWriter.writeToFile(bitMatrix, "jpg", file1);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (WriterException e) {
+			e.printStackTrace();
+		}
+		return (filePath + File.separator + fileName).replace("\\", "/");
+	}
+
+	public static void main(String[] args) {
+		 SaveToFileServer("http://", "/APP_QRCode",
+		 "APP.png",600,600);
+	}
+
+	/**
+     * 条形码
+     * @param content
+     * @param width
+     * @param height
+     * @param filePath
+     */
+    public static String encode(String content, String filePath,
+			String fileName, Integer width, Integer height,int encode) {
+        int codeWidth = 3 + // start guard
+                (7 * 6) + // left bars
+                5 + // middle guard
+                (7 * 6) + // right bars
+                3; // end guard
+        codeWidth = Math.max(codeWidth, width);
+        String fileServerPath = ResourceFileUtil.getServerVirtualDir() + filePath;
+
+		File file = new File(fileServerPath);
+		if (!file.exists() && !file.isDirectory()) {
+			file.mkdirs();
+		}
+		MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+		Map<EncodeHintType, Object> hints = new HashMap<EncodeHintType, Object>();
+		hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+        try {
+        	BarcodeFormat  encoder = null;
+    		switch (encode) {
+    		case EAN13:
+    			encoder = BarcodeFormat.EAN_13;
+    			break;
+    		case EAN8:
+    			encoder = BarcodeFormat.EAN_8;
+    			break;
+    		case CODE39:
+    			encoder = BarcodeFormat.CODE_39;
+    			break;
+    		case CODE93:
+    			encoder = BarcodeFormat.CODE_93;
+    			break;
+    		case CODE128:
+    			encoder = BarcodeFormat.CODE_128;
+    			break;
+    		case UPCA:
+    			encoder = BarcodeFormat.UPC_A;
+    			break;
+    		case UPCE:
+    			encoder = BarcodeFormat.UPC_E;
+    			break;
+    		default:
+    			break;
+    		}
+    		BitMatrix bitMatrix = multiFormatWriter.encode(content,
+					encoder, width, height, hints);
+			File file1 = new File(fileServerPath, fileName);
+			MatrixToImageWriter.writeToFile(bitMatrix, "jpg", file1);
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		} catch (WriterException e) {
+    			e.printStackTrace();
+    		}
+    		return (filePath + File.separator + fileName).replace("\\", "/");
+    	}
+
+}

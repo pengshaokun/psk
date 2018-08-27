@@ -1,0 +1,55 @@
+package com.zhs.core.util.search.paginate;
+
+import java.io.Serializable;
+
+/**
+ * 合计
+ * 
+ */
+
+public class Footer implements Serializable {
+
+	private static final long serialVersionUID = -7303396251518114024L;
+
+	private String keyName; //
+
+	private Object keyVale; 
+	
+	private String columnName;
+	
+	//是否条件     默认false  为true时，为where语句中的条件参数
+	private boolean ifWhere = false; 
+
+	public String getKeyName() {
+		return keyName;
+	}
+
+	public void setKeyName(String keyName) {
+		this.keyName = keyName;
+	}
+
+	public Object getKeyVale() {
+		return keyVale;
+	}
+
+	public void setKeyVale(Object keyVale) {
+		this.keyVale = keyVale;
+	}
+
+	public String getColumnName() {
+		return columnName;
+	}
+
+	public void setColumnName(String columnName) {
+		this.columnName = columnName;
+	}
+
+	public boolean isIfWhere() {
+		return ifWhere;
+	}
+
+	public void setIfWhere(boolean ifWhere) {
+		this.ifWhere = ifWhere;
+	}
+
+}

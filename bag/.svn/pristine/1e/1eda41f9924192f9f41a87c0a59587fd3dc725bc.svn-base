@@ -1,0 +1,170 @@
+package com.zhs.core.util;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.zhs.core.model.Constant.ExceptionCode;
+import com.zhs.core.model.Constant.ResponseObject;
+import com.zhs.core.util.json.JsonUtil;
+import com.zhs.core.util.search.paginate.PageAndOrder;
+
+/**
+ * Response工具类  
+ * 
+ * @author yurui
+ * 2016-2-22
+ */
+public class ResponseUtil {
+	
+	private static String jsonp = "jobnew";
+	
+	public static void outWrite(HttpServletResponse response,String json){
+		response.setContentType("text/html;charset=utf-8");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		try {
+			PrintWriter out = response.getWriter();
+			if (json != null && !json.equals("")) {
+				out.write(json);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void outWriteJsonp(HttpServletResponse response,String json,String jsonp){
+		response.setContentType("text/html;charset=utf-8");
+		try {
+			PrintWriter out = response.getWriter();
+			if (json != null && !json.equals("")) {
+				out.write(jsonp+"(["+json+"])");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void setResponesString(HttpServletRequest request,HttpServletResponse response, String data) {
+		String jsonpCallBack = request.getParameter(jsonp);
+		if(StringUtil.isNotEmpty(jsonpCallBack)){
+			outWriteJsonp(response, data,jsonpCallBack);
+		}else{
+			outWrite(response, data);
+		}
+	}
+
+	public static void setResponesSuccess(HttpServletRequest request,HttpServletResponse response,
+			Object ob) {
+		ResponseObject data = new ResponseObject();
+		data.setCodeTxt("success");
+		data.setReCode(ResponseObject.successCode);
+		if (ob != null) {
+			data.setData(ob);
+		}
+		String text = JsonUtil.toJsonString(data);
+		String jsonpCallBack = request.getParameter(jsonp);
+		if(StringUtil.isNotEmpty(jsonpCallBack)){
+			outWriteJsonp(response, text,jsonpCallBack);
+		}else{
+			outWrite(response, text);
+		}
+	}
+	
+	/**
+	 * 返回数据集，并返回分页页码
+	 * @param response
+	 * @param pageAndOrder
+	 * @param ob
+	 */
+	public static void setResponesSuccess(HttpServletRequest request,HttpServletResponse response,PageAndOrder pageAndOrder,
+			Object ob) {
+		response.setContentType("text/html;charset=utf-8");
+
+		ResponseObject data = new ResponseObject();
+		data.setCodeTxt("success");
+		data.setReCode(ResponseObject.successCode);
+		HashMap<String, Object> pageObejct = new HashMap<String, Object>();
+		pageObejct.put("page", pageAndOrder.getCurrentPage());
+		pageObejct.put("perPage", pageAndOrder.getObjectsPerPage());
+		pageObejct.put("totalPage", pageAndOrder.getTotalPages());
+		pageObejct.put("totalRows", pageAndOrder.getTotalRows());
+		if(ob==null){
+			pageObejct.put("data", pageAndOrder.getResult());
+		}else{
+			pageObejct.put("data", ob);
+		}
+		data.setData(pageObejct);
+		String text = JsonUtil.toJsonString(data); 
+		String jsonpCallBack = request.getParameter(jsonp);
+		if(StringUtil.isNotEmpty(jsonpCallBack)){
+			outWriteJsonp(response, text,jsonpCallBack);
+		}else{
+			outWrite(response, text);
+		}
+	}
+	
+	public static void setResponesSuccess(HttpServletRequest request,HttpServletResponse response,
+			String key,String value) {
+		response.setContentType("text/html;charset=utf-8");
+
+		ResponseObject data = new ResponseObject();
+		data.setCodeTxt("success");
+		data.setReCode(ResponseObject.successCode);
+		HashMap<String, String> ob = new HashMap<String, String>();
+		ob.put(key, value);
+		if (ob != null) {
+			data.setData(ob);
+		}
+		String text = JsonUtil.toJsonString(data); 
+		String jsonpCallBack = request.getParameter(jsonp);
+		if(StringUtil.isNotEmpty(jsonpCallBack)){
+			outWriteJsonp(response, text,jsonpCallBack);
+		}else{
+			outWrite(response, text);
+		}
+	}
+
+	public static void setResponesFail(HttpServletRequest request,HttpServletResponse response,
+			String code, String errMsg) {
+		response.setContentType("text/html;charset=utf-8");
+
+		ResponseObject data = new ResponseObject();
+		if(StringUtil.isEmpty(code)){
+			data.setReCode(ExceptionCode.normalException.getExceptionCode());
+		}else{
+			data.setReCode(code);
+		}
+		if(StringUtil.isEmpty(errMsg)){
+			data.setCodeTxt(ExceptionCode.normalException.getExceptionDesc());
+		}else{
+			data.setCodeTxt(errMsg);
+		}
+		String text = JsonUtil.toJsonString(data); 
+		String jsonpCallBack = request.getParameter(jsonp);
+		if(StringUtil.isNotEmpty(jsonpCallBack)){
+			outWriteJsonp(response, text,jsonpCallBack);
+		}else{
+			outWrite(response, text);
+		}
+	}
+	
+	public static void setResponesFail(HttpServletRequest request,HttpServletResponse response,
+			ExceptionCode code) {
+		response.setContentType("text/html;charset=utf-8");
+
+		ResponseObject data = new ResponseObject();
+		data.setReCode(code.getExceptionCode());
+		data.setCodeTxt(code.getExceptionDesc());
+		String text = JsonUtil.toJsonString(data); 
+		String jsonpCallBack = request.getParameter(jsonp);
+		if(StringUtil.isNotEmpty(jsonpCallBack)){
+			outWriteJsonp(response, text,jsonpCallBack);
+		}else{
+			outWrite(response, text);
+		}
+	}
+	
+}

@@ -1,0 +1,36 @@
+<div class="form-container">
+    <form id="form1">
+        <ul class="form-table clearBox response-table" style="min-width:35%;margin: 0px auto;">
+            <li class="clearBox">
+                <div class="label title-box float-box">反馈人:</div>
+                <div class="content-box float-box"><input name="fullName" class="f5 easyui-textbox" readonly type="text"/></div>
+            </li>
+            <li class="clearBox">
+                <div class="label title-box float-box">联系电话:</div>
+                <div class="content-box float-box"><input id="mobile" name="mobile" class="f5 easyui-textbox" readonly  type="text"/></div>
+            </li>
+
+            <li class="clearBox note-box">
+                <div class="label title-box note-title float-box">内容:</div>
+                <div class="content-box float-box"><input name="options" class="f8 easyui-textbox" readonly type="text" multiline="true"/></div>
+            </li>
+        </ul>
+
+        <!--<table class="form-table" style="min-width:400px;">-->
+            <!--<tr>-->
+                <!--<td class="label">反馈人:</td>-->
+                <!--<td ><input name="fullName" class="f5 easyui-textbox" readonly type="text"/></td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="label">联系电话:</td>-->
+                <!--<td ><input id="mobile" name="mobile" class="f5 easyui-textbox" readonly  type="text"/></td>-->
+            <!--</tr>-->
+
+            <!--<tr>-->
+                <!--<td class="label">内容:</td>-->
+                <!--<td ><input name="options" class="f8 easyui-textbox" readonly type="text" multiline="true"-->
+                            <!--style="height: 180px;width: 500px"/></td>-->
+            <!--</tr>-->
+        <!--</table>-->
+    </form>
+</div>

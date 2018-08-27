@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+    <dubbo:application name="consumer"  />
+    <!-- 用dubbo协议在20880端口暴露服务 -->
+    <dubbo:protocol name="dubbo" port="20880" />
+
+    <!-- 使用multicast广播注册中心暴露发现服务地址 116.62.51.7-->
+    <dubbo:registry address="zookeeper://localhost:2181"></dubbo:registry>
+    <!-- <dubbo:registry address="zookeeper://36.111.70.44:2181"></dubbo:registry> -->
+    <!--测试服务器-->
+    <!--<dubbo:registry address="zookeeper://test3:2181?backup=test4:2181,test5:2181"></dubbo:registry>-->
+
+
+    <!--<dubbo:registry address="zookeeper://192.168.1.10:2181?backup=192.168.1.20:2181,192.168.1.30:2181"></dubbo:registry>-->
+    <!-- 使用注解方式暴露接口 -->
+    <dubbo:annotation package="com.zhskg.bag.controller.app,
+    	com.zhskg.bag.controller.web,
+    	com.zhskg.bag.util,
+    	com.zhskg.bag.service.impl
+    	" />
+</beans>

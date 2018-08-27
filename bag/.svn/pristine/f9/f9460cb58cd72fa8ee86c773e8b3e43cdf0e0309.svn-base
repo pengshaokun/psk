@@ -1,0 +1,90 @@
+<div class="form-container">
+    <form id="form1">
+        <input id="versionId" name="versionId" type="hidden"/>
+        <ul class="form-table clearBox response-table" style="min-width:35%;margin: 0px auto;">
+            <li class="clearBox">
+                <div class="label title-box float-box">系统类别:</div>
+                <div class="content-box float-box"><input id="systemCategory" name="systemCategory" class="f6 easyui-textbox" type="text"/></div>
+            </li>
+            <li class="clearBox">
+                <div class="label title-box float-box">版本号:</div>
+                <div class="content-box float-box"><input id="versionNumber" name="versionNumber" class="f6 easyui-textbox"
+                           data-options="required:true,prompt:'请输入版本号'" type="text"/></div>
+            </li>
+            <li class="clearBox">
+                <div class="label title-box float-box">版本编码:</div>
+                <div class="content-box float-box"><input id="versionCode" name="versionCode" class="f6" type="text"/></div>
+            </li>
+            <li id="fileTr" class="clearBox">
+                <div class="label title-box float-box">安装包</div>
+                <div class="content-box float-box">
+                    <input id="file" name="file"  class="easyui-filebox" data-options="width:260,buttonText:'安装包上传'" type="text"/>
+                </div>
+            </li>
+            <li class="clearBox">
+                <div class="label title-box float-box">下载地址:</div>
+                <div class="content-box float-box"><input id="downloadUrl" name="downloadUrl" class="easyui-textbox"
+                           data-options="multiline:true,required:true,width:320,height:60" type="text"/></div>
+            </li>
+            <li id="sendFlagTr" class="clearBox">
+                <div class="label title-box float-box">推送更新:</div>
+                <div class="content-box float-box">
+                    <label>
+                        <input name="sendFlag" type="radio" checked="checked" value="1"/><span></span>推送
+                    </label>
+                    <label>
+                        <input name="sendFlag" type="radio" value="0"/><span></span>不推送
+                    </label>
+                </div>
+            </li>
+            <li class="clearBox note-box">
+                <div class="label note-title title-box float-box">备注:</div>
+                <div class="content-box float-box"><input name="remark" class="easyui-textbox"
+                           data-options="multiline:true,width:320,height:80" type="text"/></div>
+            </li>
+        </ul>
+
+        <!--<table class="form-table" style="min-width: 445px;">-->
+            <!--<tr>-->
+                <!--<td class="label">系统类别:</td>-->
+                <!--<td><input id="systemCategory" name="systemCategory" class="f6 easyui-textbox" type="text"/></td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="label">版本号:</td>-->
+                <!--<td><input id="versionNumber" name="versionNumber" class="f6 easyui-textbox"-->
+                           <!--data-options="required:true,prompt:'请输入版本号'" type="text"/></td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="label">版本编码:</td>-->
+                <!--<td><input id="versionCode" name="versionCode" class="f6" type="text"/></td>-->
+            <!--</tr>-->
+            <!--<tr id="fileTr">-->
+                <!--<td class="label">安装包</td>-->
+                <!--<td>-->
+                    <!--<input id="file" name="file"  class="easyui-filebox" data-options="width:260,buttonText:'安装包上传'" type="text"/>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="label">下载地址:</td>-->
+                <!--<td><input id="downloadUrl" name="downloadUrl" class="easyui-textbox"-->
+                           <!--data-options="multiline:true,required:true,width:320,height:60" type="text"/></td>-->
+            <!--</tr>-->
+            <!--<tr id="sendFlagTr">-->
+                <!--<td class="label">推送更新:</td>-->
+                <!--<td>-->
+                    <!--<label>-->
+                        <!--<input name="sendFlag" type="radio" checked="checked" value="1"/><span></span>推送-->
+                    <!--</label>-->
+                    <!--<label>-->
+                        <!--<input name="sendFlag" type="radio" value="0"/><span></span>不推送-->
+                    <!--</label>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="label">备注:</td>-->
+                <!--<td><input name="remark" class="easyui-textbox"-->
+                           <!--data-options="multiline:true,width:320,height:80" type="text"/></td>-->
+            <!--</tr>-->
+        <!--</table>-->
+    </form>
+</div>

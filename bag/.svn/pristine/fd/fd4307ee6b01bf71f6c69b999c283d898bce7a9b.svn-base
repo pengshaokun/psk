@@ -1,0 +1,70 @@
+package com.zhs.core.util.email;
+
+import java.io.File;
+import java.util.ResourceBundle;
+
+public class EmailConstant {
+	// 发件人称呼
+	private static String emailName = "";
+	private static String emailPwd = "";
+	private static String emailSmtp = "";
+	// 发件人Email地址
+	private static String addressEmail = "";
+
+	public static int MAX_SEND_EMAIL_TIMS = 5;
+
+	public static final ResourceBundle conf = ResourceBundle.getBundle("conf"
+			+ File.separator + "mail_config");
+
+	private EmailConstant() {
+	}
+
+	public static String getEmailPwd() {
+		if (emailPwd == null || emailPwd == "") {
+			emailPwd = conf.getString("email.password");
+		} else {
+			return emailPwd;
+		}
+		return emailPwd;
+	}
+
+	public static String getEmailSmtp() {
+		if (emailSmtp == null || emailSmtp == "") {
+			emailSmtp = conf.getString("email.smtp");
+		} else {
+			return emailSmtp;
+		}
+		return emailSmtp;
+	}
+
+	public static String getEmailName() {
+		if (emailName == null || emailName == "") {
+			emailName = conf.getString("email.name");
+		} else {
+			return emailName;
+		}
+		return emailName;
+	}
+
+	public static String getAddressEmail() {
+		if (addressEmail == null || addressEmail == "") {
+			addressEmail = conf.getString("email.address");
+		} else {
+			return addressEmail;
+		}
+		return addressEmail;
+	}
+
+	static {
+		try {
+
+			MAX_SEND_EMAIL_TIMS = Integer.valueOf(conf
+					.getString("max.send.email.times"));
+		} catch (Exception e) {
+		}
+	}
+
+	public static void main(String[] args) {
+		System.out.println(">>>>>>>>>>>>>>>" + EmailConstant.getAddressEmail());
+	}
+}

@@ -1,0 +1,87 @@
+package com.zhs.core.util;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
+
+public class GenerateNumber {
+	public static final String allChar = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+	/**
+	 * 格式为 2位年+2位月+2位日+5位数字
+	 * 
+	 * @param number
+	 * @return
+	 */
+	public static String getIdNumber11(String number) {
+		SimpleDateFormat df = new SimpleDateFormat("yyMMdd");
+		String date = df.format(new Date());
+		if (number == null || number.trim().equals("")) {
+			return date + "00001";
+		} else if (number.substring(0, 6).equals(date)) {
+			date = Long.parseLong(number) + 1 + "";
+		} else {
+			return date + "00001";
+		}
+		return date;
+	}
+
+	/**
+	 * 格式为 2位年+2位月+2位日+2位小时+2分+5位数字
+	 * 
+	 * @param number
+	 * @return
+	 */
+	public static String getIdNumber15(String number) {
+		SimpleDateFormat df = new SimpleDateFormat("yyMMddHHmm");
+		String date = df.format(new Date());
+		// System.out.println(date);
+		if (number == null || number.trim().equals("") || number.length() < 5) {
+			return date + "00001";
+		} else if (number.substring(0, 10).equals(date)) {
+			date = Long.parseLong(number) + 1 + "";
+		} else {
+			return date + "00001";
+		}
+		return date;
+	}
+
+	/**
+	 * 返回一个定长的随机字符串(只包含大小写字母、数字)
+	 * 
+	 * @param length
+	 *            随机字符串长度
+	 * @return 随机字符串
+	 */
+	public static String generateString(int length) {
+		StringBuffer sb = new StringBuffer();
+		Random random = new Random();
+		for (int i = 0; i < length; i++) {
+			sb.append(allChar.charAt(random.nextInt(allChar.length())));
+		}
+		return sb.toString();
+	}
+
+	public static String generateString(int length, int size, String splieStr) {
+		StringBuffer sb = new StringBuffer();
+		Random random = new Random();
+		int j = 0;
+		for (int i = 0; i < length; i++) {
+			if (j == size) {
+
+				sb.append(splieStr);
+				j = 0;
+			}
+
+			j++;
+			sb.append(allChar.charAt(random.nextInt(allChar.length())));
+		}
+		return sb.toString();
+	}
+
+	public static void main(String[] args) {
+//		String num = "121116053000001";
+		// System.out.println(GenerateNumber.getIdNumber11(num));
+		System.out.println(GenerateNumber.generateString(20, 4, "_"));
+	}
+}
